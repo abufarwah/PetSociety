@@ -1,9 +1,9 @@
-# Pets society
+# Pet society
 
-**Pets Society** is a web-based platform built with **Angular** and **ASP.NET Core (C#)** that provides a complete ecosystem for pet owners. It connects adoption, care, communication, and shopping in one integrated system.
+**Pet Society** is a web-based platform built with **Angular** and **ASP.NET Core (C#)** that provides a complete ecosystem for pet owners. It connects adoption, care, communication, and shopping in one integrated system.
 
 ## About
-Pets Society aims to bring all pet-related needs into a single connected platform. It allows users to adopt pets, subscribe to monthly care services, communicate through a live chat with other pet owners, report lost or found pets using AI-powered computer vision.
+Pet Society aims to bring all pet-related needs into a single connected platform. It allows users to adopt pets, subscribe to monthly care services, communicate through a live chat with other pet owners, report lost or found pets using AI-powered computer vision.
 
 ## Features
 - **Pet Adoption Center** – Browse and adopt pets from verified shelters or individuals.  
