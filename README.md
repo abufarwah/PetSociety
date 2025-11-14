@@ -6,7 +6,7 @@
 Pet Society aims to bring all pet-related needs into a single connected platform. It allows users to adopt pets, subscribe to monthly care services, communicate through a live chat with other pet owners, report lost or found pets using AI-powered computer vision.
 
 ## Features
-- **Pet Adoption Center** – Browse and adopt pets from verified shelters or individuals.  
+- **Pet Adoption Center** – Browse and adopt pets from  individuals.  
 - **Pet Service Hub+** – Monthly subscription plan that delivers selected pet supplies based on the user's preferences.    
 - **Live Chat Community** – Real-time chat between users to share advice, ask for help, and connect with local pet owners.  
 - **AI Lost & Found** – Uses computer vision to compare images of lost and found pets and show possible match.  
