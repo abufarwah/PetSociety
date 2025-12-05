@@ -1,0 +1,57 @@
+.col-md-6 {
+ background: #FFFCEE;
+}
+
+.login-image {
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
+  border-radius: 25px;
+  box-shadow: 0 20px 40px #d9c1a5;
+  
+  
+}
+
+
+.bg-image-container {
+  background: #FFFCEE;
+}
+
+
+.login-box {
+  width: 450px;
+  background: #f7f1e3;
+  border-radius: 20px;
+  box-shadow: 10px 10px 40px rgba(0,0,0,1);
+  border: 2px solid #d9c1a5;
+
+}
+
+
+.login-btn {
+  background: linear-gradient(to right, #caa77d, #b88a60);
+  color: white;
+  font-size: 18px;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+}
+.login-btn:hover {
+  opacity: 0.9;
+}
+
+.d-block{
+    color: #b88a60;
+}
+
+.d-block:hover{
+    text-decoration: underline;
+    color: #d9c1a5;
+}
+.text-decoration-none{
+    color: #b88a60;
+}
+.text-decoration-none:hover{
+    text-decoration: underline;
+    color: #d9c1a5;
+}

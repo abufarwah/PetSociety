@@ -1,0 +1,111 @@
+.custom-navbar {
+  width: 100%;
+  max-width: 1200px;   
+  margin: 0 auto;
+  padding: 15px 40px;
+  background:  #f7f1e3;
+  border-radius: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #d9c1a5;
+  /* box-shadow: 0 15px 30px #f2dec6;  */
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  /* gap: 10px; */
+}
+
+:host {
+  display: block;
+  background-color: #FFFCEE; 
+  min-height: 100vh;
+}
+
+/* .logo {
+  width: 28px;
+} */
+
+.brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+}
+
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+  margin: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #222;
+  font-size: 18px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: #c39b6e;
+}
+
+.active {
+  border-bottom: 3px solid #c39b6e;
+  padding-bottom: 4px;
+}
+
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.signup {
+  text-decoration: none;
+  font-weight: 600;
+  color: #333;
+  font-size: 17px;
+}
+
+.login-btn {
+  background-color: #d2b08c;
+  padding: 10px 24px;
+  border-radius: 30px;
+  color: #111;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: #b8926e;
+}
+footer {
+  margin-top: 40px;
+  background: linear-gradient(135deg, #FFFCEE 60%, #FFFCF4 100%);
+}
+
+.footer-link {
+  color: #394553;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-link:hover {
+  color: #d9c1a5;
+}
+
+hr {
+  border-top: 1px solid #ececec;
+}
+
+.bi {
+  font-size: 1.1rem;
+  vertical-align: middle;
+  color: #394553;
+}
