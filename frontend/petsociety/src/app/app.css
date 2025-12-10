@@ -71,11 +71,21 @@ padding-top: 25px;
   gap: 25px;
 }
 
-.signup {
+.sign-up{
   text-decoration: none;
   font-weight: 600;
-  color: #333;
   font-size: 17px;
+  padding: 13px ;
+  list-style: none;
+  text-decoration: none;
+  color: #222;
+  font-size: 18px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  
+}
+.sign-up:hover {
+  color: #c39b6e;
 }
 
 .login-btn {
