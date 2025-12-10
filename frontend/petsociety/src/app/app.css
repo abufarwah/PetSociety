@@ -1,6 +1,13 @@
 .navbar-bg {
 background-color: #FFFCEE; 
 padding-top: 25px;
+padding-bottom: 25px;
+}
+
+.main-content {
+  background-color: #FFFCEE;
+  min-height: calc(100vh - 200px);
+  padding-bottom: 50px;
 }
 
 .custom-navbar {
@@ -105,8 +112,9 @@ padding-top: 25px;
 
 /* Footer Styles */
 footer {
-  margin-top: 40px;
+  margin-top: 0;
   background: linear-gradient(135deg, #FFFCEE 60%, #FFFCF4 100%);
+  clear: both;
 }
 
 .footer-link {
