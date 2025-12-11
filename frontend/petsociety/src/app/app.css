@@ -1,20 +1,28 @@
 .navbar-bg {
-background-color: #FFFCEE; 
-padding-top: 25px;
-padding-bottom: 25px;
+background-color: linear-gradient(135deg, #FFFFFF 60%, #FFFCF4 100%);
+width: 100%;
+opacity: 0.9;
+padding-top: 5px;
+padding-bottom: 0px;
+position: sticky;
+top: 0;
+border-radius: 50px;
+
 }
 
 .main-content {
-  background-color: #FFFCEE;
+  background-color: #FFFFFF;
   min-height: calc(100vh - 200px);
   padding-bottom: 50px;
+  
 }
 
 .custom-navbar {
   width: 100%;
   max-width: 1200px;   
   margin: 0px auto;
-  padding: 15px 40px;  background:  #f7f1e3;
+  padding: 15px 40px;
+  background:  #FFFFFF;
   border-radius: 40px;
   display: flex;
   justify-content: space-between;
@@ -31,13 +39,13 @@ padding-bottom: 25px;
 
 :host {
   display: block;
-  background-color: #FFFCEE; 
+  background-color: #FFFFFF; 
   min-height: 100vh;
 }
 
-/* .logo {
+.logo {
   width: 28px;
-} */
+}
 
 .brand {
   font-size: 20px;
@@ -95,25 +103,31 @@ padding-bottom: 25px;
 }
 
 .login-btn {
-  background-color: #d2b08c;
-  padding: 10px 24px;
-  border-radius: 30px;
-  color: #111;
-  font-weight: 700;
+  /* background-color: #d2b08c; */
   text-decoration: none;
-  transition: background 0.2s ease;
+  font-weight: 600;
+  font-size: 17px;
+  padding: 13px ;
+  list-style: none;
+  text-decoration: none;
+  color: #222;
+  font-size: 18px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  
 }
 
 .login-btn:hover {
-  background-color: #b8926e;
+color: #c39b6e;
 }
 
 
 /* Footer Styles */
 footer {
   margin-top: 0;
-  background: linear-gradient(135deg, #FFFCEE 60%, #FFFCF4 100%);
+  background: linear-gradient(135deg, #FFFFFF 60%, #FFFCF4 100%);
   clear: both;
+  border: 1px solid #d9c1a5;
 }
 
 .footer-link {
