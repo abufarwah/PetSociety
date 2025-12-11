@@ -1,5 +1,5 @@
 .col-md-6 {
- background: #FFFCEE;
+ background: #FFFFFF;
  min-height: 100vh;
  align-items: stretch;
 }
@@ -9,7 +9,7 @@
   margin-bottom: 50px;
   align-items: stretch;
 }
-.login-image {
+.signup-image  {
   width: 90%;
   height: 719px;
   object-fit: cover;
@@ -21,13 +21,13 @@
 
 
 .bg-image-container {
-  background: #FFFCEE;
+  background: #FFFFFF;
 }
 
 
-.login-box {
+.signup-box {
   width: 450px;
-  background: #f7f1e3;
+  background: #f9f6f0;
   border-radius: 20px;
   box-shadow: 10px 10px 40px rgba(0,0,0,1);
   border: 2px solid #d9c1a5;
@@ -35,16 +35,15 @@
 
 }
 
-
-.login-btn {
-  background: linear-gradient(to right, #caa77d, #b88a60);
+.signup-btn {
+  background: #b88a60;
   color: white;
   font-size: 18px;
   padding: 12px;
   border-radius: 12px;
   border: none;
 }
-.login-btn:hover {
+.signup-btn:hover {
   opacity: 0.9;
 }
 
