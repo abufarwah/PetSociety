@@ -1,0 +1,219 @@
+/* ============================
+   HERO SECTION
+============================ */
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0 0 35px 35px;
+}
+
+.hero-img {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  display: block;
+}
+
+/* HERO TEXT */
+.hero-text {
+  position: absolute;
+  top: 32%;
+  left: 6%;
+  transform: translateY(-20%);
+  color: #fff;
+  max-width: 450px;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.08;
+  margin: 0;
+}
+
+.hero-line-white {
+  color: #ffffff;
+  display: block;
+  white-space: nowrap;
+}
+
+.hero-line-gold {
+  color: #d3b281;
+  display: block;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+.hero-text p {
+  font-size: 18px;
+  margin-top: 15px;
+  color: #ffffff;
+}
+
+
+/* ============================
+   ABOUT SECTION
+============================ */
+
+.about-image-wrapper {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 22px;
+  background: transparent;
+}
+
+.about-img {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  display: block;
+}
+
+.text-gold {
+  color: #c8a978;
+}
+
+.stat-num {
+  color: #c8a978;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+
+/* ============================
+   SERVICE CARDS — UNIFIED STYLE
+============================ */
+
+.services {
+  margin-top: 60px;
+}
+
+/* الشكل الأساسي الموحد لكل الكروت */
+.service-card {
+  background: #fff;
+  padding: 28px;
+  border-radius: 18px;
+  transition: 0.3s ease;
+  border: 1px solid #eee;
+  box-shadow: none;
+  height: 100%;              /* أهم نقطة لعدم تقدم أي كرت */
+}
+
+.service-card img {
+  width: 55px;
+  margin-bottom: 18px;
+}
+
+.service-card h4 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.service-card p {
+  color: #444;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.service-card button {
+  margin-top: auto;
+  border-radius: 30px;
+  padding: 8px 28px;
+  border: 2px solid #111;
+  background: transparent;
+  color: #111;
+  transition: 0.3s ease;
+}
+
+
+/* ============================
+   HOVER STYLE (مشترك للجميع)
+============================ */
+
+.service-card:hover {
+  background: #c7ab86;
+  transform: translateY(-8px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  border-color: transparent;
+}
+
+.service-card:hover h4,
+.service-card:hover p {
+  color: white !important;
+}
+
+.service-card:hover button {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+/* إزالة لون سابق للـ Adoption إذا كان الكود القديم باقي */
+.brown-card {
+  background: #fff !important;
+  color: #000 !important;
+  box-shadow: none !important;
+}
+
+
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+@media (max-width: 768px) {
+  .hero-img {
+    height: 350px;
+  }
+
+  .hero-text {
+    top: 22%;
+    max-width: 260px;
+  }
+
+  .hero-text h1 {
+    font-size: 34px;
+  }
+
+  .hero-text p {
+    font-size: 15px;
+  }
+
+  .about-img {
+    height: 260px;
+  }
+
+  .service-card {
+    text-align: center;
+  }
+}
+.icon-circle {
+  width: 56px;
+  height: 56px;
+  background:#c7ab86;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  transition: 0.3s ease;
+}
+
+.icon-circle i {
+  font-size: 28px;     /* حجم ثابت لكل الأيقونات */
+  color: #000;
+  transition: 0.3s ease;
+}
+
+/* عند الهوفر ينعكس اللون */
+.service-card:hover .icon-circle {
+  background: rgba(255,255,255,0.2);
+}
+
+.service-card:hover .icon-circle i {
+  color:#c7ab86;
+}
