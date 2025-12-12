@@ -4,7 +4,7 @@ import { Signup } from './components/signup/signup';
 import { Home } from './components/home/home';
 import { PetSocietyPlus } from './components/PetSocietyPlus/pet-society-plus/pet-society-plus';
 import { Adoption } from './components/adoption/adoption';
-
+import { PostPetModalComponent } from'./components/post-pet-modal/post-pet-modal';
 export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'signup', component: Signup },
@@ -12,4 +12,5 @@ export const routes: Routes = [
   { path: '', redirectTo: '/Home', pathMatch: 'full' },
   { path: 'Home', component: Home },
   { path: 'Adoption', component: Adoption },
+  {path:  'PostPetModalComponent', component: PostPetModalComponent}
 ];
