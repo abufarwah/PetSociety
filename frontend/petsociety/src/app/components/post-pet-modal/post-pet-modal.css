@@ -1,31 +1,138 @@
-.modal-overlay {
+.modal-backdrop-custom {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
 }
 
-.modal {
+.modal-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 620px;
+  max-width: 95%;
+  max-height: 85vh;
   background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  width: 400px;
-  position: relative;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+  overflow: hidden;
+}
+
+/* Header */
+.modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 20px;
 }
 
 .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  background: #f2f2f2;
   border: none;
-  background: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   font-size: 20px;
   cursor: pointer;
 }
 
+/* Body */
+.modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 90px;
+  resize: none;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.image-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-icon {
+  background: #f5f5f5;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* Tags */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background: #f4f4f4;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end; 
+  gap: 12px;                
+
 .cancel-btn {
-  margin-top: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 10px 26px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background: #d6b48c;
+  border: none;
+  padding: 10px 36px;
+  border-radius: 30px;
+  color: #000;
+  font-weight: 500;
+  cursor: pointer;
+}
 }

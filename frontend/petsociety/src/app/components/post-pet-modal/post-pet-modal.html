@@ -1,17 +1,74 @@
-<div class="modal-overlay">
-  <div class="modal">
+<div class="modal-backdrop-custom" (click)="close.emit()"></div>
 
-    <!-- زر الإغلاق (X) -->
-    <button class="close-btn" (click)="close.emit()">✕</button>
+<div class="modal-box" (click)="$event.stopPropagation()">
 
-    <!-- محتوى المودال -->
-    <h2>Post Pet for Adoption</h2>
-    <p>Post Pet Modal Works</p>
+  <!-- Header -->
+  <div class="modal-header">
+    <h3>Post Pet for Adoption</h3>
+    <button class="close-btn" (click)="close.emit()">×</button>
+  </div>
 
-    <!-- زر Cancel -->
-    <button class="cancel-btn" (click)="close.emit()">
-      Cancel
-    </button>
+  <!-- Body -->
+  <div class="modal-body">
+
+    <div class="form-group">
+      <label>Pet Name *</label>
+      <input type="text" placeholder="Enter pet name" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Type *</label>
+        <select>
+          <option>Dog</option>
+          <option>Cat</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Age *</label>
+        <input type="text" placeholder="e.g. 2 years" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Location *</label>
+      <input type="text" placeholder="City, State" />
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea placeholder="Tell us about this pet..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Image URL</label>
+      <div class="image-input">
+        <input type="text" placeholder="https://example.com/image.jpg" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Tags</label>
+      <div class="tags">
+        <span class="tag">Vaccinated</span>
+        <span class="tag">Friendly</span>
+        <span class="tag">Good with kids</span>
+        <span class="tag">Playful</span>
+        <span class="tag">Calm</span>
+        <span class="tag">Energetic</span>
+        <span class="tag">Indoor</span>
+        <span class="tag">Outdoor</span>
+        <span class="tag">Trained</span>
+      </div>
+    </div>
 
   </div>
+
+  <!-- Footer -->
+  <div class="modal-footer">
+    <button class="cancel-btn" (click)="close.emit()">Cancel</button>
+    <button class="submit-btn">Post Pet</button>
+  </div>
+
 </div>
