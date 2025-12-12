@@ -1,0 +1,79 @@
+<section class="adoption-hero container">
+    <div class="hero-content">
+        <div>
+            <h1>Find Your Perfect Companion</h1>
+            <p>
+                Browse our selection of lovable pets waiting for their forever
+                homes
+            </p>
+        </div>
+
+        <button class="post-btn" (click)="openPostModal()">
+            + Post Pet for Adoption
+        </button>
+
+    </div>
+</section>
+
+<section class="filters-bar">
+    <div class="container filters-content">
+        <div class="filters-left">
+            <span class="filter-label">Filters:</span>
+
+            <label>
+                Type:
+                <select>
+                    <option>All</option>
+                    <option>Dog</option>
+                    <option>Cat</option>
+                </select>
+            </label>
+
+            <label>
+                Age:
+                <select>
+                    <option>All</option>
+                    <option>Baby</option>
+                    <option>Young</option>
+                    <option>Adult</option>
+                </select>
+            </label>
+        </div>
+
+        <span class="results-count">6 pets found</span>
+    </div>
+</section>
+
+<section class="pets-section container">
+    <div class="pets-grid">
+
+        <div class="pet-card" *ngFor="let pet of pets">
+            <div class="pet-img">
+                <img [src]="pet.image" alt />
+                <button class="fav-btn">♡</button>
+            </div>
+
+            <div class="pet-info">
+                <div class="pet-header">
+                    <h3>{{ pet.name }}</h3>
+                    <span class="tag">{{ pet.type }}</span>
+                </div>
+
+                <p class="location">📍 {{ pet.location }}</p>
+                <p class="age">Age: {{ pet.age }}</p>
+
+                <div class="tags">
+                    <span *ngFor="let tag of pet.tags">{{ tag }}</span>
+                </div>
+
+                <button class="adopt-btn">Adopt Now</button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<app-post-pet-modal
+    *ngIf="showPostModal"
+    (close)="closePostModal()">
+</app-post-pet-modal>
