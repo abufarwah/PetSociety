@@ -1,22 +1,20 @@
+
 .navbar-bg {
-background-color: linear-gradient(135deg, #FFFFFF 60%, #FFFCF4 100%);
-width: 100%;
-opacity: 0.9;
-padding-top: 5px;
-padding-bottom: 0px;
-position: sticky;
-top: 0;
-border-radius: 50px;
-
-}
-
+  background-color: linear-gradient(135deg, #FFFFFF 60%, #FFFCF4 100%);
+  width: 100%;
+  opacity: 0.9;
+  padding-top: 5px;
+  padding-bottom: 0px;
+  position: sticky;
+  top: 0;
+  border-radius: 50px;
+}       
 .main-content {
   background-color: #FFFFFF;
   min-height: calc(100vh - 200px);
   padding-bottom: 50px;
   
 }
-
 .custom-navbar {
   width: 100%;
   max-width: 1200px;   
@@ -30,7 +28,6 @@ border-radius: 50px;
   border: 1px solid #d9c1a5;
   /* box-shadow: 0 15px 30px #f2dec6;  */
 }
-
 .nav-left {
   display: flex;
   align-items: center;
