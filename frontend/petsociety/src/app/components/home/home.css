@@ -1,41 +1,44 @@
-/* ============================
-   HERO SECTION
-============================ */
+
+.hero-img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;  
+}
+
 
 body {
   margin: 0;
   padding: 0;
 }
 
-.hero-img {
-  width: 100%;
-  height: 620px;
-  object-fit: cover;
-  display: block;
-}
-
-/* يرفع الهيرو تحت الناف */
 .home-page {
   margin-top: -90px;
 }
 
-/* خلي الناف فوق الصورة */
 .home-page ::ng-deep .navbar-bg {
+ 
   position: relative;
-  z-index: 10;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(10px);
+  height: 620px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+
+  
+  height: 620px;
+  width: 100%;
+  background: #fff;
 }
 
-/* HERO TEXT */
 .hero-text {
   position: absolute;
-  top: 32%;
-  left: 6%;
-  transform: translateY(-20%);
+  left: 2%;  
+  top: 38%;
   color: #fff;
-  max-width: 450px;
 }
+
 
 .hero-text h1 {
   font-size: 48px;
@@ -63,21 +66,16 @@ body {
   color: #ffffff;
 }
 
-/* ============================
-   ABOUT SECTION
-============================ */
-
 .about-image-wrapper {
   width: 100%;
-  overflow: hidden;
-  border-radius: 22px;
-  background: transparent;
+  overflow: hidden;         
+  border-radius: 28px;      
 }
 
 .about-img {
   width: 100%;
-  height: 360px;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;        
   display: block;
 }
 
@@ -91,15 +89,13 @@ body {
   font-size: 22px;
 }
 
-/* ============================
-   SERVICE CARDS — FIXED
-============================ */
+
 
 .services {
   margin-top: 60px;
 }
 
-/* الكرت */
+
 .service-card {
   background: #fff;
   padding: 28px;
@@ -107,14 +103,12 @@ body {
   transition: 0.3s ease;
   border: 1px solid #c8a978;
   box-shadow: none;
-
-  /* 🔥 الحل */
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* العنوان */
+
 .service-card h4 {
   font-size: 22px;
   font-weight: 700;
@@ -122,17 +116,15 @@ body {
   color: #000;
 }
 
-/* النص */
+
 .service-card p {
   color: #444;
   font-size: 16px;
-
-  /* 🔥 يخلي كل الكروت بنفس الارتفاع */
   flex-grow: 1;
   margin-bottom: 0;
 }
 
-/* الزر */
+
 .service-card button {
   margin-top: 24px;
   border-radius: 30px;
@@ -144,9 +136,6 @@ body {
   align-self: flex-start;
 }
 
-/* ============================
-   HOVER
-============================ */
 
 .service-card:hover {
   background: #c7ab86;
@@ -166,9 +155,6 @@ body {
   border-color: #111;
 }
 
-/* ============================
-   ICON
-============================ */
 
 .icon-circle {
   width: 56px;
@@ -192,9 +178,6 @@ body {
   background: rgba(255,255,255,0.2);
 }
 
-/* ============================
-   RESPONSIVE
-============================ */
 
 @media (max-width: 768px) {
   .hero-img {
