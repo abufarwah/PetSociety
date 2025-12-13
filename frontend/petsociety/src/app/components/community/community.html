@@ -1,1 +1,68 @@
-<p>community works!</p>
+<div class="community-page">
+
+  <!-- Sidebar -->
+  <aside class="community-sidebar">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search channels..."
+    />
+
+    <div class="channel-list">
+      <div
+        class="channel"
+        *ngFor="let channel of channels"
+        [class.active]="channel.id === activeChannel.id"
+        (click)="selectChannel(channel)"
+      >
+        <div class="channel-icon">{{ channel.icon }}</div>
+        <div class="channel-info">
+          <h6>{{ channel.name }}</h6>
+          <p>{{ channel.desc }}</p>
+          <span>{{ channel.members }} members</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Chat Area -->
+  <section class="community-chat">
+
+    <!-- Header -->
+    <div class="chat-header">
+      <h5>{{ activeChannel.name }}</h5>
+      <p>{{ activeChannel.desc }}</p>
+    </div>
+
+    <div class="chat-messages">
+
+  <div class="message" *ngFor="let msg of messages">
+    <img [src]="msg.avatar" />
+
+    <div class="message-bubble">
+      <div class="message-header">
+        <strong>{{ msg.user }}</strong>
+        <span class="time">{{ msg.time }}</span>
+      </div>
+
+      <p>{{ msg.text }}</p>
+    </div>
+  </div>
+
+</div>
+
+
+    <!-- Input -->
+    <div class="chat-input">
+      <input
+        type="text"
+        placeholder="Type your message..."
+        [(ngModel)]="newMessage"
+        (keyup.enter)="sendMessage()"
+      />
+      <button (click)="sendMessage()">Send</button>
+    </div>
+
+  </section>
+
+</div>
