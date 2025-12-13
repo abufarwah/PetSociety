@@ -14,8 +14,8 @@
   </ul>
 
   <nav class="Right-nav">
-    <a routerLink="/signup" routerLinkActive="active" class="sign-up">sign up</a>
-  <a routerLink="/login" routerLinkActive="active" class="login-btn">Login</a>
+    <a routerLink="/signup" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" class="sign-up ">Sign up</a>
+  <a routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="login-btn">Login</a>
 </nav>
   
 </nav>

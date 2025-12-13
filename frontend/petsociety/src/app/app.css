@@ -63,7 +63,7 @@
   color: #222;
   font-size: 18px;
   font-weight: 500;
-  transition: color 0.2s ease;
+  /* transition: color 0.2s ease; */
 }
 
 .nav-links a:hover {
@@ -86,11 +86,10 @@
   text-decoration: none;
   font-weight: 600;
   font-size: 17px;
-  padding: 13px ;
   list-style: none;
   text-decoration: none;
   color: #222;
-  font-size: 18px;
+  padding: 8px ;
   font-weight: 500;
   transition: color 0.2s ease;
   
@@ -104,11 +103,11 @@
   text-decoration: none;
   font-weight: 600;
   font-size: 17px;
-  padding: 13px ;
+  padding: 8px ;
   list-style: none;
   text-decoration: none;
   color: #222;
-  font-size: 18px;
+ 
   font-weight: 500;
   transition: color 0.2s ease;
   
