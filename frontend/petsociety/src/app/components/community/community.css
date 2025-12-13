@@ -4,7 +4,7 @@
   background: #fafafa;
 }
 
-/* Sidebar */
+/* ================= SIDEBAR ================= */
 .community-sidebar {
   width: 300px;
   background: #ffffff;
@@ -29,7 +29,7 @@
   border-radius: 18px;
   cursor: pointer;
   margin-bottom: 14px;
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 .channel:hover {
@@ -62,7 +62,7 @@
   color: #aaa;
 }
 
-/* Chat */
+/* ================= CHAT ================= */
 .community-chat {
   flex: 1;
   display: flex;
@@ -141,7 +141,7 @@
   line-height: 1.5;
 }
 
-/* Input */
+/* ================= INPUT ================= */
 .chat-input {
   display: flex;
   padding: 18px 22px;
@@ -158,21 +158,29 @@
   font-size: 14px;
 }
 
+/* Send Button (Final) */
 .chat-input button {
   margin-left: 12px;
-  padding: 12px 28px;        
-  border-radius: 999px;    
-  background: #d9b98f;   
+  padding: 12px 30px;
+  border-radius: 999px;
+  background: #d6b48c;
   border: none;
-  color: #000;             
+  color: #000;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 /* Hover */
 .chat-input button:hover {
-  background: #caa678;
+  background: #c9a774;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
+/* Active (click) */
+.chat-input button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}

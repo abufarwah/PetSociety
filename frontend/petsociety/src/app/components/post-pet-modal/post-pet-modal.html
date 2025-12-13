@@ -20,8 +20,14 @@
       <div class="form-group">
         <label>Type *</label>
         <select>
-          <option>Dog</option>
-          <option>Cat</option>
+           <option>All</option>
+                    <option>Dog</option>
+                    <option>Cat</option>
+                    <option>Rabbit</option>
+                    <option>Hamster</option>
+                    <option>Bird</option>
+                    <option>Turtle</option>
+                    <option>Fish</option>
         </select>
       </div>
 
@@ -68,7 +74,7 @@
   <!-- Footer -->
   <div class="modal-footer">
     <button class="cancel-btn" (click)="close.emit()">Cancel</button>
-    <button class="submit-btn">Post Pet</button>
+    <button class="submit-btn" (click)="submitPet()">Post Pet</button>
   </div>
 
 </div>
