@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './pet-society-plus.css',
 })
 export class PetSocietyPlus {
+selectCard(_t11: any) {
+throw new Error('Method not implemented.');
+}
+selectedIndex: any;
 
 }
