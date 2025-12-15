@@ -16,24 +16,38 @@
           <p class="text-muted">Tell us about you and your beloved pet</p>
         </div>
 
-        <form>
+        <form [formGroup]="signupnForm" (ngSubmit)="signup()">
           <label class="mb-1">Your Name</label>
           <input type="text" class="form-control mb-3" placeholder="Enter your name">
 
           <label class="mb-1">Phone Number</label>
           <input type="text" class="form-control mb-3" placeholder="+(962)*******">
 
-          <label class="mb-1">Email</label>
-          <input type="email" class="form-control mb-2" placeholder="Paw@gmail.com">
+          <label class="mb-1">Email Address</label>
+          <input
+            type="email"
+            class="form-control mb-3"
+            placeholder="paw@gmail.com"
+            formControlName="email"
+          />
+
+
 
           <label class="mb-1">Password</label>
-          <input type="password" class="form-control mb-3" placeholder="********">
- 
+          <input
+            type="password"
+            class="form-control mb-3"
+            placeholder="********"
+            formControlName="Password"
+          />
 
-          <label class="mb-1">Confirm Password</label>
-          <input type="password" class="form-control mb-3" placeholder="********">
-
-
+          <label class="mb-1">Password</label>
+          <input
+            type="password"
+            class="form-control mb-3"
+            placeholder="********"
+            formControlName="password"
+          />
           
 
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -44,7 +58,12 @@
            
           </div>
 
-          <button class="btn  signup-btn w-100">Sign Up <i class="fa-solid fa-paw" style="color: #ffffff;"></i></button>
+           <button
+            type="submit"
+            class="btn signup-btn  w-100"
+            [disabled]="signupnForm.invalid">
+            Sign Up
+          </button>
 
           <a href="./login" class="d-block text-center mt-3">Already have an account? Log In</a>
         </form>

@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class Login  {
 
   loginForm = new FormGroup({
-  Username: new FormControl('', Validators.required),
+  email: new FormControl('', Validators.required),
   Password: new FormControl('', Validators.required)
 });
 
