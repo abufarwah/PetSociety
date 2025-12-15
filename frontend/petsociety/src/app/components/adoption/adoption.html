@@ -53,9 +53,32 @@
     <div class="pets-grid">
 
         <div class="pet-card" *ngFor="let pet of pets">
-            <div class="pet-img">
+            <div class="pet-img" (click)="openPet(pet)">
                 <img [src]="pet.image" alt />
+
+                <!-- زر المفضلة -->
                 <button class="fav-btn">♡</button>
+
+                <div class="pet-overlay">
+                    <h4>{{ pet.name }}</h4>
+
+                    <p>{{ pet.age }} • {{ pet.type }}</p>
+
+                    <p class="overlay-location">
+                        📍 {{ pet.location }}
+                    </p>
+
+                    <div class="overlay-tags">
+                        <span *ngFor="let tag of pet.tags">
+                            {{ tag }}
+                        </span>
+                    </div>
+
+                    <span class="view-details">
+                        View Details
+                    </span>
+                </div>
+
             </div>
 
             <div class="pet-info">
@@ -71,12 +94,63 @@
                     <span *ngFor="let tag of pet.tags">{{ tag }}</span>
                 </div>
 
-                <button class="adopt-btn">Adopt Now</button>
+                <!-- زر التبني -->
+                <button class="adopt-btn" (click)="openPet(pet)">
+                    Adopt Now
+                </button>
             </div>
         </div>
 
     </div>
 </section>
+<!-- Backdrop -->
+<div class="modal-backdrop" *ngIf="selectedPet" (click)="closePet()"></div>
+
+<!-- Modal -->
+<div class="pet-modal" *ngIf="selectedPet">
+    <img [src]="selectedPet.image" />
+
+    <div class="modal-content">
+        <h2>{{ selectedPet.name }}</h2>
+        <p class="modal-meta">
+            {{ selectedPet.age }} • {{ selectedPet.type }}
+        </p>
+        <p>📍 {{ selectedPet.location }}</p>
+
+        <div class="tags">
+            <span *ngFor="let tag of selectedPet.tags">{{ tag }}</span>
+        </div>
+
+        <p class="modal-desc">
+            This lovely {{ selectedPet.type.toLowerCase() }} is looking for a
+            forever home 💛
+        </p>
+        <!-- Adoption Confirmation -->
+        <div class="confirm-modal" *ngIf="showConfirm">
+            <div class="confirm-box">
+                <h3>Request Sent 🐾</h3>
+                <p>
+                    Your adoption request for
+                    <strong>{{ selectedPet?.name }}</strong>
+                    has been sent successfully.
+                </p>
+
+                <button (click)="closeConfirm()">OK</button>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="adopt-btn" (click)="confirmAdoption()">
+                Request Adoption
+            </button>
+
+            <button class="close-btn" (click)="closePet()">
+                Close
+            </button>
+        </div>
+
+    </div>
+</div>
 
 <app-post-pet-modal
     *ngIf="showPostModal"

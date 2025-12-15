@@ -171,4 +171,25 @@ export class Adoption {
   closePostModal() {
     this.showPostModal = false;
   }
+  selectedPet: any = null;
+
+openPet(pet: any) {
+  this.selectedPet = pet;
+}
+
+closePet() {
+  this.selectedPet = null;
+}
+
+showConfirm = false;
+
+confirmAdoption() {
+  this.showConfirm = true;
+}
+
+closeConfirm() {
+  this.showConfirm = false;
+  this.selectedPet = null; // نسكر كلشي
+}
+
 }

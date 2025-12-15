@@ -10,4 +10,9 @@ import { CommonModule } from '@angular/common';
 })
 export class PostPetModalComponent {
   @Output() close = new EventEmitter<void>();
+
+  submitPet() {
+    alert('Pet posted successfully 🐾'); // مؤقت
+    this.close.emit();
+  }
 }
