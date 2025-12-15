@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';		
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
 export class Login  {
 
   loginForm = new FormGroup({
-  email: new FormControl('', Validators.required),
-  Password: new FormControl('', Validators.required)
+  email: new FormControl('', [Validators.required, Validators.email]),
+  Password: new FormControl('', [Validators.required, Validators.minLength(8)])
 });
 
   constructor(private router: Router) {}

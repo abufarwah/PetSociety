@@ -1,17 +1,21 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';		
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-signup',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
 export class Signup {
  signupnForm = new FormGroup({
-  email: new FormControl('', Validators.required),
-  password: new FormControl('', Validators.required)
+  name: new FormControl('', [Validators.required]),
+  phone: new FormControl('', [Validators.required, Validators.pattern(/^\+962[0-9]{9}$/)]),
+  email: new FormControl('', [Validators.required, Validators.email]),
+  Password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+  password: new FormControl('', [Validators.required, Validators.minLength(8)])
 });
   constructor(private router: Router) {}
 

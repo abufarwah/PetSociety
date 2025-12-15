@@ -18,36 +18,56 @@
 
         <form [formGroup]="signupnForm" (ngSubmit)="signup()">
           <label class="mb-1">Your Name</label>
-          <input type="text" class="form-control mb-3" placeholder="Enter your name">
+          <input type="text" class="form-control "  formControlName="name" placeholder="Enter your name">
 
           <label class="mb-1">Phone Number</label>
-          <input type="text" class="form-control mb-3" placeholder="+(962)*******">
+          <input 
+            type="text"  class="form-control" placeholder="+962XXXXXXXXX" formControlName="phone"
+            [class.is-invalid]="signupnForm.get('phone')?.invalid && signupnForm.get('phone')?.touched"
+          />
+          <div class="text-danger small mb-2" *ngIf="signupnForm.get('phone')?.invalid && signupnForm.get('phone')?.touched">
+            <span *ngIf="signupnForm.get('phone')?.errors?.['required']">Phone number is required</span>
+            <span *ngIf="signupnForm.get('phone')?.errors?.['pattern']">Please enter a valid Jordanian phone number (+962XXXXXXXXX)</span>
+          </div>
 
           <label class="mb-1">Email Address</label>
           <input
             type="email"
-            class="form-control mb-3"
+            class="form-control"
             placeholder="paw@gmail.com"
             formControlName="email"
+            [class.is-invalid]="signupnForm.get('email')?.invalid && signupnForm.get('email')?.touched"
           />
-
-
+          <div class="text-danger small mb-2" *ngIf="signupnForm.get('email')?.invalid && signupnForm.get('email')?.touched">
+            <span *ngIf="signupnForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="signupnForm.get('email')?.errors?.['email']">Please enter a valid email address (example@domain.com)</span>
+          </div>
 
           <label class="mb-1">Password</label>
           <input
             type="password"
-            class="form-control mb-3"
+            class="form-control"
             placeholder="********"
             formControlName="Password"
+            [class.is-invalid]="signupnForm.get('Password')?.invalid && signupnForm.get('Password')?.touched"
           />
+          <div class="text-danger small mb-2" *ngIf="signupnForm.get('Password')?.invalid && signupnForm.get('Password')?.touched">
+            <span *ngIf="signupnForm.get('Password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="signupnForm.get('Password')?.errors?.['minLength']">Password must be at least 8 characters</span>
+          </div>
 
-          <label class="mb-1">Password</label>
+          <label class="mb-1">Confirm Password</label>
           <input
             type="password"
-            class="form-control mb-3"
+            class="form-control"
             placeholder="********"
             formControlName="password"
+            [class.is-invalid]="signupnForm.get('password')?.invalid && signupnForm.get('password')?.touched"
           />
+          <div class="text-danger small mb-2" *ngIf="signupnForm.get('password')?.invalid && signupnForm.get('password')?.touched">
+            <span *ngIf="signupnForm.get('password')?.errors?.['required']">Confirm password is required</span>
+            <span *ngIf="signupnForm.get('password')?.errors?.['minLength']">Password must be at least 8 characters</span>
+          </div>
           
 
           <div class="d-flex justify-content-between align-items-center mb-3">

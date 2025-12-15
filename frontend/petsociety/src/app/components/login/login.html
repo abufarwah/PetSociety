@@ -27,19 +27,29 @@
           <label class="mb-1">Email Address</label>
           <input
             type="email"
-            class="form-control mb-3"
+            class="form-control"
             placeholder="paw@gmail.com"
             formControlName="email"
+            [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
           />
+          <div class="text-danger small mb-2" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email address (Paw@gmail.com)</span>
+          </div>
 
           <!-- Password -->
           <label class="mb-1">Password</label>
           <input
             type="password"
-            class="form-control mb-3"
+            class="form-control"
             placeholder="********"
             formControlName="Password"
+            [class.is-invalid]="loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched"
           />
+          <div class="text-danger small mb-2" *ngIf="loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched">
+            <span *ngIf="loginForm.get('Password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="loginForm.get('Password')?.errors?.['minLength']">Password must be at least 8 characters</span>
+          </div>
 
          
           <div class="d-flex justify-content-between align-items-center mb-3">
