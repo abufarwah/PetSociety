@@ -3,41 +3,82 @@
 
     <!-- Left Image -->
     <div class="col-md-6 p-0 d-flex align-items-center justify-content-center bg-image-container">
-      <img src="/PetPic.png" class="login-image">
+      <img src="/PetPic.png" class="login-image" />
     </div>
 
     <!-- Right Login Form -->
     <div class="col-md-6 d-flex justify-content-center align-items-center">
       <div class="login-box p-5 shadow-sm rounded-4">
-        
+
         <div class="text-center mb-4">
-          <h3>Welcome Back ,Pet Lover!<i class="fa-solid fa-paw"></i></h3>
-          <p class="text-muted">Login to reunite with your furry friends</p>
+          <h3>
+            Welcome Back, Pet Lover!
+            <i class="fa-solid fa-paw"></i>
+          </h3>
+          <p class="text-muted">
+            Login to reunite with your furry friends
+          </p>
         </div>
 
-        <form>
+        <!-- FORM -->
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+          <!-- Email -->
           <label class="mb-1">Email Address</label>
-          <input type="email" class="form-control mb-3" placeholder="Paw@gmail.com">
-
-          <label class="mb-1">Password</label>
-          <input type="password" class="form-control mb-2" placeholder="********">
-
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <input type="checkbox" id="remember">
-              <label for="remember"> Remember me</label>
-            </div>
-            <a href="#" class="text-decoration-none">Forgot Password?</a>
+          <input
+            type="email"
+            class="form-control"
+            placeholder="paw@gmail.com"
+            formControlName="email"
+            [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          />
+          <div class="text-danger small mb-2" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email address (Paw@gmail.com)</span>
           </div>
 
-          <button class="btn login-btn w-100">Login <i class="fa-solid fa-paw" style="color: #ffffff;"></i></button>
+          <!-- Password -->
+          <label class="mb-1">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            placeholder="********"
+            formControlName="Password"
+            [class.is-invalid]="loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched"
+          />
+          <div class="text-danger small mb-2" *ngIf="loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched">
+            <span *ngIf="loginForm.get('Password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="loginForm.get('Password')?.errors?.['minLength']">Password must be at least 8 characters</span>
+          </div>
 
-          <a href="./signup" class="d-block text-center mt-3">New to Pet Society? Join Us</a>
+         
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <input type="checkbox" id="remember" />
+              <label for="remember"> Remember me</label>
+            </div>
+            <a href="#" class="text-decoration-none">
+              Forgot Password?
+            </a>
+          </div>
+
+          
+          <button
+            type="submit"
+            class="btn login-btn w-100"
+            [disabled]="loginForm.invalid">
+            Login
+          </button>
+
+         
+          <a href="/signup" class="d-block text-center mt-3">
+            New to Pet Society? Join Us
+          </a>
+
         </form>
 
       </div>
     </div>
-    
 
   </div>
 </div>
