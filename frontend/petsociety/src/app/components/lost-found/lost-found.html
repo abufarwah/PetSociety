@@ -1,0 +1,195 @@
+<div class="container my-5">
+
+  <div class="text-center mb-5">
+    <div class="mb-3">
+      <i class="bi bi-stars fs-1 star-icon"></i>
+    </div>
+    
+    <h1 class="fw-bold mb-3 main-title">
+      AI-Powered Pet Matching
+    </h1>
+    
+    <p class="text-muted description-text">
+      Upload two photos to compare and find out if they're the same pet. 
+      Our AI analyzes color, shape, patterns, and more to give you a similarity score!
+    </p>
+
+
+
+<div class="row justify-content-center mb-5">
+    <div class="col-lg-8">
+      <div class="stats-container d-flex justify-content-around align-items-center bg-white shadow-sm py-3 px-4 rounded-pill border">
+        
+        <div class="stat-item text-center">
+          <h3 class="fw-bold text-danger mb-0 counter">{{ lostCount }}</h3>
+          <small class="text-muted fw-bold">🐶 Lost Pets</small>
+        </div>
+
+        <div class="vr"></div>
+
+        <div class="stat-item text-center">
+          <h3 class="fw-bold text-success mb-0 counter">{{ foundCount }}</h3>
+          <small class="text-muted fw-bold">🐱 Found Pets</small>
+        </div>
+
+        <div class="vr"></div>
+
+        <div class="stat-item text-center">
+          <h3 class="fw-bold text-primary mb-0 counter">{{ reunitedCount }}</h3>
+          <small class="text-muted fw-bold">✅ Reunited!</small>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+  <div class="row g-4">
+    
+    <div class="col-md-6">
+      <div class="upload-card lost-card p-4 rounded-4">
+        
+        <div class="d-flex align-items-center mb-3">
+          <div class="icon-box">
+             <i class="bi bi-box-arrow-up text-danger fs-4"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold text-danger mb-0">Lost Pet Photo</h5>
+            <small class="text-muted">Upload the original photo of your lost pet</small>
+          </div>
+        </div>
+
+        <input type="file" #lostInput hidden (change)="onFileSelected($event, 'lost')" accept="image/*">
+
+        <div class="upload-area-container dashed-pink" (click)="lostInput.click()">
+          
+          <div *ngIf="!lostImageName" class="text-center">
+            <div class="upload-icon-circle">
+               <i class="bi bi-upload fs-1 text-danger"></i>
+            </div>
+            <p class="mb-1 fw-bold text-dark">Click to upload lost pet photo</p>
+            <small class="text-muted">JPG, PNG up to 10MB</small>
+          </div>
+
+          <div *ngIf="lostImageName" class="text-center">
+            <i class="bi bi-check-circle-fill fs-1 text-success mb-2"></i>
+            <p class="mb-0 fw-bold text-dark">{{ lostImageName }}</p>
+            <small class="text-success">Ready to compare</small>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-md-6">
+      <div class="upload-card found-card p-4 rounded-4">
+        
+        <div class="d-flex align-items-center mb-3">
+           <div class="icon-box">
+             <i class="bi bi-box-arrow-in-down text-success fs-4"></i>
+           </div>
+          <div>
+            <h5 class="fw-bold text-success mb-0">Found Pet Photo</h5>
+            <small class="text-muted">Upload the photo of the pet you found</small>
+          </div>
+        </div>
+
+        <input type="file" #foundInput hidden (change)="onFileSelected($event, 'found')" accept="image/*">
+
+        <div class="upload-area-container dashed-green" (click)="foundInput.click()">
+          
+          <div *ngIf="!foundImageName" class="text-center">
+             <div class="upload-icon-circle">
+               <i class="bi bi-upload fs-1 text-success"></i>
+            </div>
+            <p class="mb-1 fw-bold text-dark">Click to upload found pet photo</p>
+            <small class="text-muted">JPG, PNG up to 10MB</small>
+          </div>
+
+          <div *ngIf="foundImageName" class="text-center">
+            <i class="bi bi-check-circle-fill fs-1 text-success mb-2"></i>
+            <p class="mb-0 fw-bold text-dark">{{ foundImageName }}</p>
+            <small class="text-success">Ready to compare</small>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+<div class="text-center mt-5">
+    <button class="btn compare-btn rounded-pill px-5 py-3 shadow-sm" 
+            [disabled]="!lostImageName || !foundImageName">
+      
+      <i class="bi bi-stars me-2"></i> Upload Both Images to Compare 
+      
+      <i class="bi bi-arrow-right ms-2"></i> </button>
+  </div>
+
+
+
+
+
+  <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mt-5 bg-white">
+    
+<h3 class="text-center fw-bold mb-5 works-title">How Our AI Matching Works ...</h3>   
+
+    <div class="row g-4 text-center">
+      
+      <div class="col-md-3 col-6">
+        <div class="step-item">
+          <div class="step-icon bg-purple mb-3">
+            <i class="bi bi-box-arrow-up"></i>
+          </div>
+          <h6 class="fw-bold mb-2">1. Upload Photos</h6>
+          <p class="text-muted small">Upload clear photos of both pets for comparison</p>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-6">
+        <div class="step-item">
+          <div class="step-icon bg-blue mb-3">
+            <i class="bi bi-stars"></i>
+          </div>
+          <h6 class="fw-bold mb-2">2. AI Analysis</h6>
+          <p class="text-muted small">Our AI analyzes colors, patterns, shapes, and features</p>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-6">
+        <div class="step-item">
+          <div class="step-icon bg-cyan mb-3">
+            <i class="bi bi-search"></i>
+          </div>
+          <h6 class="fw-bold mb-2">3. Get Results</h6>
+          <p class="text-muted small">Receive detailed similarity scores and insights</p>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-6">
+        <div class="step-item">
+          <div class="step-icon bg-green mb-3">
+            <i class="bi bi-check-circle"></i>
+          </div>
+          <h6 class="fw-bold mb-2">4. Take Action</h6>
+          <p class="text-muted small">Contact owners and reunite pets with families</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  </div>
+</div>

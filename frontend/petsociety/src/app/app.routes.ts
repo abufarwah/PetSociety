@@ -6,6 +6,8 @@ import { PetSocietyPlus } from './components/PetSocietyPlus/pet-society-plus/pet
 import { Adoption } from './components/adoption/adoption';
 import { PostPetModalComponent } from'./components/post-pet-modal/post-pet-modal';
 import { Community } from './components/community/community';
+import { LostFoundComponent } from './components/lost-found/lost-found';
+
 export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'signup', component: Signup },
@@ -15,4 +17,5 @@ export const routes: Routes = [
   { path: 'Adoption', component: Adoption },
   {path:  'PostPetModalComponent', component: PostPetModalComponent},
   { path: 'community', component: Community },
+  { path: 'lost-found', component: LostFoundComponent },
 ];

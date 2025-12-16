@@ -1,0 +1,197 @@
+/*    خلفية المتدرجههه  */
+.mb-5 {
+  background: radial-gradient(circle at top left, #fafafa, #e9d6b9);
+  border-radius: 20px; 
+  padding: 40px; /* مسافة داخلية */
+}
+
+
+
+/* النصوص والعناوين */
+.star-icon { color: #F8B64C; }
+.main-title { color: #333333; }
+.description-text { max-width: 75%; margin: 0 auto; font-size: 1.1rem; }
+
+/* الكروت العامة */
+.upload-card {
+  border: 1px solid #eee; /* حدود خفيفة جداً */
+  height: 100%;
+  transition: all 0.3s ease; /* لجعل الحركة ناعمة */
+
+  /* --- هذا هو سطر الظل --- */
+  /* القيم تعني: إزاحة أفقية 0، عمودية 8px، ضبابية 24px، لون أسود شفاف جداً */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}.icon-box { background-color: #fff; padding: 0.5rem; border-radius: 0.5rem; margin-right: 1rem; box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+
+
+/* (اختياري) تأثير جميل عند مرور الماوس: يزيد الظل ويرتفع الكرت */
+.upload-card:hover {
+  transform: translateY(-5px); /* يرتفع للأعلى قليلاً */
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12); /* ظل أعمق */
+}
+
+
+
+
+/* منطقة الرفع */
+.upload-area-container {
+  min-height: 250px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  background-color: #fff; border-radius: 0.5rem; transition: all 0.3s; cursor: pointer;
+}
+.upload-icon-circle { background-color: #f8f9fa; padding: 1rem; border-radius: 50%; margin-bottom: 1rem; }
+
+/* الكرت الوردي */
+.lost-card { background-color: #FFF0F0; box-shadow: #a0a0a0; }
+.dashed-pink { border: 2px dashed #FF6B6B; }
+.dashed-pink:hover { background-color: #ffe5e5; border-color: #ff85a7; }
+
+/* الكرت الأخضر */
+.found-card { background-color: #F0FFF4; }
+.dashed-green { border: 2px dashed #48C774; }
+.dashed-green:hover { background-color: #e6ffec; border-color: #2f9e52; }
+
+
+
+/*  زر اللي تتححتت بعد رفع الصور عشان نقارن */
+.compare-btn {
+  background-color: #FCD34D; 
+  color: white;
+  border: none;
+  font-weight: bold;
+  font-size: 1.1rem; 
+  transition: all 0.3s ease;
+}
+
+.compare-btn:hover:not(:disabled) {
+  background-color: #e6c044; 
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 15px rgba(252, 211, 77, 0.4);
+}
+
+/* شكل الزر لما يكون مش مفعل (قبل رفع الصور) */
+.compare-btn:disabled {
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  cursor: not-allowed;
+}
+
+
+
+
+
+
+
+
+
+/* تنسيق عام لأيقونات الخطوات */
+.step-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto; /* توسيط الأيقونة */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px; /* حواف ناعمة مربعة */
+  font-size: 1.75rem; /* حجم الأيقونة */
+  transition: transform 0.3s;
+}
+
+.step-item:hover .step-icon {
+  transform: translateY(-5px); /* حركة خفيفة عند المرور */
+}
+
+/* 1. اللون النهدي (Upload) */
+.bg-purple {
+  background-color: #F3E8FF;
+  color: #9333EA;
+}
+
+/* 2. اللون الأزرق (AI Analysis) */
+.bg-blue {
+  background-color: #E0F2FE;
+  color: #F8B64C;
+}
+
+/* 3. اللون السماوي (Get Results) */
+.bg-cyan {
+  background-color: #CCFBF1;
+  color: #45b3ea;
+}
+
+/* 4. اللون الأخضر (Take Action) */
+.bg-green {
+  background-color: #DCFCE7;
+  color: #22C55E;
+}
+
+.works-title {
+  color: #333333;
+}
+
+
+
+
+
+
+/* هاد عشان الكود عشان اخلي الايكون ببداية البيج دايناميك  */
+
+
+/* 1. تعريف الحركة (Keyframes) */
+@keyframes twinkle {
+  0% { 
+    transform: scale(1); 
+    filter: drop-shadow(0 0 0px rgba(248, 182, 76, 0)); 
+  }
+  50% { 
+    transform: scale(1.2); /* تكبير بسيط */
+    filter: drop-shadow(0 0 10px rgba(248, 182, 76, 0.8)); /* توهج (لمعة) */
+  }
+  100% { 
+    transform: scale(1); 
+    filter: drop-shadow(0 0 0px rgba(248, 182, 76, 0)); 
+  }
+}
+
+/* 2. تطبيق الحركة على الأيقونة */
+.star-icon {
+  color: #F8B64C; /* اللون الأصفر الأصلي */
+  display: inline-block; /* ضروري لكي تعمل خاصية transform */
+  animation: twinkle 2.5s infinite ease-in-out; /* تكرار الحركة كل ثانيتين */
+}
+
+
+
+
+
+
+
+
+
+/* كونتينررر الل الإحصائيات */
+.stats-container {
+  border: 1px solid #f0f0f0;
+  transition: transform 0.3s ease;
+  background: #ffffff;
+}
+
+.stats-container:hover {
+  transform: translateY(-3px); /* حركة طفيفة عند المرور */
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+/* تنسيق الأرقام */
+.counter {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* خط أرقام واضح */
+  letter-spacing: -1px;
+}
+
+/* الفاصل العمودي */
+.vr {
+  background-color: #e0e0e0;
+  width: 1px;
+  height: 40px;
+  opacity: 1;
+}
+
+
