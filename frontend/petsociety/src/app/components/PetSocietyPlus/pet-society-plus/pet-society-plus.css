@@ -35,9 +35,8 @@
 .subscription-card:hover {
   background: #fdf9f3;
   transform: translateY(-6px);
-  box-shadow: 0 16px 32px rgba(195, 155, 110, 0.2);
+  box-shadow: 0  20px 32px rgba(202, 154, 99, 0.3);
 }
-
 .card-icon {
   width: 80px;
   height: 80px;
