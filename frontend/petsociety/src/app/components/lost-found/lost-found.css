@@ -1,5 +1,5 @@
 /*    خلفية المتدرجههه  */
-.mb-5 {
+.hero-bg {
   background: radial-gradient(circle at top left, #fafafa, #e9d6b9);
   border-radius: 20px; 
   padding: 40px; /* مسافة داخلية */
