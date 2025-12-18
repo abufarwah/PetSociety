@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.html',
-  imports: [RouterOutlet , RouterLinkActive, RouterLink ],
+  imports: [RouterOutlet , RouterLinkActive, RouterLink , CommonModule],
 })
 export class App {
   
