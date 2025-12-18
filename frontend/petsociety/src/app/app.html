@@ -14,11 +14,41 @@
   </ul>
 
   <nav class="Right-nav">
-    <a routerLink="/signup" routerLinkActive="active"[routerLinkActiveOptions]="{ exact: true }" class="sign-up ">Sign up</a>
-  <a routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="login-btn">Login</a>
+
+  <!-- إذا المستخدم مش مسجّل -->
+  <a
+    *ngIf="!auth.isLoggedIn()"
+    routerLink="/signup"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="sign-up"
+  >
+    Sign up
+  </a>
+
+  <a
+    *ngIf="!auth.isLoggedIn()"
+    routerLink="/login"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="login-btn"
+  >
+    Login
+  </a>
+
+  <!-- إذا المستخدم مسجّل -->
+  <a
+    *ngIf="auth.isLoggedIn()"
+    routerLink="/account"
+    routerLinkActive="active"
+    class="account-btn"
+  >
+    Account
+  </a>
+
 </nav>
-  
-</nav>
+
+  </nav>
 </div>
 
 <div class="main-content">
