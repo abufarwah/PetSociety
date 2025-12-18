@@ -8,7 +8,7 @@ import { PostPetModalComponent } from'./components/post-pet-modal/post-pet-modal
 import { Community } from './components/community/community';
 import { LostFoundComponent } from './components/lost-found/lost-found';
 import { Auth } from './services/auth';
-import { CommonModule } from '@angular/common';
+
 
 export const routes: Routes = [
   { path: 'login', component: Login },
