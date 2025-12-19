@@ -4,15 +4,15 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class Auth {
-  private loggedIn = new BehaviorSubject<boolean>(false);
-  isLoggedIn$ = this.loggedIn.asObservable();
+ isLoggedIn$ = new BehaviorSubject<boolean>(false);
 
   login() {
-    this.loggedIn.next(true);
+    console.log('LOGIN CALLED');
+    this.isLoggedIn$.next(true);
   }
 
   logout() {
-    this.loggedIn.next(false);
+    this.isLoggedIn$.next(false);
   }
   
 }
