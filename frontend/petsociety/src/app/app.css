@@ -130,7 +130,13 @@ color: #c39b6e;
   
 }
 .account-btn:hover {
-color: #c39b6e;
+  color: #c39b6e;
+  
+}
+
+.account-btn.active {
+  border-bottom: 3px solid #c39b6e;
+  padding-bottom: 4px;
 }
 
 /* Footer Styles */
