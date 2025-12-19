@@ -16,6 +16,7 @@ export class Login  {
   email: new FormControl('', [Validators.required, Validators.email]),
   Password: new FormControl('', [Validators.required, Validators.minLength(8)])
 });
+  auth: any;
 
   constructor(private router: Router) {}
 
@@ -23,7 +24,14 @@ export class Login  {
     if (this.loginForm.valid) {
       this.router.navigate(['/Home']);
     }
+
+    if (this.loginForm.valid) {
+    this.auth.login();
+    this.router.navigate(['/Account']);
   }
+  }
+
+  
 }
 
 

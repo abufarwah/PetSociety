@@ -16,36 +16,24 @@
   <nav class="Right-nav">
 
   
-  <a
-    *ngIf="!auth.isLoggedIn()"
-    routerLink="/signup"
-    routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact: true }"
-    class="sign-up"
-  >
-    Sign up
-  </a>
+  <!-- NOT LOGGED IN -->
+<a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/signup" class="sign-up">
+  Sign up
+</a>
 
-  <a
-    *ngIf="!auth.isLoggedIn()"
-    routerLink="/login"
-    routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact: true }"
-    class="login-btn"
-  >
-    Login
-  </a>
+<a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/login" class="login-btn">
+  Login
+</a>
+
+<!-- LOGGED IN -->
+<a *ngIf="auth.isLoggedIn$ | async" routerLink="/account" class="account-btn">
+  Account
+</a>
+
+
+
 
  
-  <a
-    *ngIf="auth.isLoggedIn()"
-    routerLink="/account"
-    routerLinkActive="active"
-    class="account-btn"
-  >
-    Account
-  </a>
-
 </nav>
 
   </nav>
