@@ -15,7 +15,7 @@
 
   <nav class="Right-nav">
 
-  <!-- إذا المستخدم مش مسجّل -->
+  
   <a
     *ngIf="!auth.isLoggedIn()"
     routerLink="/signup"
@@ -36,7 +36,7 @@
     Login
   </a>
 
-  <!-- إذا المستخدم مسجّل -->
+ 
   <a
     *ngIf="auth.isLoggedIn()"
     routerLink="/account"

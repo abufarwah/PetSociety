@@ -4,14 +4,10 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class Auth {
-  private userKey = 'loggedUser';
+  private userKey = 'user';
 
   login(user: any) {
     localStorage.setItem(this.userKey, JSON.stringify(user));
-  }
-
-  logout() {
-    localStorage.removeItem(this.userKey);
   }
 
   getUser() {
@@ -20,6 +16,10 @@ export class Auth {
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem(this.userKey);
+  }
+
+  logout() {
+    localStorage.removeItem(this.userKey);
   }
   
 }
