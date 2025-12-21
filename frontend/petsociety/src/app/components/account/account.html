@@ -24,10 +24,13 @@
         </div>
       </div>
 
-      <button class="btn btn-outline-danger">
-        <i class="bi bi-box-arrow-right"></i>
-        Sign Out
-      </button>
+  
+<a
+  class="signout-link"
+  routerLink="/login"
+  (click)="logout($event)">
+  Sign Out
+</a>
 
     </div>
   </div>

@@ -60,3 +60,18 @@
   display: block;
   text-align: center;
 }
+.signout-link {
+  text-decoration: none;
+   background: #d6b896;
+   color: #fff;
+   padding: 12px 26px;
+  border-radius: 30px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.signout-link:hover {
+  text-decoration: none;
+   background: #c5a882; 
+
+}
