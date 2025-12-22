@@ -130,6 +130,19 @@ export class Admin {
   ];
 
 
+  // ... داخل كلاس Admin
+
+
+  // ✅ أضف هذا الكائن الجديد لإحصائيات الباقات
+  planStats = {
+    basic: 7,
+    premium: 3,
+    deluxe: 4
+  };
+
+  // ... باقي الكود كما هو
+
+
   // ==================== 3. الذكاء الاصطناعي (AI Lost & Found) ====================
   aiStats = {
     totalReports: 46,
@@ -167,7 +180,7 @@ export class Admin {
     { 
       id: 'REQ-101', 
       pet: 'Golden Retriever (Dog)', 
-      applicant: 'Sarah Johnson', 
+      applicant: 'kinda alsayed', 
       owner: 'Ali Olwan',          
       date: '2025-12-19', 
       status: 'Waiting Owner'      
@@ -175,7 +188,7 @@ export class Admin {
     { 
       id: 'REQ-102', 
       pet: 'Maine Coon (Cat)', 
-      applicant: 'Mike Chen', 
+      applicant: 'Nawras Amayreh', 
       owner: 'Malah kh', 
       date: '2025-12-18', 
       status: 'In Discussion'      

@@ -6,7 +6,6 @@
 .main-content {
     flex: 1;
     padding: 40px;
-    background: radial-gradient(circle at top left, #fafafa, #e9d6b9);
     overflow-y: auto;
 }
 
@@ -288,6 +287,62 @@
     font-weight: 600; color: #333; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.02);
 }
 
+
+
+
+/* --- تنسيقات إضافية لبطاقات الباقات (Plans Stats) --- */
+
+/* تقليل المسافة بين صفي الإحصائيات */
+.plans-row {
+    margin-top: -15px; /* رفع الصف قليلاً للأعلى */
+    margin-bottom: 35px;
+}
+
+/* تنسيق خاص لبطاقة الباقة */
+.plan-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px; /* تصغير الحجم قليلاً مقارنة بالبطاقات الكبيرة */
+}
+
+.plan-card .stat-label {
+    margin-bottom: 5px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.plan-card .stat-value {
+    font-size: 28px; /* حجم خط أصغر قليلاً للرقم */
+    color: #2d3436;
+}
+
+/* أيقونة الباقة */
+.plan-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+/* ألوان مميزة لكل باقة */
+.basic-plan .plan-icon {
+    background-color: #e0f2fe; /* أزرق فاتح */
+    color: #0984e3;
+}
+
+.premium-plan .plan-icon {
+    background-color: #fff3cd; /* أصفر فاتح */
+    color: #f39c12;
+}
+
+.deluxe-plan .plan-icon {
+    background-color: #f3e5f5; /* بنفسجي فاتح */
+    color: #9b59b6;
+}
 
 /* =========================================
    7. الذكاء الاصطناعي (AI Section Styles) - (تم استبدال Inline Styles)
