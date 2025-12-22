@@ -1,0 +1,501 @@
+<main class="main-content">
+    <header class="dashboard-header">
+        <div class="header-container">
+            <div class="header-icon-box">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="header-text">
+                <h1>Admin Dashboard</h1>
+                <p>Manage and monitor Pet Society platform</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="cards-container">
+        <div class="card card-blue">
+            <div class="card-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="card-info">
+                <h3>10</h3>
+                <p>Total Users</p>
+            </div>
+            <i class="fa-solid fa-arrow-trend-up trend-icon"></i>
+        </div>
+
+        <div class="card card-green">
+            <div class="card-icon"><i class="fa-solid fa-user-check"></i></div>
+            <div class="card-info">
+                <h3>7</h3>
+                <p>Active Users</p>
+            </div>
+        </div>
+
+        <div class="card card-orange">
+            <div class="card-icon"><i class="fa-solid fa-file-lines"></i></div>
+            <div class="card-info">
+                <h3>2</h3>
+                <p>Pets Available</p>
+            </div>
+        </div>
+
+        <div class="card card-yellow">
+            <div class="card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="card-info">
+                <h3>2</h3>
+                <p>Subscribers</p>
+            </div>
+        </div>
+
+        <div class="card card-red">
+            <div class="card-icon"><i class="fa-regular fa-comment-dots"></i></div>
+            <div class="card-info">
+                <h3>1</h3>
+                <p>Flagged Messages</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="tabs-bar">
+    <button [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">User Management</button>
+    <button [class.active]="activeTab === 'adoptions'" (click)="setActiveTab('adoptions')">Adoption Management</button>
+    <button [class.active]="activeTab === 'chat'" (click)="setActiveTab('chat')">Chat & Community</button>
+    <button [class.active]="activeTab === 'subscriptions'" (click)="setActiveTab('subscriptions')">Subscriptions</button>  
+        <button [class.active]="activeTab === 'reports'" (click)="setActiveTab('reports')">Lost & Found (AI)</button>
+     
+</div>
+
+<div class="section-content no-bg" *ngIf="activeTab === 'users'">
+
+    <div class="subs-header-row">
+        <div class="header-texts">
+            <h2>User Management</h2>
+            <p>Manage registered users, view profiles, and control access.</p>
+        </div>
+    </div>
+
+    <div class="search-filter-bar">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" [(ngModel)]="userSearchText" placeholder="Search by name, email or phone...">
+        </div>
+        <button class="filter-btn">
+            <i class="fa-solid fa-user-plus"></i> Add User
+        </button>
+    </div>
+
+    <div class="table-container-white">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>User Info</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of filteredUsers">
+                    <td>
+                        <div class="user-cell">
+                            <div class="avatar-circle">{{user.name.charAt(0)}}</div>
+                            <div class="user-info-text">
+                                <div class="user-name">{{user.name}}</div>
+                                <div class="user-email">{{user.email}}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{user.phone}}</td>
+                    <td>{{user.role}}</td>
+                    <td>
+                        <span class="status-badge" 
+                              [ngClass]="user.status === 'Active' ? 'active-green' : 'cancelled-gray'">
+                            {{user.status}}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="icon-btn view" (click)="viewUser(user)" title="View Profile" aria-label="View Profile">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            
+                            <button class="icon-btn edit" (click)="toggleUserStatus(user)" 
+                                    [title]="user.status === 'Active' ? 'Disable User' : 'Enable User'"
+                                    aria-label="Toggle User Status">
+                                <i class="fa-solid" [ngClass]="user.status === 'Active' ? 'fa-ban' : 'fa-check'"></i>
+                            </button>
+                            
+                            <button class="icon-btn delete" (click)="deleteUser(user.id)" title="Delete User" aria-label="Delete User">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="userDetails" class="user-details-card" *ngIf="selectedUser">
+        <div class="card-header-row">
+            <h3>User Profile: {{selectedUser.name}}</h3>
+            <button class="close-btn" (click)="selectedUser = null" aria-label="Close Details"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="details-grid">
+            <div class="detail-item">
+                <i class="fa-solid fa-paw"></i>
+                <div>
+                    <span class="label">Pets Posted</span>
+                    <span class="value">{{selectedUser.petsPosted}} Pets</span>
+                </div>
+            </div>
+            
+            <div class="detail-item">
+                <i class="fa-solid fa-crown"></i>
+                <div>
+                    <span class="label">Subscription</span>
+                    <span class="value">{{selectedUser.subscription}}</span>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <div>
+                    <span class="label">Last Activity</span>
+                    <span class="value">{{selectedUser.activity}}</span>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <i class="fa-solid fa-envelope"></i>
+                <div>
+                    <span class="label">Contact</span>
+                    <span class="value">{{selectedUser.email}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section-content no-bg" *ngIf="activeTab === 'reports'">
+    <div class="subs-header-row">
+        <div class="header-texts">
+            <h2>AI Lost & Found Monitor</h2>
+            <p>Real-time monitoring of image matching and lost reports.</p>
+        </div>
+    </div>
+
+    <div class="subs-stats-row grid-3-cols">
+        <div class="stat-card">
+            <span class="stat-label">Total Reports Processed</span>
+            <h3 class="stat-value revenue">{{aiStats.totalReports}}</h3>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Successful Matches</span>
+            <h3 class="stat-value active-count">{{aiStats.successfulMatches}}</h3>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Model Accuracy</span>
+            <h3 class="stat-value purple-text">{{aiStats.accuracy}}</h3>
+        </div>
+    </div>
+
+    <div class="table-container-white">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Report Info</th>
+                    <th>AI Confidence</th>
+                    <th>User Response</th>
+                    <th>Admin Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of aiReports">
+                    <td>
+                        <div class="user-cell">
+                            <div class="pet-thumb">
+                                <i class="fa-solid fa-paw placeholder-icon"></i>
+                            </div>
+                            <div class="user-info-text">
+                                <span class="user-name">{{item.reporter}}</span>
+                                <span class="sub-text">Match ID: {{item.id}}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="match-container">
+                            <span class="match-text" 
+                                  [ngClass]="item.matchPercent > 80 ? 'text-green' : (item.matchPercent > 50 ? 'text-orange' : 'text-red')">
+                                {{item.matchPercent}}%
+                            </span>
+                            <div class="progress-bar">
+                                <div class="fill" 
+                                     [style.width.%]="item.matchPercent"
+                                     [ngClass]="item.matchPercent > 80 ? 'bg-green' : (item.matchPercent > 50 ? 'bg-orange' : 'bg-red')">
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge" 
+                              [ngClass]="{
+                                'active-green': item.status === 'User Confirmed',
+                                'pending-yellow': item.status === 'Waiting User',
+                                'cancelled-gray': item.status === 'User Rejected'
+                              }">
+                            <i class="fa-solid" 
+                               [ngClass]="{
+                                 'fa-check': item.status === 'User Confirmed',
+                                 'fa-clock': item.status === 'Waiting User',
+                                 'fa-xmark': item.status === 'User Rejected'
+                               }"></i>
+                            {{item.status}}
+                        </span>
+                        <div class="sub-text-small">{{item.lastUpdate}}</div>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button *ngIf="item.status === 'Waiting User'" 
+                                    class="text-btn btn-nudge" 
+                                    title="Send Reminder Notification"
+                                    aria-label="Nudge User">
+                                <i class="fa-regular fa-bell"></i> Nudge
+                            </button>
+
+                            <button class="icon-btn" title="View Match Details" aria-label="View Details">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+
+                            <button class="icon-btn delete" title="Remove Record" aria-label="Delete Record">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="section-content" *ngIf="activeTab === 'adoptions'">
+    <div class="section-header">
+        <h2>Adoption Monitoring</h2>
+        <p>Monitor interactions between pet owners and applicants.</p>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Request ID</th>
+                <th>Pet</th>
+                <th>Applicant</th> 
+                <th>Owner</th>     
+                <th>Status</th>    
+                <th>Date</th>
+                <th>Admin Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let req of adoptionRequests">
+                <td>{{req.id}}</td>
+                <td><strong>{{req.pet}}</strong></td>
+                <td>{{req.applicant}}</td>
+                <td>
+                    <div class="user-cell">
+                        <div class="avatar-circle small avatar-xs">{{req.owner.charAt(0)}}</div>
+                        {{req.owner}}
+                    </div>
+                </td>
+                <td>
+                    <span class="status-badge" 
+                          [ngClass]="{
+                            'pending-yellow': req.status === 'Waiting Owner',
+                            'blue-discuss': req.status === 'In Discussion',
+                            'green-approved': req.status === 'Owner Approved'
+                          }">
+                        {{req.status}}
+                    </span>
+                </td>
+                <td>{{req.date}}</td>
+                <td>
+                    <button class="text-btn view" title="View Details" aria-label="View Details">View Details</button>
+                    <button class="icon-btn delete small" title="Force Cancel" aria-label="Force Cancel"><i class="fa-solid fa-ban"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="section-content no-bg" *ngIf="activeTab === 'chat'">
+    <div class="subs-header-row">
+        <div class="header-texts">
+            <h2>Chat & Community Moderation</h2>
+            <p>Manage live conversations, review flagged messages, and ensure community safety.</p>
+        </div>
+    </div>
+
+    <div class="subs-stats-row">
+        <div class="stat-card">
+            <span class="stat-label">Daily Messages</span>
+            <h3 class="stat-value revenue">{{chatStats.dailyMessages}}</h3>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Active Chat Users</span>
+            <h3 class="stat-value active-count">{{chatStats.activeUsers}}</h3>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Flagged Messages</span>
+            <h3 class="stat-value churn">{{chatStats.flaggedCount}}</h3>
+        </div>
+    </div>
+
+    <div class="chat-grid-layout">
+        
+        <div class="table-container-white chat-col-left">
+            <div class="section-header-small">
+                <h3>🚫 Restricted Users</h3>
+                <span class="badge-count">Management</span>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Reason & Duration</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of bannedUsers">
+                        <td>
+                            <div class="user-cell">
+                                <div class="avatar-circle small avatar-xs banned-avatar">
+                                    <i class="fa-solid fa-ban"></i>
+                                </div>
+                                <div class="user-info-text">
+                                    <span class="user-name">{{user.user}}</span>
+                                    <span class="sub-text">{{user.bannedAt}}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="user-info-text">
+                                <span class="risk-badge high badge-fit">{{user.duration}}</span>
+                                <span class="sub-text">{{user.reason}}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="text-btn unban-btn" title="Unban User" aria-label="Unban User">
+                                Unban
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-container-white chat-col-right">
+            <div class="section-header-small">
+                <h3>🚨 Reported Messages</h3>
+                <span class="badge-count red">Action Required</span>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Sender</th>
+                        <th>Content / Reason</th>
+                        <th>Risk</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let msg of reportedMessages">
+                        <td><strong>{{msg.sender}}</strong></td>
+                        <td>
+                            <div class="msg-preview">
+                                <p class="msg-text">"{{msg.content}}"</p>
+                                <span class="msg-reason">Reason: {{msg.reason}}</span>
+                            </div>
+                        </td>
+                        <td>
+                             <span class="status-badge" 
+                                   [ngClass]="msg.risk === 'High' ? 'churn' : (msg.risk === 'Medium' ? 'pending-yellow' : 'active-green')">
+                                {{msg.risk}}
+                            </span>
+                        </td>
+                        <td class="action-cell-flex">
+                            <button class="btn-small delete" title="Delete Message" aria-label="Delete Message">Delete</button>
+                            <button class="btn-small ban" title="Ban User From Chat" aria-label="Ban User">Ban User</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="section-content no-bg" *ngIf="activeTab === 'subscriptions'">
+    <div class="subs-header-row">
+        <div class="header-texts">
+            <h2>Subscriptions Management</h2>
+            <p>Monitor and manage Pet Service Hub+ recurring plans.</p>
+        </div>
+    </div>
+
+    <div class="subs-stats-row">
+        <div class="stat-card">
+            <span class="stat-label">Total Revenue (MRR)</span>
+            <h3 class="stat-value revenue">{{subsStats.revenue}}</h3>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Active Subscriptions</span>
+            <h3 class="stat-value active-count">{{subsStats.activeCount}}</h3>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Churn Rate</span>
+            <h3 class="stat-value churn">{{subsStats.churnRate}}</h3>
+        </div>
+    </div>
+
+    <div class="search-filter-bar">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" [(ngModel)]="searchText" placeholder="Search by subscription ID or user...">
+        </div>
+        <button class="filter-btn" title="Filter" aria-label="Filter">
+            <i class="fa-solid fa-filter"></i> Filter
+        </button>
+    </div>
+
+    <div class="table-container-white">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Plan</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Next Billing</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let sub of filteredSubscriptions">
+                    <td>{{sub.id}}</td>
+                    <td><strong>{{sub.user || sub.Sarah}}</strong></td>
+                    <td>{{sub.plan}}</td>
+                    <td>{{sub.price}}</td>
+                    <td>
+                        <span class="status-badge" 
+                              [ngClass]="sub.status === 'Active' ? 'active-green' : 'cancelled-gray'">
+                            {{sub.status}}
+                        </span>
+                    </td>
+                    <td>{{sub.nextBilling}}</td>
+                    <td><button class="text-btn" title="Manage Subscription" aria-label="Manage Subscription">Manage</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
