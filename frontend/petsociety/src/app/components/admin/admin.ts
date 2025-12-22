@@ -263,4 +263,21 @@ export class Admin {
     }
   ];
 
+
+// ... داخل كلاس Admin
+
+  // ✅ 1. إحصائيات الداشبورد العلوية (محسوبة تلقائياً)
+  get stats() {
+    return {
+      totalUsers: this.users.length,
+      activeUsers: this.users.filter(u => u.status === 'Active').length,
+      petsCount: this.adoptionRequests.length, // أو أي قائمة حيوانات لديك
+      subscribers: this.subscriptionsList.filter(s => s.status === 'Active').length,
+      flaggedCount: this.reportedMessages.length
+    };
+  }
+
+  // ... باقي الكود
+
+
 }

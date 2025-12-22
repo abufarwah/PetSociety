@@ -13,43 +13,81 @@
 
     <div class="cards-container">
         <div class="card card-blue">
-            <div class="card-icon"><i class="fa-solid fa-users"></i></div>
-            <div class="card-info">
-                <h3>10</h3>
-                <p>Total Users</p>
+            <div class="card-content">
+                <div class="card-text">
+                    <p>Total Users</p>
+                    <h3>{{stats.totalUsers}}</h3>
+                </div>
+                <div class="card-icon-box">
+                    <i class="fa-solid fa-users"></i>
+                </div>
             </div>
-            <i class="fa-solid fa-arrow-trend-up trend-icon"></i>
+            <div class="card-footer">
+                <span class="trend positive"><i class="fa-solid fa-arrow-up"></i> 12%</span>
+                <span class="footer-text">Since last month</span>
+            </div>
         </div>
 
         <div class="card card-green">
-            <div class="card-icon"><i class="fa-solid fa-user-check"></i></div>
-            <div class="card-info">
-                <h3>7</h3>
-                <p>Active Users</p>
+            <div class="card-content">
+                <div class="card-text">
+                    <p>Active Users</p>
+                    <h3>{{stats.activeUsers}}</h3>
+                </div>
+                <div class="card-icon-box">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="trend neutral"><i class="fa-solid fa-minus"></i> 0%</span>
+                <span class="footer-text">Stable this week</span>
             </div>
         </div>
 
         <div class="card card-orange">
-            <div class="card-icon"><i class="fa-solid fa-file-lines"></i></div>
-            <div class="card-info">
-                <h3>2</h3>
-                <p>Pets Available</p>
+            <div class="card-content">
+                <div class="card-text">
+                    <p>Pets Available</p>
+                    <h3>{{stats.petsCount}}</h3>
+                </div>
+                <div class="card-icon-box">
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="trend positive"><i class="fa-solid fa-arrow-up"></i> 5</span>
+                <span class="footer-text">New pets added</span>
             </div>
         </div>
 
         <div class="card card-yellow">
-            <div class="card-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <div class="card-info">
-                <h3>2</h3>
-                <p>Subscribers</p>
+            <div class="card-content">
+                <div class="card-text">
+                    <p>Active Subs</p>
+                    <h3>{{stats.subscribers}}</h3>
+                </div>
+                <div class="card-icon-box">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="trend negative"><i class="fa-solid fa-arrow-down"></i> 1</span>
+                <span class="footer-text">Unsubscribed recently</span>
             </div>
         </div>
 
         <div class="card card-red">
-            <div class="card-icon"><i class="fa-regular fa-comment-dots"></i></div>
-            <div class="card-info">
-                <h3>1</h3>
-                <p>Flagged Messages</p>
+            <div class="card-content">
+                <div class="card-text">
+                    <p>Flagged Msg</p>
+                    <h3>{{stats.flaggedCount}}</h3>
+                </div>
+                <div class="card-icon-box">
+                    <i class="fa-solid fa-flag"></i>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="trend high-risk">Action Needed</span>
             </div>
         </div>
     </div>
@@ -59,9 +97,8 @@
     <button [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">User Management</button>
     <button [class.active]="activeTab === 'chat'" (click)="setActiveTab('chat')">Chat & Community</button>
     <button [class.active]="activeTab === 'adoptions'" (click)="setActiveTab('adoptions')">Adoption Management</button>
-    <button [class.active]="activeTab === 'subscriptions'" (click)="setActiveTab('subscriptions')">Subscriptions</button>  
-        <button [class.active]="activeTab === 'reports'" (click)="setActiveTab('reports')">Lost & Found (AI)</button>
-     
+    <button [class.active]="activeTab === 'subscriptions'" (click)="setActiveTab('subscriptions')">Subscriptions</button>
+    <button [class.active]="activeTab === 'reports'" (click)="setActiveTab('reports')">Lost & Found (AI)</button>
 </div>
 
 <div class="section-content no-bg" *ngIf="activeTab === 'users'">
@@ -201,7 +238,6 @@
     </div>
 
     <div class="chat-grid-layout">
-        
         <div class="table-container-white chat-col-left">
             <div class="section-header-small">
                 <h3>🚫 Restricted Users</h3>
@@ -457,8 +493,6 @@
         </div>
     </div>
 
-    
-
     <div class="subs-stats-row plans-row">
         <div class="stat-card plan-card basic-plan">
             <div class="plan-icon"><i class="fa-solid fa-bone"></i></div>
@@ -484,9 +518,6 @@
             </div>
         </div>
     </div>
-
-
-
 
     <div class="search-filter-bar">
         <div class="search-box">
