@@ -48,7 +48,7 @@
           />
           <div class="text-danger small mb-2" *ngIf="loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched">
             <span *ngIf="loginForm.get('Password')?.errors?.['required']">Password is required</span>
-            <span *ngIf="loginForm.get('Password')?.errors?.['minLength']">Password must be at least 8 characters</span>
+            <span *ngIf="loginForm.get('Password')?.errors?.['minlength']">Password must be at least 8 characters</span>
           </div>
 
          
