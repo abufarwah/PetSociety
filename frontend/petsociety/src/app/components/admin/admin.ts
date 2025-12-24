@@ -130,10 +130,9 @@ export class Admin {
   ];
 
 
-  // ... داخل كلاس Admin
 
 
-  // ✅ أضف هذا الكائن الجديد لإحصائيات الباقات
+  // ✅ أ
   planStats = {
     basic: 7,
     premium: 3,
@@ -264,9 +263,8 @@ export class Admin {
   ];
 
 
-// ... داخل كلاس Admin
 
-  // ✅ 1. إحصائيات الداشبورد العلوية (محسوبة تلقائياً)
+  // ✅ 1. إحصائيات الداشبورد العلوية ( محسوبة تلقائياً)
   get stats() {
     return {
       totalUsers: this.users.length,
@@ -277,7 +275,6 @@ export class Admin {
     };
   }
 
-  // ... باقي الكود
 
 
 }

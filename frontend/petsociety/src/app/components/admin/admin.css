@@ -1,15 +1,12 @@
-/* =========================================
-   1. التنسيقات العامة والهيكل (Layout)
-   ========================================= */
-
 /* تنسيق المحتوى الرئيسي */
+
 .main-content {
     flex: 1;
     padding: 40px;
     overflow-y: auto;
 }
 
-/* الرأس (Header) */
+/* (Header) */
 .dashboard-header .header-container {
     margin-bottom: 25px;
     display: flex;
@@ -29,18 +26,18 @@
     font-size: 16px;
 }
 
-/* أيقونة الرأس البرتقالية */
+/* أيقونة الداشششش  */
 .header-icon-box {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+    background: linear-gradient(135deg,#d3b281,#f4e2ca);
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 15px;
     font-size: 28px;
-    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    box-shadow: 0 5px 15px #bfb37b7a;
 }
 
 .header-text h1 { margin: 0; font-size: 28px; color: #2c3e50; font-weight: 700; }
@@ -48,7 +45,7 @@
 
 
 /* =========================================
-   2. البطاقات العلوية المطورة (Enhanced Top Cards) - ✅ تم التحديث
+   2. البطاقات العلوية  (Enhanced Top Cards) 
    ========================================= */
 
 .cards-container {
@@ -115,7 +112,7 @@
 /* ألوان الأيقونات لكل بطاقة (Gradients) */
 .card-blue .card-icon-box { background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%); }
 .card-green .card-icon-box { background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%); }
-.card-orange .card-icon-box { background: linear-gradient(45deg, #fa709a 0%, #fee140 100%); }
+.card-orange .card-icon-box { background: linear-gradient(45deg, #ffefb7 0%, #ffec82 100%); }
 .card-yellow .card-icon-box { background: linear-gradient(45deg, #f6d365 0%, #fda085 100%); }
 .card-red .card-icon-box { background: linear-gradient(45deg, #ff0844 0%, #ffb199 100%); }
 
@@ -132,7 +129,7 @@
     color: #adb5bd;
 }
 
-/* مؤشرات النمو (Trends) */
+/* مؤشرات النمو  */
 .trend {
     font-weight: 600;
     display: flex;
@@ -140,9 +137,9 @@
     gap: 3px;
 }
 
-.trend.positive { color: #2dce89; } /* أخضر */
-.trend.negative { color: #f5365c; } /* أحمر */
-.trend.neutral { color: #fb6340; } /* برتقالي */
+.trend.positive { color: #2dce89; } 
+.trend.negative { color: #f5365c; } 
+.trend.neutral { color: #fb6340; } 
 .trend.high-risk { 
     color: #f5365c; 
     background: #ffebeb; 
@@ -152,7 +149,7 @@
 
 
 /* =========================================
-   3. شريط التبويبات (Tabs)
+   3.  شريط التبويبات (Tabs) تبع اللي بننتقل من صفحة لصفحة
    ========================================= */
 
 .tabs-bar {
@@ -181,14 +178,14 @@
 .tabs-bar button:hover { background: #f0f0f0; }
 
 .tabs-bar button.active {
-    background: #ff7e5f;
+    background: #d3b281;
     color: white;
-    box-shadow: 0 2px 5px rgba(255, 126, 95, 0.3);
+    box-shadow: 0 2px 5px rgba(172, 172, 172, 0.434);
 }
 
 
 /* =========================================
-   4. الجداول والمحتوى العام (General Content)
+   4. الجداول ومححتواهم العام (General Content)
    ========================================= */
 
 .section-content {
@@ -493,7 +490,6 @@
 }
 
 /* =========================================
-   10. تنسيقات إضافية (بديلة للـ Inline Styles)
    ========================================= */
 
 /* ألوان النصوص */
@@ -553,10 +549,10 @@
 
 
 /* =========================================
-   تعديل الألوان (سكري بارد للعناصر)
+   تعديل الألوان )
    ========================================= */
 
-/* تجميع كل العناصر التي لها خلفية */
+/* تجميع كل العناصر اللي الها خلفية */
 .card, 
 .table-container-white, 
 .tabs-bar, 
@@ -566,7 +562,7 @@
 .filter-btn,
 .user-details-card {
     /* ✅ لون سكري بارد (Off-White) */
-    background-color:radial-gradient(circle at top left, #fafafa, #e9d6b9) !important; 
+    background-color:#fffef9 !important; 
     
     /* جعل الحدود ناعمة جداً لتناسب الخلفية البيضاء */
     border: 1px solid #f0f0f0 !important;
@@ -577,10 +573,27 @@
     background-color: #ffffff !important;
 }
 
-/* تعديل تأثير المرور بالماوس (Hover) ليكون واضحاً */
+/*           (Hover)          */
 .data-table tbody tr:hover,
 .card:hover,
 .stat-card:hover {
-    background-color: #ffffff !important; /* يضيء باللون الأبيض عند اللمس */
+    background-color: 	#fffcee !important; /* يضيء باللون الأبيض عند اللمس */
     box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
+}
+
+
+
+
+
+
+
+.header-texts h2::after {
+    content: '';
+    display: block;
+    width: 50px; /* تصغير عرض الخط قليلاً */
+    height: 4px;
+    background: linear-gradient(90deg, #d3b281, #feb47b);
+    border-radius: 2px;
+    margin-top: 10px;
+    margin-left: 5px; /* ✅ توسيط الخط */
 }
