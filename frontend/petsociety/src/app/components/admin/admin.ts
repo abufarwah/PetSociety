@@ -11,14 +11,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class Admin {
 
-  // متغير التبويبات
+  // 
   activeTab: string = 'users';
 
   setActiveTab(tabName: string) {
     this.activeTab = tabName;
   }
 
-  // ==================== 1. منطق إدارة المستخدمين (User Management) ====================
+  // ====1. منطق إدارة المستخدمين (User Management) ====================
   
   userSearchText: string = '';
   selectedUser: any = null;
@@ -102,7 +102,7 @@ export class Admin {
   ];
 
 
-  // ==================== 2. منطق الاشتراكات (Subscriptions) ====================
+  // ==================== 2. منطق الاشتراكات (Subscriptions) ==
   searchText: string = '';
 
   get filteredSubscriptions() {
@@ -139,10 +139,10 @@ export class Admin {
     deluxe: 4
   };
 
-  // ... باقي الكود كما هو
+  // ... 
 
 
-  // ==================== 3. الذكاء الاصطناعي (AI Lost & Found) ====================
+  // ================== الذكاء الاصطناعي (AI Lost & Found) ====================
   aiStats = {
     totalReports: 46,
     successfulMatches: 39,
@@ -152,7 +152,7 @@ export class Admin {
   aiReports = [
     { 
       id: 'MATCH-101', 
-      reporter: 'Sami Ali', 
+      reporter: 'Sami Farawneh', 
       matchPercent: 98, 
       status: 'User Confirmed', // المستخدم أكد أنه حيوانه
       lastUpdate: '2 hours ago'
@@ -161,7 +161,7 @@ export class Admin {
       id: 'MATCH-102', 
       reporter: 'Layan S.', 
       matchPercent: 92, 
-      status: 'Waiting User',   // النظام لقى تطابق وينتظر رد المستخدم
+      status: 'Waiting User',   // النظام لقى تطابق وبستنى رد المستخدم
       lastUpdate: '1 day ago'
     },
     { 
@@ -174,7 +174,7 @@ export class Admin {
   ];
 
 
-  // ==================== 4. طلبات التبني (Adoption Requests) ====================
+  // ==================== 4. طلبات التبني (Adoption Requests) ==
   adoptionRequests = [
     { 
       id: 'REQ-101', 
@@ -264,12 +264,12 @@ export class Admin {
 
 
 
-  // ✅ 1. إحصائيات الداشبورد العلوية ( محسوبة تلقائياً)
+  // ✅ 1. إحصائيات الداشبورد العلوية ( بتنحسب لحالها)
   get stats() {
     return {
       totalUsers: this.users.length,
       activeUsers: this.users.filter(u => u.status === 'Active').length,
-      petsCount: this.adoptionRequests.length, // أو أي قائمة حيوانات لديك
+      petsCount: this.adoptionRequests.length, 
       subscribers: this.subscriptionsList.filter(s => s.status === 'Active').length,
       flaggedCount: this.reportedMessages.length
     };

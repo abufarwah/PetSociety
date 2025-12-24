@@ -187,21 +187,23 @@
 /* =========================================
    4. الجداول ومححتواهم العام (General Content)
    ========================================= */
-
 .section-content {
     background: white;
     padding: 25px;
-    border-radius: 15px;
+    border-radius: 2px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.03);
     animation: fadeIn 0.3s ease-in-out;
     padding-left: 40px;
 }
 
+
 .section-content.no-bg {
     background: transparent !important;
     box-shadow: none !important;
-    padding: 0 40px !important;
+    padding: 30px 40px !important;
     margin-top: 10px;
+        border: none !important;
+
 }
 
 @keyframes fadeIn {
