@@ -18,8 +18,7 @@ export class Admin {
     this.activeTab = tabName;
   }
 
-  // ====1. منطق إدارة المستخدمين (User Management) ====================
-  
+  // == ---user managment--=====-------
   userSearchText: string = '';
   selectedUser: any = null;
 
@@ -102,7 +101,7 @@ export class Admin {
   ];
 
 
-  // ==================== 2. منطق الاشتراكات (Subscriptions) ==
+  // ==================== (Subscriptions) ==
   searchText: string = '';
 
   get filteredSubscriptions() {
@@ -132,7 +131,7 @@ export class Admin {
 
 
 
-  // ✅ أ
+  // ✅ 
   planStats = {
     basic: 7,
     premium: 3,
@@ -142,7 +141,7 @@ export class Admin {
   // ... 
 
 
-  // ================== الذكاء الاصطناعي (AI Lost & Found) ====================
+  // ==================  (AI Lost & Found)-----.....
   aiStats = {
     totalReports: 46,
     successfulMatches: 39,
@@ -174,7 +173,7 @@ export class Admin {
   ];
 
 
-  // ==================== 4. طلبات التبني (Adoption Requests) ==
+  // ==================== طلبات التبني (Adoption Requests) ==
   adoptionRequests = [
     { 
       id: 'REQ-101', 
@@ -203,7 +202,7 @@ export class Admin {
   ];
 
 
-  // ==================== 5. إدارة الشات والمجتمع (Chat & Community) ====================
+  //  إدارة الشات  (Chat & Community) ====================
   
   chatStats = {
     dailyMessages: 140,
@@ -264,7 +263,7 @@ export class Admin {
 
 
 
-  // ✅ 1. إحصائيات الداشبورد العلوية ( بتنحسب لحالها)
+  //  إحصائيات الداشبورد العلوية ( بتنحسب لحالها)
   get stats() {
     return {
       totalUsers: this.users.length,

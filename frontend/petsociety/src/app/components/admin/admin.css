@@ -1,4 +1,4 @@
-/* تنسيق المحتوى الرئيسي */
+
 
 .main-content {
     flex: 1;
@@ -45,7 +45,7 @@
 
 
 /* =========================================
-   2. البطاقات العلوية  (Enhanced Top Cards) 
+ البطاقات    العلوية  
    ========================================= */
 
 .cards-container {
@@ -65,7 +65,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 140px; /* ارتفاع ثابت لتوحيد الشكل */
+    height: 140px; /* ارتفاع ثابت عشان يتوحد الشكل */
 }
 
 .card:hover {
@@ -333,7 +333,7 @@
 .stat-value.active-count { color: #10b981; }
 .stat-value.churn { color: #ef4444; }
 
-/* شريط البحث */
+/*     البحث */
 .search-filter-bar { display: flex; gap: 15px; margin-bottom: 25px; }
 .search-box {
     width: 350px; background: white; border-radius: 15px; padding: 12px 20px;
@@ -366,7 +366,7 @@
 }
 
 .plan-card .stat-value {
-    font-size: 28px; /* حجم خط أصغر قليلاً للرقم */
+    font-size: 28px; 
     color: #2d3436;
 }
 
@@ -381,14 +381,14 @@
     font-size: 22px;
 }
 
-/* ألوان مميزة لكل باقة */
+/* ألوان    كل باقة */
 .basic-plan .plan-icon { background-color: #e0f2fe; color: #0984e3; }
 .premium-plan .plan-icon { background-color: #fff3cd; color: #f39c12; }
 .deluxe-plan .plan-icon { background-color: #f3e5f5; color: #9b59b6; }
 
 
 /* =========================================
-   7. الذكاء الاصطناعي (AI Section Styles) - (تم استبدال Inline Styles)
+   7. الذكاء الاصطناعي (AI Section Styles) - 
    ========================================= */
 
 .purple-text { color: #6c5ce7; }
@@ -417,7 +417,7 @@
 
 
 /* =========================================
-   8. الشات والمجتمع (Chat Section Styles) - (تم استبدال Inline Styles)
+   8. الشات  (Chat Section Styles) -
    ========================================= */
 
 .chat-grid-layout { display: flex; gap: 20px; flex-wrap: wrap; }
@@ -460,7 +460,6 @@
 
 
 /* =========================================
-   9. عناصر متنوعة
    ========================================= */
 
 /* شارات الحالة */
@@ -486,7 +485,7 @@
 }
 .text-btn.view:hover { background: #0984e3; color: white; }
 
-/* تعديلات صغيرة للصورة */
+/* تعديلات  للصورة */
 .avatar-circle.small.avatar-xs {
     width: 25px; height: 25px; font-size: 10px;
 }
@@ -563,10 +562,9 @@
 .search-box, 
 .filter-btn,
 .user-details-card {
-    /* ✅ لون سكري بارد (Off-White) */
+    /*  لون سكري بارد (Off-White) */
     background-color:#fffef9 !important; 
     
-    /* جعل الحدود ناعمة جداً لتناسب الخلفية البيضاء */
     border: 1px solid #f0f0f0 !important;
 }
 
@@ -579,7 +577,7 @@
 .data-table tbody tr:hover,
 .card:hover,
 .stat-card:hover {
-    background-color: 	#fffcee !important; /* يضيء باللون الأبيض عند اللمس */
+    background-color: 	#fffcee !important; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
 }
 
@@ -592,10 +590,10 @@
 .header-texts h2::after {
     content: '';
     display: block;
-    width: 50px; /* تصغير عرض الخط قليلاً */
+    width: 50px; 
     height: 4px;
     background: linear-gradient(90deg, #d3b281, #feb47b);
     border-radius: 2px;
     margin-top: 10px;
-    margin-left: 5px; /* ✅ توسيط الخط */
+    margin-left: 5px; /* توسيط الخط */
 }
