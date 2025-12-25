@@ -7,6 +7,11 @@ import { Adoption } from './components/adoption/adoption';
 import { PostPetModalComponent } from'./components/post-pet-modal/post-pet-modal';
 import { Community } from './components/community/community';
 import { LostFoundComponent } from './components/lost-found/lost-found';
+import { Account } from './components/account/account';
+import { Auth } from './services/auth';
+import { Admin } from './components/admin/admin'; 
+
+
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -18,4 +23,10 @@ export const routes: Routes = [
   {path:  'PostPetModalComponent', component: PostPetModalComponent},
   { path: 'community', component: Community },
   { path: 'lost-found', component: LostFoundComponent },
+  {path: 'Auth', component: Auth},
+  {path: 'Account', component: Account},
+  { path: 'admin', component: Admin }
+
 ];
+
+

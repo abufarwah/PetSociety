@@ -117,7 +117,27 @@
 .login-btn:hover {
 color: #c39b6e;
 }
+.account-btn {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 17px;
+  padding: 8px ;
+  list-style: none;
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  
+}
+.account-btn:hover {
+  color: #c39b6e;
+  
+}
 
+.account-btn.active {
+  border-bottom: 3px solid #c39b6e;
+  padding-bottom: 4px;
+}
 
 /* Footer Styles */
 footer {
