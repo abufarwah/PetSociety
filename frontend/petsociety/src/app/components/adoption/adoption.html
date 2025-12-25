@@ -1,89 +1,100 @@
+<!-- HERO -->
 <section class="adoption-hero container">
     <div class="hero-content">
         <div>
             <h1>Find Your Perfect Companion</h1>
-            <p>
-                Browse our selection of lovable pets waiting for their forever
-                homes
-            </p>
+            <p>Browse our selection of lovable pets waiting for their forever
+                homes</p>
         </div>
 
         <button class="post-btn" (click)="openPostModal()">
             + Post Pet for Adoption
         </button>
-
     </div>
 </section>
 
+<!-- FILTERS -->
 <section class="filters-bar">
+
     <div class="container filters-content">
         <div class="filters-left">
             <span class="filter-label">Filters:</span>
 
+            <!-- Type -->
             <label>
                 Type:
-                <select>
-                    <option>All</option>
-                    <option>Dog</option>
-                    <option>Cat</option>
-                    <option>Rabbit</option>
-                    <option>Hamster</option>
-                    <option>Bird</option>
-                    <option>Turtle</option>
-                    <option>Fish</option>
+                <select (change)="onTypeChange($event)">
+                    <option value="All">All</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                    <option value="Rabbit">Rabbit</option>
+                    <option value="Hamster">Hamster</option>
+                    <option value="Bird">Bird</option>
+                    <option value="Turtle">Turtle</option>
+                    <option value="Fish">Fish</option>
                 </select>
-
             </label>
 
+            <!-- Age -->
             <label>
                 Age:
-                <select>
-                    <option>All</option>
-                    <option>Baby</option>
-                    <option>Young</option>
-                    <option>Adult</option>
+                <select (change)="onAgeChange($event)">
+                    <option value="All">All</option>
+                    <option value="Baby">Baby</option>
+                    <option value="Young">Young</option>
+                    <option value="Adult">Adult</option>
                 </select>
             </label>
         </div>
-
     </div>
+
+    <!-- TAGS -->
+    <div class="container tags-filter">
+        <span class="filter-label">Tags:</span>
+
+        <button
+            class="tag-btn"
+            [class.active]="selectedTag === 'All'"
+            (click)="selectTag('All')">
+            All
+        </button>
+
+        <button
+            class="tag-btn"
+            *ngFor="let tag of availableTags"
+            [class.active]="selectedTag === tag"
+            (click)="selectTag(tag)">
+            {{ tag }}
+        </button>
+    </div>
+
 </section>
 
+<!-- PETS GRID -->
 <section class="pets-section container">
     <div class="pets-grid">
 
-        <div class="pet-card" *ngFor="let pet of pets">
+        <div class="pet-card" *ngFor="let pet of filteredPets">
+
             <div class="pet-img" (click)="openPet(pet)">
                 <img [src]="pet.image" alt />
 
-                <!-- زر المفضلة -->
-                <button class="fav-btn">♡</button>
-
                 <div class="pet-overlay">
-                    <h4>{{ pet.name }}</h4>
-
+                    <h4>{{ pet.breed }}</h4>
                     <p>{{ pet.age }} • {{ pet.type }}</p>
-
-                    <p class="overlay-location">
-                        📍 {{ pet.location }}
-                    </p>
+                    <p class="overlay-location">📍 {{ pet.location }}</p>
 
                     <div class="overlay-tags">
-                        <span *ngFor="let tag of pet.tags">
-                            {{ tag }}
-                        </span>
+                        <span *ngFor="let tag of pet.tags">{{ tag }}</span>
                     </div>
 
-                    <span class="view-details">
-                        View Details
-                    </span>
+                    <span class="view-details">View Details</span>
                 </div>
-
             </div>
 
             <div class="pet-info">
                 <div class="pet-header">
-                    <h3>{{ pet.name }}</h3>
+                    <h3>{{ pet.breed }}</h3>
                     <span class="tag">{{ pet.type }}</span>
                 </div>
 
@@ -94,16 +105,24 @@
                     <span *ngFor="let tag of pet.tags">{{ tag }}</span>
                 </div>
 
-                <!-- زر التبني -->
-                <button class="adopt-btn" (click)="openPet(pet)">
+                <!-- <button
+                    type="button"
+                    class="adopt-btn"
+                    (click)="openPet(pet); $event.preventDefault(); $event.stopPropagation()">
+                    Adopt Now
+                </button> -->
+                 <button class="adopt-btn" (click)="openPet(pet)">
                     Adopt Now
                 </button>
+
             </div>
+
         </div>
 
     </div>
 </section>
-<!-- Backdrop -->
+
+<!-- Backdrop  -->
 <div class="modal-backdrop" *ngIf="selectedPet" (click)="closePet()"></div>
 
 <!-- Modal -->
@@ -111,10 +130,12 @@
     <img [src]="selectedPet.image" />
 
     <div class="modal-content">
-        <h2>{{ selectedPet.name }}</h2>
+        <h2>{{ selectedPet.breed }}</h2>
+
         <p class="modal-meta">
             {{ selectedPet.age }} • {{ selectedPet.type }}
         </p>
+
         <p>📍 {{ selectedPet.location }}</p>
 
         <div class="tags">
@@ -123,9 +144,31 @@
 
         <p class="modal-desc">
             This lovely {{ selectedPet.type.toLowerCase() }} is looking for a
-            forever home 💛
+            forever home
         </p>
-        <!-- Adoption Confirmation -->
+
+        <!-- <div class="confirm-modal" *ngIf="showConfirm">
+            <div class="confirm-box">
+                <h3>Request Sent</h3>
+                <p>Your adoption request has been sent successfully.</p>
+                <button (click)="closeConfirm()">OK</button>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="adopt-btn" (click)="confirmAdoption()">Request
+                Adoption</button>
+            <button class="close-btn" (click)="closePet()">Close</button>
+        </div>
+    </div>
+</div>
+
+<app-post-pet-modal
+    *ngIf="showPostModal"
+    (close)="closePostModal()">
+</app-post-pet-modal> -->
+
+<!-- Adoption Confirmation -->
         <div class="confirm-modal" *ngIf="showConfirm">
             <div class="confirm-box">
                 <h3>Request Sent 🐾</h3>

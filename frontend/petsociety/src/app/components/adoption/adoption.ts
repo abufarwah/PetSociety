@@ -10,186 +10,244 @@ import { PostPetModalComponent } from '../post-pet-modal/post-pet-modal';
   styleUrls: ['./adoption.css'],
 })
 export class Adoption {
-
   showPostModal = false;
+  selectedPet: any = null;
+  showConfirm = false;
 
- pets = [
-  {
-    name: 'Max',
-    type: 'Dog',
-    location: 'Amman',
-    age: '2 years',
-    image: 'd1.jpg',
-    tags: ['Friendly', 'Vaccinated'],
-  },
-  {
-    name: 'Luna',
-    type: 'Cat',
-    location: 'Amman',
-    age: '1 year',
-    image: 'c1.jpg',
-    tags: ['Playful', 'Indoor'],
-  },
-  {
-    name: 'Snow',
-    type: 'Rabbit',
-    location: 'Amman',
-    age: '1 year',
-    image: 'r3.jpg',
-    tags: ['Cute'],
-  },
-  {
-    name: 'Kiwi',
-    type: 'Bird',
-    location: 'Amman',
-    age: '1 year',
-    image: 'bbb.jpg',
-    tags: ['Colorful', 'Friendly'],
-  },
-  {
-    name: 'Rocky',
-    type: 'Dog',
-    location: 'Zarqa',
-    age: '4 years',
-    image: 'd2.jpg',
-    tags: ['Trained', 'Calm'],
-  },
-  {
-    name: 'Peanut',
-    type: 'Hamster',
-    location: 'Zarqa',
-    age: '6 months',
-    image: 'h1.jpg',
-    tags: ['Small', 'Cute'],
-  },
-  {
-    name: 'Milo',
-    type: 'Cat',
-    location: 'Salt',
-    age: '3 years',
-    image: 'c2.jpg',
-    tags: ['Calm'],
-  },
-  {
-    name: 'Shelly',
-    type: 'Turtle',
-    location: 'Amman',
-    age: '5 years',
-    image: 'tt.jpg',
-    tags: ['Quiet', 'Easy Care'],
-  },
-  {
-    name: 'Buddy',
-    type: 'Dog',
-    location: 'Irbid',
-    age: '1 year',
-    image: 'd3.jpg',
-    tags: ['Energetic'],
-  },
-  {
-    name: 'Bubbles',
-    type: 'Fish',
-    location: 'Amman',
-    age: '8 months',
-    image: 'f1.jpg',
-    tags: ['Quiet', 'Easy Care'],
-  },
-  {
-    name: 'Cotton',
-    type: 'Rabbit',
-    location: 'Madaba',
-    age: '2 years',
-    image: 'r2.jpg',
-    tags: ['Calm'],
-  },
-  {
-    name: 'Kiwi',
-    type: 'Bird',
-    location: 'Amman',
-    age: '1 year',
-    image: 'bb.jpg',
-    tags: ['Friendly'],
-  },
-  {
-    name: 'Nala',
-    type: 'Cat',
-    location: 'Aqaba',
-    age: '2 years',
-    image: 'c3.jpg',
-    tags: ['Sweet'],
-  },
-  {
-    name: 'Snow',
-    type: 'Rabbit',
-    location: 'Amman',
-    age: '1 year',
-    image: 'r1.jpg',
-    tags: ['Cute'],
-  },
-  {
-    name: 'Luna',
-    type: 'Cat',
-    location: 'Amman',
-    age: '1 year',
-    image: 'c4.jpg',
-    tags: ['Playful'],
-  },
-  {
-    name: 'Peanut',
-    type: 'Hamster',
-    location: 'Zarqa',
-    age: '6 months',
-    image: 'h2.jpg',
-    tags: ['Small', 'Cute'],
-  },
-  {
-    name: 'Milo',
-    type: 'Cat',
-    location: 'Salt',
-    age: '2 years',
-    image: 'c5.jpg',
-    tags: ['Calm'],
-  },
-  {
-    name: 'Fluffy',
-    type: 'Rabbit',
-    location: 'Karak',
-    age: '1 year',
-    image: 'r5.jpg',
-    tags: ['Friendly'],
-  },
-];
+  selectedType: string = 'All';
+  selectedAge: string = 'All';
+  selectedTag: string = 'All';
 
-// ngOnInit() {
-//     this.pets = this.pets.sort(() => Math.random() - 0.5);
-//   } // => عشان اخربط الحيوانات
+  availableTags: string[] = [
+    'Vaccinated',
+    'Friendly',
+    'Good with kids',
+    'Playful',
+    'Calm',
+    'Energetic',
+    'Indoor',
+    'Outdoor',
+    'Trained',
+  ];
+
+  pets = [
+    {
+      breed: 'Toy Poodle',
+      type: 'Dog',
+      location: 'Karak',
+      age: 'Adult',
+      image: 'd3.jpg',
+      tags: ['Calm', 'Friendly'],
+    },
+    {
+      breed: 'Australian Shepherd',
+      type: 'Dog',
+      location: 'Amman',
+      age: 'Baby',
+      image: 'd2.jpg',
+      tags: ['Smart', 'Active'],
+    },
+    {
+      breed: 'Domestic Shorthair',
+      type: 'Cat',
+      location: 'Amman',
+      age: 'Baby',
+      image: 'c2.jpg',
+      tags: ['Playful', 'Curious'],
+    },
+    {
+      breed: 'Boston Terrier',
+      type: 'Dog',
+      location: 'Irbid',
+      age: 'Baby',
+      image: 'd1.jpg',
+      tags: ['Friendly', 'Playful'],
+    },
+    {
+      breed: 'Domestic Shorthair',
+      type: 'Cat',
+      location: 'Amman',
+      age: 'Baby',
+      image: 'c1.jpg',
+      tags: ['Cute', 'Calm'],
+    },
+    {
+      breed: 'Scottish Fold',
+      type: 'Cat',
+      location: 'Amman',
+      age: 'Baby',
+      image: 'cat1.jpeg',
+      tags: ['Quiet', 'Sweet'],
+    },
+    {
+      breed: 'Golden Retriever',
+      type: 'Dog',
+      location: 'Jarash',
+      age: 'Baby',
+      image: 'dog1.jpeg',
+      tags: ['Friendly', 'Loyal'],
+    },
+    {
+      breed: 'Syrian Hamster',
+      type: 'Hamster',
+      location: 'Zarqa',
+      age: 'Baby',
+      image: 'ham1.jpeg',
+      tags: ['Small', 'Cute'],
+    },
+    {
+      breed: 'Budgerigar',
+      type: 'Bird',
+      location: 'Madapa',
+      age: 'Adult',
+      image: 'bird1.jpeg',
+      tags: ['Colorful', 'Friendly'],
+    },
+    {
+      breed: 'Scottish Fold',
+      type: 'Cat',
+      location: 'Amman',
+      age: 'Baby',
+      image: 'cat2.jpeg',
+      tags: ['Playful', 'Cute'],
+    },
+    {
+      breed: 'Domestic Rabbit',
+      type: 'Rabbit',
+      location: 'Amman',
+      age: 'Adult',
+      image: 'rabbit2.jpeg',
+      tags: ['Calm', 'Soft'],
+    },
+    {
+      breed: 'Goldfish',
+      type: 'Fish',
+      location: 'Aqaba',
+      age: 'Adult',
+      image: 'fish.jpeg',
+      tags: ['Quiet', 'Easy Care'],
+    },
+    {
+      breed: 'Golden Retriever',
+      type: 'Dog',
+      location: 'Amman',
+      age: 'Baby',
+      image: 'dog2.jpeg',
+      tags: ['Playful', 'Friendly'],
+    },
+    {
+      breed: 'Red-Eared Slider',
+      type: 'Turtle',
+      location: 'Amman',
+      age: 'Baby',
+      image: 'turt1.jpeg',
+      tags: ['Quiet', 'Unique'],
+    },
+    {
+      breed: 'Scottish Fold',
+      type: 'Cat',
+      location: 'Amman',
+      age: 'Adult',
+      image: 'cat4.jpeg',
+      tags: ['Cute', 'Lazy'],
+    },
+    {
+      breed: 'Budgerigar', 
+      type: 'Bird',
+      location: 'Karak',
+      age: 'Adult',
+      image: 'bird2.jpeg',
+      tags: ['Talkative', 'Cute'],
+    },
+    {
+      breed: 'Wild Rabbit',
+      type: 'Rabbit',
+      location: 'Amman',
+      age: 'Adult',
+      image: 'r4.jpg',
+      tags: ['Fast', 'Alert'],
+    },
+    {
+      breed: 'European Hamster',
+      type: 'Hamster',
+      location: 'Amman',
+      age: 'Adult',
+      image: 'h1.jpg',
+      tags: ['Rare', 'Cute'],
+    },
+    {
+      breed: 'British Shorthair',
+      type: 'Cat',
+      location: 'Amman',
+      age: 'Baby',
+      image: 'c5.jpg',
+      tags: ['Fluffy', 'Calm'],
+    },
+    {
+      breed: 'British Shorthair',
+      type: 'Cat',
+      location: 'Zarqa',
+      age: 'Baby',
+      image: 'cat5.jpeg',
+      tags: ['Cute', 'Quiet'],
+    },
+    {
+      breed: 'Mixed Hamster',
+      type: 'Hamster',
+      location: 'Amman',
+      age: 'Baby',
+      image: 'ham3.jpeg',
+      tags: ['Small', 'Cute', 'Active'],
+    },
+  ];
+  onTypeChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.selectedType = select.value;
+  }
+
+  onAgeChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.selectedAge = select.value;
+  }
+
+  selectTag(tag: string) {
+    this.selectedTag = tag;
+  }
+
+  get filteredPets() {
+    return this.pets.filter((pet) => {
+      const matchType = this.selectedType === 'All' || pet.type === this.selectedType;
+
+      const matchAge = this.selectedAge === 'All' || pet.age === this.selectedAge;
+
+      const matchTag = this.selectedTag === 'All' || pet.tags.includes(this.selectedTag);
+
+      return matchType && matchAge && matchTag;
+    });
+  }
+
   openPostModal() {
-    console.log('CLICKED');
     this.showPostModal = true;
   }
 
   closePostModal() {
     this.showPostModal = false;
   }
-  selectedPet: any = null;
 
-openPet(pet: any) {
-  this.selectedPet = pet;
-}
+  openPet(pet: any) {
+    this.selectedPet = pet;
+  }
 
-closePet() {
-  this.selectedPet = null;
-}
+  closePet() {
+    this.selectedPet = null;
+  }
 
-showConfirm = false;
+  confirmAdoption() {
+    this.showConfirm = true;
+  }
 
-confirmAdoption() {
-  this.showConfirm = true;
-}
-
-closeConfirm() {
-  this.showConfirm = false;
-  this.selectedPet = null; // نسكر كلشي
-}
-
+  closeConfirm() {
+    this.showConfirm = false;
+    this.selectedPet = null;
+  }
 }

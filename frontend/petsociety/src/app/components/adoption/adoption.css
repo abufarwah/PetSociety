@@ -22,7 +22,7 @@
   max-width: 520px;
 }
 
-/* Beige Primary Button */
+/* ================= BUTTON ================= */
 .post-btn {
   background: #d6b48c;
   border: none;
@@ -45,7 +45,7 @@
   border-top: 1px solid #e5e7eb;
   border-bottom: 1px solid #e5e7eb;
   padding: 20px 0;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .filters-content {
@@ -66,19 +66,47 @@
 
 select {
   padding: 6px 14px;
-  border-radius: 20px;
+  border-radius: 999px;
   border: 1px solid #d6b48c;
   background: white;
 }
 
-/* ================= PET GRID ================= */
+/* ================= TAGS ================= */
+.tags-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.tag-btn {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid #d6b48c;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tag-btn:hover {
+  background: #f8f5f0;
+}
+
+.tag-btn.active {
+  background: #d6b48c;
+  font-weight: 600;
+}
+
+/* ================= GRID ================= */
 .pets-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 30px;
 }
 
-/* ================= PET CARD ================= */
+/* ================= CARD ================= */
 .pet-card {
   background: white;
   border-radius: 24px;
@@ -86,7 +114,6 @@ select {
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-/* Image */
 .pet-img {
   position: relative;
   cursor: pointer;
@@ -104,21 +131,7 @@ select {
   transform: scale(1.08);
 }
 
-/* Favorite */
-.fav-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: white;
-  border-radius: 50%;
-  border: none;
-  width: 36px;
-  height: 36px;
-  z-index: 2;
-  cursor: pointer;
-}
-
-/* Hover Overlay */
+/* ================= OVERLAY ================= */
 .pet-overlay {
   position: absolute;
   inset: 0;
@@ -135,48 +148,6 @@ select {
 
 .pet-img:hover .pet-overlay {
   opacity: 1;
-}
-
-.pet-overlay h4 {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.pet-overlay p {
-  margin: 6px 0;
-  font-size: 14px;
-}
-
-.view-details {
-  margin-top: 10px;
-  background: #d6b48c;
-  color: #000;
-  padding: 8px 18px;
-  border-radius: 999px;
-  font-weight: 600;
-}
-
-/* Extra hover info */
-.overlay-location {
-  font-size: 13px;
-  margin-bottom: 6px;
-}
-
-.overlay-tags {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.overlay-tags span {
-  background: rgba(255,255,255,0.9);
-  color: #000;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
 }
 
 /* ================= INFO ================= */
@@ -197,12 +168,6 @@ select {
   font-size: 14px;
 }
 
-.location,
-.age {
-  margin: 6px 0;
-  color: #475569;
-}
-
 .tags span {
   background: #ecfdf5;
   color: #059669;
@@ -212,7 +177,7 @@ select {
   margin-right: 6px;
 }
 
-/* Adopt Button */
+/* ================= ADOPT BUTTON ================= */
 .adopt-btn {
   margin-top: 15px;
   width: 100%;
@@ -251,33 +216,38 @@ select {
   object-fit: cover;
 }
 
+
+
+/* ================= MODAL CONTENT ================= */
 .modal-content {
   padding: 24px;
-}
-
-.modal-meta {
-  color: #64748b;
-  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .modal-desc {
-  margin: 16px 0;
   color: #475569;
 }
 
-/* Modal Actions */
+/* ================= MODAL ACTIONS ================= */
 .modal-actions {
-  margin-top: 24px;
+  margin-top: 20px;
   display: flex;
-  flex-direction: column;
   gap: 12px;
+}
+
+.modal-actions button {
+  flex: 1;
 }
 
 /* Close Button */
 .close-btn {
   border: 1px solid #e5e7eb;
-  border-radius: 999px;
-  padding: 10px;
+  margin-top: 15px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 30px;
   background: transparent;
   cursor: pointer;
   color: #475569;
@@ -285,7 +255,6 @@ select {
 
 .close-btn:hover {
   background: #f8fafc;
-  text-decoration: underline;
 }
 
 /* ================= CONFIRMATION ================= */
