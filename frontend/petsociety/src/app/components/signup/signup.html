@@ -48,12 +48,12 @@
             type="password"
             class="form-control"
             placeholder="********"
-            formControlName="Password"
-            [class.is-invalid]="signupnForm.get('Password')?.invalid && signupnForm.get('Password')?.touched"
+            formControlName="Password1"
+            [class.is-invalid]="signupnForm.get('Password1')?.invalid && signupnForm.get('Password1')?.touched"
           />
           <div class="text-danger small mb-2" *ngIf="signupnForm.get('Password1')?.invalid && signupnForm.get('Password1')?.touched">
             <span *ngIf="signupnForm.get('Password1')?.errors?.['required']">Password is required</span>
-            <span *ngIf="signupnForm.get('Password1')?.errors?.['minLength']">Password must be at least 8 characters</span>
+            <span *ngIf="signupnForm.get('Password1')?.errors?.['minlength']">Password must be at least 8 characters</span>
           </div>
 
           <label class="mb-1">Confirm Password</label>
@@ -61,12 +61,13 @@
             type="password"
             class="form-control"
             placeholder="********"
-            formControlName="password"
-            [class.is-invalid]="signupnForm.get('password')?.invalid && signupnForm.get('password')?.touched"
+            formControlName="password2"
+            [class.is-invalid]="signupnForm.get('password2')?.touched && (signupnForm.get('password2')?.invalid || signupnForm.hasError('passwordMismatch'))"
           />
-          <div class="text-danger small mb-2" *ngIf="signupnForm.get('password2')?.invalid && signupnForm.get('password2')?.touched">
+          <div class="text-danger small mb-2" *ngIf="signupnForm.get('password2')?.touched && (signupnForm.get('password2')?.invalid || signupnForm.hasError('passwordMismatch'))">
             <span *ngIf="signupnForm.get('password2')?.errors?.['required']">Confirm password is required</span>
-            <span *ngIf="signupnForm.get('password2')?.errors?.['minLength']">Password must be at least 8 characters</span>
+            <span *ngIf="signupnForm.get('password2')?.errors?.['minlength']">Password must be at least 8 characters</span>
+            <span *ngIf="signupnForm.hasError('passwordMismatch')">Passwords do not match</span>
           </div>
           
 
