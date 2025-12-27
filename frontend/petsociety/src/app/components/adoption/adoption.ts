@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PostPetModalComponent } from '../post-pet-modal/post-pet-modal';
+import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-adoption',
@@ -9,7 +10,7 @@ import { PostPetModalComponent } from '../post-pet-modal/post-pet-modal';
   templateUrl: './adoption.html',
   styleUrls: ['./adoption.css'],
 })
-export class Adoption {
+export class Adoption implements OnInit {
   showPostModal = false;
   showConfirm = false;
   selectedPet: any = null;
@@ -17,6 +18,7 @@ export class Adoption {
   selectedType: string = 'All';
   selectedAge: string = 'All';
   selectedTag: string = 'All';
+  isLoggedIn = false;
 
   availableTags: string[] = [
     'Vaccinated',
@@ -260,6 +262,28 @@ export class Adoption {
   this.showPostModal = false;
   this.successType = 'add';
   this.showConfirm = true;
+}
+
+handlePostPet() {
+  if (!this.isLoggedIn) {
+    alert('Please login first to post a pet 🐾');
+    return;
+  }
+
+  this.openPostModal();
+}
+
+handleAdoption(pet: any) {
+  if (!this.isLoggedIn) {
+    alert('Please login first to adopt a pet 🐾');
+    return;
+  }
+
+  this.openPet(pet);
+}
+
+ngOnInit() {
+  this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 }
 
 }
