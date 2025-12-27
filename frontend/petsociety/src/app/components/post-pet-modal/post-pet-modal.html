@@ -20,14 +20,14 @@
       <div class="form-group">
         <label>Type *</label>
         <select>
-           <option>All</option>
-                    <option>Dog</option>
-                    <option>Cat</option>
-                    <option>Rabbit</option>
-                    <option>Hamster</option>
-                    <option>Bird</option>
-                    <option>Turtle</option>
-                    <option>Fish</option>
+          <option>All</option>
+          <option>Dog</option>
+          <option>Cat</option>
+          <option>Rabbit</option>
+          <option>Hamster</option>
+          <option>Bird</option>
+          <option>Turtle</option>
+          <option>Fish</option>
         </select>
       </div>
 
@@ -47,11 +47,24 @@
       <textarea placeholder="Tell us about this pet..."></textarea>
     </div>
 
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label>Image URL</label>
       <div class="image-input">
         <input type="text" placeholder="https://example.com/image.jpg" />
       </div>
+    </div> -->
+    <div class="form-group">
+      <label>Pet Image *</label>
+
+      <input
+        type="file"
+        accept="image/*"
+        (change)="onImageSelected($event)" />
+
+      <img
+        *ngIf="imagePreview"
+        [src]="imagePreview"
+        class="preview-img" />
     </div>
 
     <div class="form-group">

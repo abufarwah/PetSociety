@@ -105,12 +105,6 @@
                     <span *ngFor="let tag of pet.tags">{{ tag }}</span>
                 </div>
 
-                <!-- <button
-                    type="button"
-                    class="adopt-btn"
-                    (click)="openPet(pet); $event.preventDefault(); $event.stopPropagation()">
-                    Adopt Now
-                </button> -->
                  <button class="adopt-btn" (click)="openPet(pet)">
                     Adopt Now
                 </button>
@@ -147,27 +141,6 @@
             forever home
         </p>
 
-        <!-- <div class="confirm-modal" *ngIf="showConfirm">
-            <div class="confirm-box">
-                <h3>Request Sent</h3>
-                <p>Your adoption request has been sent successfully.</p>
-                <button (click)="closeConfirm()">OK</button>
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="adopt-btn" (click)="confirmAdoption()">Request
-                Adoption</button>
-            <button class="close-btn" (click)="closePet()">Close</button>
-        </div>
-    </div>
-</div>
-
-<app-post-pet-modal
-    *ngIf="showPostModal"
-    (close)="closePostModal()">
-</app-post-pet-modal> -->
-
 <!-- Adoption Confirmation -->
         <div class="confirm-modal" *ngIf="showConfirm">
             <div class="confirm-box">
@@ -196,6 +169,8 @@
 </div>
 
 <app-post-pet-modal
-    *ngIf="showPostModal"
-    (close)="closePostModal()">
+  *ngIf="showPostModal"
+  (close)="closePostModal()"
+  (petCreated)="addPet($event)">
 </app-post-pet-modal>
+

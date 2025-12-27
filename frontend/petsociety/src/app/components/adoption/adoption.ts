@@ -250,4 +250,10 @@ export class Adoption {
     this.showConfirm = false;
     this.selectedPet = null;
   }
+
+  addPet(pet: any) {
+  this.pets.unshift(pet);
+  this.showPostModal = false;
+  }
+
 }
