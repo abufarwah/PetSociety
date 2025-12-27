@@ -27,7 +27,7 @@
             <li><i class="fa fa-check"></i>Email tips for pet care</li>
           </ul>
 
-          <button class="card-button w-100">Subscribe<i class="fa-solid fa-paw ms-2"></i></button>
+          <button class="card-button w-100" (click)="goToPayment('Basic')">Subscribe<i class="fa-solid fa-paw ms-2"></i></button>
         </div>
       </div>
 
@@ -51,7 +51,7 @@
             <li><i class="fa fa-check"></i>Pet Treat pack of 2 (2kg each/month)</li>
           </ul>
 
-          <button class="card-button w-100">Subscribe<i class="fa-solid fa-paw ms-2"></i></button>
+          <button class="card-button w-100" (click)="goToPayment('Premium')">Subscribe<i class="fa-solid fa-paw ms-2"></i></button>
         </div>
       </div>
 
@@ -76,7 +76,7 @@
             <li><i class="fa fa-check"></i>Exclusive gift (Accessories Box)</li>
           </ul>
 
-          <button class="card-button w-100">Subscribe<i class="fa-solid fa-paw ms-2"></i></button>
+          <button class="card-button w-100" (click)="goToPayment('Deluxe')">Subscribe<i class="fa-solid fa-paw ms-2"></i></button>
         </div>
       </div>
 
@@ -120,5 +120,14 @@
       </div>
     </div>
 
+  </div>
+</div>
+<!-- Login Required Modal -->
+<div class="modal-backdrop" *ngIf="showLoginModal" (click)="closeLoginModal()"></div>
+<div class="login-modal" *ngIf="showLoginModal">
+  <div class="modal-content">
+    <h2>Please Login First <i class="fa-solid fa-paw"></i></h2>
+    <p>You need to be logged in to subscribe to our plans.</p>
+    <button class="btn-ok" (click)="goToLogin()">Login</button>
   </div>
 </div>

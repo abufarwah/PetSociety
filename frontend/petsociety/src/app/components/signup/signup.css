@@ -61,4 +61,5 @@
 .text-decoration-none:hover{
     text-decoration: underline;
     color: #d9c1a5;
+    cursor: not-allowed;
 }

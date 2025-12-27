@@ -1,15 +1,37 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-pet-society-plus',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './pet-society-plus.html',
   styleUrl: './pet-society-plus.css',
 })
 export class PetSocietyPlus {
-selectCard(_t11: any) {
-throw new Error('Method not implemented.');
-}
-selectedIndex: any;
+  showLoginModal = false;
+
+  constructor(private router: Router) {}
+
+  goToPayment(plan: string) {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+      this.showLoginModal = true;
+      return;
+    }
+
+    this.router.navigate(['/payment'], { queryParams: { plan } });
+  }
+
+  closeLoginModal() {
+    this.showLoginModal = false;
+  }
+
+  goToLogin() {
+    this.showLoginModal = false;
+    this.router.navigate(['/login']);
+  }
 
 }

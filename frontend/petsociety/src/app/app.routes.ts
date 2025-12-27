@@ -10,6 +10,7 @@ import { LostFoundComponent } from './components/lost-found/lost-found';
 import { Account } from './components/account/account';
 import { Auth } from './services/auth';
 import { Admin } from './components/admin/admin'; 
+import { Payment } from './components/payment/payment';
 
 
 
@@ -25,7 +26,8 @@ export const routes: Routes = [
   { path: 'lost-found', component: LostFoundComponent },
   {path: 'Auth', component: Auth},
   {path: 'Account', component: Account},
-  { path: 'admin', component: Admin }
+  { path: 'admin', component: Admin } ,
+  { path: 'payment', component: Payment }
 
 ];
 

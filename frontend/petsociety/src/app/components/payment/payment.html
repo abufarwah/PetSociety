@@ -1,0 +1,264 @@
+<div class="payment-container">
+  <div class="container py-5">
+    <h1 class="text-center mb-4">
+      <i class="fa-solid fa-credit-card"></i> Payment
+    </h1>
+    <p class="text-center mb-5">Complete your subscription to PetSociety+</p>
+
+    <div class="row g-4">
+      <!-- Left: Package Selection -->
+      <div class="col-lg-7">
+        <div class="payment-section">
+          <h3 class="section-title mb-4">1. Select Your Package</h3>
+
+          <div class="package-selection">
+            <div
+              *ngFor="let pkg of packages"
+              class="package-card"
+              [class.selected]="selectedPackage?.name === pkg.name"
+              (click)="selectPackage(pkg)">
+              <div class="package-header">
+                <h4>{{ pkg.name }}</h4>
+                <span class="package-price">${{ pkg.price }}/month</span>
+              </div>
+              <ul class="package-features">
+                <li *ngFor="let feature of pkg.features">
+                  <i class="fa fa-check"></i> {{ feature }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Form -->
+        <div class="payment-section mt-4">
+          <h3 class="section-title mb-4">2. Payment Information</h3>
+
+          <form [formGroup]="paymentForm" (ngSubmit)="processPayment()">
+            <!-- Card Number -->
+            <div class="mb-3">
+              <label class="form-label">Card Number</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="cardNumber"
+                placeholder="1234 5678 9012 3456"
+                maxlength="19"
+                [class.is-invalid]="
+                  paymentForm.get('cardNumber')?.invalid &&
+                  paymentForm.get('cardNumber')?.touched
+                " />
+              <div
+                class="text-danger small mt-1"
+                *ngIf="
+                  paymentForm.get('cardNumber')?.invalid &&
+                  paymentForm.get('cardNumber')?.touched
+                ">
+                Please enter a valid card number
+              </div>
+            </div>
+
+            <!-- Cardholder Name -->
+            <div class="mb-3">
+              <label class="form-label">Cardholder Name</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="cardName"
+                placeholder="John Doe"
+                [class.is-invalid]="
+                  paymentForm.get('cardName')?.invalid &&
+                  paymentForm.get('cardName')?.touched
+                " />
+              <div
+                class="text-danger small mt-1"
+                *ngIf="
+                  paymentForm.get('cardName')?.invalid &&
+                  paymentForm.get('cardName')?.touched
+                ">
+                Cardholder name is required
+              </div>
+            </div>
+
+            <!-- Expiry & CVV -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Expiry Date</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="expiry"
+                  placeholder="MM/YY"
+                  maxlength="5"
+                  [class.is-invalid]="
+                    paymentForm.get('expiry')?.invalid &&
+                    paymentForm.get('expiry')?.touched
+                  " />
+                <div
+                  class="text-danger small mt-1"
+                  *ngIf="
+                    paymentForm.get('expiry')?.invalid &&
+                    paymentForm.get('expiry')?.touched
+                  ">
+                  Format: MM/YY
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">CVV</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="cvv"
+                  placeholder="123"
+                  maxlength="3"
+                  [class.is-invalid]="
+                    paymentForm.get('cvv')?.invalid && paymentForm.get('cvv')?.touched
+                  " />
+                <div
+                  class="text-danger small mt-1"
+                  *ngIf="
+                    paymentForm.get('cvv')?.invalid && paymentForm.get('cvv')?.touched
+                  ">
+                  3 digits required
+                </div>
+              </div>
+            </div>
+
+            <!-- Billing Address -->
+            <h4 class="section-subtitle mt-4 mb-3">Billing Address</h4>
+
+            <div class="mb-3">
+              <label class="form-label">Address</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="address"
+                placeholder="123 Main St"
+                [class.is-invalid]="
+                  paymentForm.get('address')?.invalid &&
+                  paymentForm.get('address')?.touched
+                " />
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="city"
+                  placeholder="Amman"
+                  [class.is-invalid]="
+                    paymentForm.get('city')?.invalid && paymentForm.get('city')?.touched
+                  " />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Postal Code</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="postalCode"
+                  placeholder="11953"
+                  [class.is-invalid]="
+                    paymentForm.get('postalCode')?.invalid &&
+                    paymentForm.get('postalCode')?.touched
+                  " />
+              </div>
+            </div>
+
+            <!-- Submit Button  -->
+            <button
+              type="submit"
+              class="btn btn-primary w-100 pay-btn d-none d-lg-block"
+              [disabled]="!selectedPackage || paymentForm.invalid">
+              <i class="fa fa-lock me-2"></i>
+              Pay ${{ selectedPackage?.price || 0 }}/month
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right: Order Summary -->
+      <div class="col-lg-5">
+        <div class="payment-section summary-card sticky-top">
+          <h3 class="section-title mb-4">Order Summary</h3>
+
+          <div *ngIf="selectedPackage; else noPackageSelected">
+            <div class="summary-item">
+              <span class="summary-label">Package</span>
+              <span class="summary-value">{{ selectedPackage.name }}</span>
+            </div>
+
+            <div class="summary-item">
+              <span class="summary-label">Billing Cycle</span>
+              <span class="summary-value">Monthly</span>
+            </div>
+
+            <hr />
+
+            <div class="summary-item">
+              <span class="summary-label">Subtotal</span>
+              <span class="summary-value">${{ selectedPackage.price }}</span>
+            </div>
+
+            <div class="summary-item">
+              <span class="summary-label">Tax (11%)</span>
+              <span class="summary-value">${{ tax }}</span>
+            </div>
+
+            <hr />
+
+            <div class="summary-item total">
+              <span class="summary-label">Total</span>
+              <span class="summary-value">${{ total }}</span>
+            </div>
+
+            <div class="payment-info mt-4">
+              <p class="text-muted small">
+                <i class="fa fa-info-circle me-1"></i>
+                Your subscription will automatically renew every month. You can cancel
+                anytime from your account settings.
+              </p>
+              <p class="text-muted small">
+                <i class="fa fa-lock me-1"></i>
+                All transactions are secure and encrypted.
+              </p>
+            </div>
+
+            <!-- Pay Button -->
+            <button
+              type="button"
+              class="btn btn-primary w-100 pay-btn d-lg-none mt-3"
+              [disabled]="!selectedPackage || paymentForm.invalid"
+              (click)="processPayment()">
+              <i class="fa fa-lock me-2"></i>
+              Pay ${{ total }}/month
+            </button>
+          </div>
+
+          <ng-template #noPackageSelected>
+            <p class="text-center text-muted">Please select a package to continue</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-backdrop" *ngIf="showSuccess" (click)="closeSuccess()"></div>
+<div class="success-modal" *ngIf="showSuccess">
+  <div class="success-content">
+    <div class="success-icon">
+      <i class="fa-solid fa-paw"></i>
+    </div>
+    <h2>Payment Successful! </h2>
+    <p>
+      Your subscription to <strong>{{ selectedPackage?.name }}</strong> has been activated successfully.
+    </p>
+    <button class="btn" (click)="closeSuccess(); resetForm()" >OK</button>
+  </div>
+</div>
+

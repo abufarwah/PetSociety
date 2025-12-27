@@ -180,3 +180,59 @@
   color: #777;
 }
 
+/* Login Modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  animation: fadeIn 0.3s ease;
+}
+
+.login-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  width: 90%;
+  max-width: 450px;
+  animation: slideIn 0.3s ease;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content h2 {
+  color: #2c3e50;
+  margin: 0 0 1rem 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.btn-ok {
+  padding: 0.65rem 2.2rem;
+  background: #c39b6e;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 22px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.btn-ok:hover {
+  background: #b08956;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(195, 155, 110, 0.3);
+}
