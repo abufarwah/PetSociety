@@ -28,8 +28,22 @@ export class Login  {
     if (this.loginForm.valid) {
     console.log('BUTTON CLICKED');
     this.auth.login();
-    this.router.navigate(['/Home']);
+    // this.router.navigate(['/Home']);
     
+  }
+  
+  if (this.loginForm.valid) {
+
+
+    localStorage.setItem('isLoggedIn', 'true');
+
+
+    localStorage.setItem(
+      'userEmail',
+      this.loginForm.value.email || ''
+    );
+
+    this.router.navigate(['/Home']);
   }
   }
 
