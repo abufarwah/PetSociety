@@ -151,7 +151,7 @@
         <!-- Adoption Confirmation -->
         <div class="confirm-modal" *ngIf="showConfirm">
             <div class="confirm-box">
-                <h3>Request Sent 🐾</h3>
+                <h3>Request Sent <i class="fa-solid fa-paw"></i></h3>
                 <p>
                     Your adoption request for
                     <strong>{{ selectedPet?.name }}</strong>
@@ -178,11 +178,11 @@
     <div class="confirm-box">
 
         <h3 *ngIf="successType === 'add'">
-            Pet Added Successfully 🐾
+            Pet Added Successfully <i class="fa-solid fa-paw"></i>
         </h3>
 
         <h3 *ngIf="successType === 'adopt'">
-            Request Sent 🐾
+            Request Sent <i class="fa-solid fa-paw"></i>
         </h3>
 
         <p *ngIf="successType === 'add'">

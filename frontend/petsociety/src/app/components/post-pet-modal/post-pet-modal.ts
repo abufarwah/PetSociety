@@ -18,6 +18,7 @@ export class PostPetModalComponent {
   petType: string = '';
   petLocation: string = '';
   petDescription: string = '';
+  isSubmitted = false;
 
   availableTags: string[] = [
     'Vaccinated',
@@ -59,17 +60,29 @@ export class PostPetModalComponent {
   @Output() petCreated = new EventEmitter<any>();
 
   submitPet() {
-    const newPet = {
-      breed: this.petName,
-      type: this.petType,
-      age: this.petAge,
-      location: this.petLocation,
-      description: this.petDescription,
-      image: this.imagePreview,
-      tags: this.selectedTags,
-    };
+  this.isSubmitted = true;
 
-    this.petCreated.emit(newPet);
-    this.close.emit();
+  if (
+    !this.petName ||
+    !this.petType ||
+    !this.petAge ||
+    !this.petLocation ||
+    !this.selectedImageFile
+  ) {
+    return;
   }
+
+  const newPet = {
+    breed: this.petName,
+    type: this.petType,
+    age: this.petAge,
+    location: this.petLocation,
+    description: this.petDescription,
+    image: this.imagePreview,
+    tags: this.selectedTags,
+  };
+
+  this.petCreated.emit(newPet);
+  this.close.emit();
+}
 }
