@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PostPetModalComponent } from '../post-pet-modal/post-pet-modal';
 import { OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-adoption',
@@ -19,6 +21,7 @@ export class Adoption implements OnInit {
   selectedAge: string = 'All';
   selectedTag: string = 'All';
   isLoggedIn = false;
+  constructor(private router: Router, private auth: Auth) {}
 
   availableTags: string[] = [
     'Vaccinated',
@@ -266,7 +269,8 @@ export class Adoption implements OnInit {
 
 handlePostPet() {
   if (!this.isLoggedIn) {
-    alert('Please login first to post a pet 🐾');
+    // Redirect unauthenticated users to login
+    (this as any).router?.navigate(['/login'], { queryParams: { redirect: 'Adoption' } });
     return;
   }
 
@@ -275,7 +279,8 @@ handlePostPet() {
 
 handleAdoption(pet: any) {
   if (!this.isLoggedIn) {
-    alert('Please login first to adopt a pet 🐾');
+    // Redirect unauthenticated users to login
+    (this as any).router?.navigate(['/login'], { queryParams: { redirect: 'Adoption' } });
     return;
   }
 
@@ -283,7 +288,10 @@ handleAdoption(pet: any) {
 }
 
 ngOnInit() {
-  this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  // Subscribe to auth stream so UI updates immediately on login/logout
+  this.auth.isLoggedIn$.subscribe((v: boolean) => {
+    this.isLoggedIn = v;
+  });
 }
 
 }
