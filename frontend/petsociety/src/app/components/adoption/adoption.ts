@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PostPetModalComponent } from '../post-pet-modal/post-pet-modal';
+import { OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-adoption',
@@ -9,7 +12,7 @@ import { PostPetModalComponent } from '../post-pet-modal/post-pet-modal';
   templateUrl: './adoption.html',
   styleUrls: ['./adoption.css'],
 })
-export class Adoption {
+export class Adoption implements OnInit {
   showPostModal = false;
   showConfirm = false;
   selectedPet: any = null;
@@ -17,6 +20,8 @@ export class Adoption {
   selectedType: string = 'All';
   selectedAge: string = 'All';
   selectedTag: string = 'All';
+  isLoggedIn = false;
+  constructor(private router: Router, private auth: Auth) {}
 
   availableTags: string[] = [
     'Vaccinated',
@@ -260,6 +265,33 @@ export class Adoption {
   this.showPostModal = false;
   this.successType = 'add';
   this.showConfirm = true;
+}
+
+handlePostPet() {
+  if (!this.isLoggedIn) {
+    // Redirect unauthenticated users to login
+    (this as any).router?.navigate(['/login'], { queryParams: { redirect: 'Adoption' } });
+    return;
+  }
+
+  this.openPostModal();
+}
+
+handleAdoption(pet: any) {
+  if (!this.isLoggedIn) {
+    // Redirect unauthenticated users to login
+    (this as any).router?.navigate(['/login'], { queryParams: { redirect: 'Adoption' } });
+    return;
+  }
+
+  this.openPet(pet);
+}
+
+ngOnInit() {
+  // Subscribe to auth stream so UI updates immediately on login/logout
+  this.auth.isLoggedIn$.subscribe((v: boolean) => {
+    this.isLoggedIn = v;
+  });
 }
 
 }

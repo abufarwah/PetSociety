@@ -7,7 +7,10 @@
                 homes</p>
         </div>
 
-        <button class="post-btn" (click)="openPostModal()">
+        <!-- <button class="post-btn" (click)="openPostModal()">
+            + Post Pet for Adoption
+        </button> -->
+        <button class="post-btn" (click)="handlePostPet()">
             + Post Pet for Adoption
         </button>
     </div>
@@ -105,7 +108,10 @@
                     <span *ngFor="let tag of pet.tags">{{ tag }}</span>
                 </div>
 
-                <button class="adopt-btn" (click)="openPet(pet)">
+                <!-- <button class="adopt-btn" (click)="openPet(pet)">
+                    Adopt Now
+                </button> -->
+                <button class="adopt-btn" (click)="handleAdoption(pet)">
                     Adopt Now
                 </button>
 
@@ -167,36 +173,35 @@
         </div>
 
     </div>
-</div> 
-        <div class="confirm-modal" *ngIf="showConfirm">
-  <div class="confirm-box">
+</div>
+<div class="confirm-modal" *ngIf="showConfirm">
+    <div class="confirm-box">
 
-    <h3 *ngIf="successType === 'add'">
-      Pet Added Successfully 🐾
-    </h3>
+        <h3 *ngIf="successType === 'add'">
+            Pet Added Successfully 🐾
+        </h3>
 
-    <h3 *ngIf="successType === 'adopt'">
-      Request Sent 🐾
-    </h3>
+        <h3 *ngIf="successType === 'adopt'">
+            Request Sent 🐾
+        </h3>
 
-    <p *ngIf="successType === 'add'">
-      Your pet has been added to the adoption list.
-    </p>
+        <p *ngIf="successType === 'add'">
+            Your pet has been added to the adoption list.
+        </p>
 
-    <p *ngIf="successType === 'adopt'">
-      Your adoption request for
-      <strong>{{ selectedPet?.breed }}</strong>
-      has been sent successfully.
-    </p>
+        <p *ngIf="successType === 'adopt'">
+            Your adoption request for
+            <strong>{{ selectedPet?.breed }}</strong>
+            has been sent successfully.
+        </p>
 
-    <button (click)="closeConfirm()">OK</button>
+        <button (click)="closeConfirm()">OK</button>
 
-  </div>
+    </div>
 </div>
 
-
-        <app-post-pet-modal
-            *ngIf="showPostModal"
-            (close)="closePostModal()"
-            (petCreated)="addPet($event)">
-        </app-post-pet-modal>
+<app-post-pet-modal
+    *ngIf="showPostModal"
+    (close)="closePostModal()"
+    (petCreated)="addPet($event)">
+</app-post-pet-modal>
