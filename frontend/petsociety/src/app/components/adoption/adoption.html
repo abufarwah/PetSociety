@@ -105,7 +105,7 @@
                     <span *ngFor="let tag of pet.tags">{{ tag }}</span>
                 </div>
 
-                 <button class="adopt-btn" (click)="openPet(pet)">
+                <button class="adopt-btn" (click)="openPet(pet)">
                     Adopt Now
                 </button>
 
@@ -137,11 +137,12 @@
         </div>
 
         <p class="modal-desc">
-            This lovely {{ selectedPet.type.toLowerCase() }} is looking for a
-            forever home
+            {{ selectedPet.description || ('This lovely ' +
+            selectedPet.type.toLowerCase() + ' is looking for a forever home')
+            }}
         </p>
 
-<!-- Adoption Confirmation -->
+        <!-- Adoption Confirmation -->
         <div class="confirm-modal" *ngIf="showConfirm">
             <div class="confirm-box">
                 <h3>Request Sent 🐾</h3>
@@ -166,11 +167,36 @@
         </div>
 
     </div>
+</div> 
+        <div class="confirm-modal" *ngIf="showConfirm">
+  <div class="confirm-box">
+
+    <h3 *ngIf="successType === 'add'">
+      Pet Added Successfully 🐾
+    </h3>
+
+    <h3 *ngIf="successType === 'adopt'">
+      Request Sent 🐾
+    </h3>
+
+    <p *ngIf="successType === 'add'">
+      Your pet has been added to the adoption list.
+    </p>
+
+    <p *ngIf="successType === 'adopt'">
+      Your adoption request for
+      <strong>{{ selectedPet?.breed }}</strong>
+      has been sent successfully.
+    </p>
+
+    <button (click)="closeConfirm()">OK</button>
+
+  </div>
 </div>
 
-<app-post-pet-modal
-  *ngIf="showPostModal"
-  (close)="closePostModal()"
-  (petCreated)="addPet($event)">
-</app-post-pet-modal>
 
+        <app-post-pet-modal
+            *ngIf="showPostModal"
+            (close)="closePostModal()"
+            (petCreated)="addPet($event)">
+        </app-post-pet-modal>

@@ -11,9 +11,9 @@ import { PostPetModalComponent } from '../post-pet-modal/post-pet-modal';
 })
 export class Adoption {
   showPostModal = false;
-  selectedPet: any = null;
   showConfirm = false;
-
+  selectedPet: any = null;
+  successType: 'add' | 'adopt' | null = null;
   selectedType: string = 'All';
   selectedAge: string = 'All';
   selectedTag: string = 'All';
@@ -243,17 +243,23 @@ export class Adoption {
   }
 
   confirmAdoption() {
-    this.showConfirm = true;
-  }
+  this.successType = 'adopt';
+  this.showConfirm = true;
+}
+
 
   closeConfirm() {
-    this.showConfirm = false;
-    this.selectedPet = null;
-  }
+  this.showConfirm = false;
+  this.successType = null;
+  this.selectedPet = null;
+}
+
 
   addPet(pet: any) {
   this.pets.unshift(pet);
   this.showPostModal = false;
-  }
+  this.successType = 'add';
+  this.showConfirm = true;
+}
 
 }

@@ -1,16 +1,45 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-post-pet-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './post-pet-modal.html',
   styleUrls: ['./post-pet-modal.css'],
 })
 export class PostPetModalComponent {
   imagePreview: string | null = null;
   selectedImageFile: File | null = null;
+
+  petAge: string = '';
+  petName: string = '';
+  petType: string = '';
+  petLocation: string = '';
+  petDescription: string = '';
+
+  availableTags: string[] = [
+    'Vaccinated',
+    'Friendly',
+    'Good with kids',
+    'Playful',
+    'Calm',
+    'Energetic',
+    'Indoor',
+    'Outdoor',
+    'Trained',
+  ];
+
+  selectedTags: string[] = [];
+
+  toggleTag(tag: string) {
+    if (this.selectedTags.includes(tag)) {
+      this.selectedTags = this.selectedTags.filter((t) => t !== tag);
+    } else {
+      this.selectedTags.push(tag);
+    }
+  }
 
   onImageSelected(event: any) {
     const file = event.target.files[0];
@@ -31,12 +60,13 @@ export class PostPetModalComponent {
 
   submitPet() {
     const newPet = {
-      breed: 'New Pet',
-      type: 'Dog',
-      age: 'Baby',
-      location: 'Amman',
+      breed: this.petName,
+      type: this.petType,
+      age: this.petAge,
+      location: this.petLocation,
+      description: this.petDescription,
       image: this.imagePreview,
-      tags: [],
+      tags: this.selectedTags,
     };
 
     this.petCreated.emit(newPet);

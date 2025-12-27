@@ -13,46 +13,50 @@
 
     <div class="form-group">
       <label>Pet Name *</label>
-      <input type="text" placeholder="Enter pet name" />
+      <input type="text" placeholder="Enter pet name" [(ngModel)]="petName"
+        name="petName" />
+
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label>Type *</label>
-        <select>
-          <option>All</option>
-          <option>Dog</option>
-          <option>Cat</option>
-          <option>Rabbit</option>
-          <option>Hamster</option>
-          <option>Bird</option>
-          <option>Turtle</option>
-          <option>Fish</option>
+
+        <select [(ngModel)]="petType" name="petType">
+          <option value>Select type</option>
+          <option value="Dog">Dog</option>
+          <option value="Cat">Cat</option>
+          <option value="Rabbit">Rabbit</option>
+          <option value="Hamster">Hamster</option>
+          <option value="Bird">Bird</option>
+          <option value="Turtle">Turtle</option>
+          <option value="Fish">Fish</option>
         </select>
+
       </div>
 
       <div class="form-group">
         <label>Age *</label>
-        <input type="text" placeholder="e.g. 2 years" />
+        <select [(ngModel)]="petAge" name="petAge">
+          <option value>Select age</option>
+          <option value="Baby">Baby</option>
+          <option value="Young">Young</option>
+          <option value="Adult">Adult</option>
+        </select>
+
       </div>
     </div>
 
     <div class="form-group">
       <label>Location *</label>
-      <input type="text" placeholder="City, State" />
+      <input type="text" placeholder="City, State" [(ngModel)]="petLocation" name="petLocation" />
     </div>
 
     <div class="form-group">
       <label>Description</label>
-      <textarea placeholder="Tell us about this pet..."></textarea>
+      <textarea placeholder="Tell us about this pet..." [(ngModel)]="petDescription" name="petDescription"></textarea>
     </div>
 
-    <!-- <div class="form-group">
-      <label>Image URL</label>
-      <div class="image-input">
-        <input type="text" placeholder="https://example.com/image.jpg" />
-      </div>
-    </div> -->
     <div class="form-group">
       <label>Pet Image *</label>
 
@@ -67,19 +71,14 @@
         class="preview-img" />
     </div>
 
-    <div class="form-group">
-      <label>Tags</label>
-      <div class="tags">
-        <span class="tag">Vaccinated</span>
-        <span class="tag">Friendly</span>
-        <span class="tag">Good with kids</span>
-        <span class="tag">Playful</span>
-        <span class="tag">Calm</span>
-        <span class="tag">Energetic</span>
-        <span class="tag">Indoor</span>
-        <span class="tag">Outdoor</span>
-        <span class="tag">Trained</span>
-      </div>
+    <div class="tags">
+      <span
+        class="tag"
+        *ngFor="let tag of availableTags"
+        [class.active]="selectedTags.includes(tag)"
+        (click)="toggleTag(tag)">
+        {{ tag }}
+      </span>
     </div>
 
   </div>

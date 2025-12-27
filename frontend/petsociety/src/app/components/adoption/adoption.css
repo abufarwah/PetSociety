@@ -37,7 +37,7 @@
 .post-btn:hover {
   background: #c9a774;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* ================= FILTERS ================= */
@@ -111,7 +111,7 @@ select {
   background: white;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .pet-img {
@@ -135,7 +135,7 @@ select {
 .pet-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0, 0, 0, 0.55);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -193,7 +193,7 @@ select {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 1000;
 }
 
@@ -215,8 +215,6 @@ select {
   height: 260px;
   object-fit: cover;
 }
-
-
 
 /* ================= MODAL CONTENT ================= */
 .modal-content {
@@ -261,19 +259,32 @@ select {
 .confirm-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
-}
+  z-index: 9999;
+}  
+
 
 .confirm-box {
   background: white;
   padding: 30px;
   border-radius: 20px;
   text-align: center;
-  width: 360px;
+  width: 320px;
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .confirm-box h3 {
@@ -298,5 +309,7 @@ select {
 .confirm-box button:hover {
   background: #c9a774;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
+
+
