@@ -17,11 +17,11 @@
 
   
   <!-- NOT LOGGED IN -->
-<a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/signup" class="sign-up">
+<a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/signup" routerLinkActive="active" class="sign-up">
   Sign up
 </a>
 
-<a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/login" class="login-btn">
+<a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/login" routerLinkActive="active" class="login-btn">
   Login
 </a>
 
