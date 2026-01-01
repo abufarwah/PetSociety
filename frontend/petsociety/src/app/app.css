@@ -99,6 +99,11 @@
   color: #c39b6e;
 }
 
+.sign-up.active {
+  border-bottom: 3px solid #c39b6e;
+  padding-bottom: 4px;
+}
+
 .login-btn {
   /* background-color: #d2b08c; */
   text-decoration: none;
@@ -116,6 +121,11 @@
 
 .login-btn:hover {
 color: #c39b6e;
+}
+
+.login-btn.active {
+  border-bottom: 3px solid #c39b6e;
+  padding-bottom: 4px;
 }
 .account-btn {
   text-decoration: none;
