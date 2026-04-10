@@ -8,7 +8,7 @@ export class Auth {
    isLoggedIn$ = new BehaviorSubject<boolean>(false);
 
   constructor() {
-    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('isLoggedIn') : null;
+    const stored = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('isLoggedIn') : null;
     if (stored === 'true') {
       this.isLoggedIn$.next(true);
     }
@@ -17,17 +17,15 @@ export class Auth {
   login() {
     this.isLoggedIn$.next(true);
     try {
-      localStorage.setItem('isLoggedIn', 'true');
+      sessionStorage.setItem('isLoggedIn', 'true');
     } catch {}
   }
 
   logout() {
     this.isLoggedIn$.next(false);
     try {
-      localStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('isLoggedIn');
     } catch {}
   }
 
 }
-
-
