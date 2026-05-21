@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Petsociety.Models;
 
 namespace Petsociety.Model
 {
@@ -11,5 +12,8 @@ namespace Petsociety.Model
         // keep existing DbSets in your project; add these if not present
         public DbSet<Pet> Pets { get; set; } = null!;
         public DbSet<AdoptionRequest> AdoptionRequests { get; set; } = null!;
+
+        // Added Users DbSet so Account APIs can read user profiles/stats.
+        public DbSet<User> Users { get; set; } = null!;
     }
 }
