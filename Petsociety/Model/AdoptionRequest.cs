@@ -9,6 +9,8 @@ namespace Petsociety.Model
 
         [Required]
         public long PetId { get; set; }
+        [Required]
+        public long UserId { get; set; }
 
         [Required]
         public string PhoneNumber { get; set; } = null!;
