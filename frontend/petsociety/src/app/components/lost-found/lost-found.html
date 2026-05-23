@@ -1,7 +1,6 @@
 <div class="container my-5">
 
   <div class="text-center hero-bg mb-5">
-
     <div class="mb-3">
       <i class="bi bi-stars fs-1 star-icon"></i>
     </div>
@@ -58,9 +57,9 @@
 
     <div class="col-md-6">
 
-      <div class="upload-card p-4">
+      <div class="upload-card lost-card p-4">
 
-        <div class="d-flex align-items-center mb-3">
+        <div class="d-flex align-items-center gap-3 mb-3">
 
           <div class="icon-box">
             <i class="bi bi-box-arrow-up fs-4"></i>
@@ -102,17 +101,35 @@
 
           </div>
 
-          <div *ngIf="lostImageName" class="text-center">
+          <div *ngIf="lostImageName" class="preview-box">
 
-            <i class="bi bi-check-circle-fill fs-1 mb-2"></i>
+  <div class="preview-image-wrapper">
 
-            <p class="mb-0 fw-bold text-dark">
-              {{ lostImageName }}
-            </p>
+    <img
+      [src]="lostImagePreview"
+      class="preview-image"
+      alt="Lost Pet">
 
-            <small>Ready to compare</small>
+    <div class="preview-check">
+      <i class="bi bi-check-lg"></i>
+    </div>
 
-          </div>
+  </div>
+
+  <div class="preview-content">
+
+    <h5>{{ lostImageName }}</h5>
+
+    <small>Ready to compare</small>
+
+    <button class="change-btn">
+      Change Photo
+      <i class="bi bi-pencil ms-2"></i>
+    </button>
+
+  </div>
+
+</div>
 
         </div>
 
@@ -124,9 +141,9 @@
 
     <div class="col-md-6">
 
-      <div class="upload-card p-4">
+      <div class="upload-card found-card p-4">
 
-        <div class="d-flex align-items-center mb-3">
+     <div class="d-flex align-items-center gap-3 mb-3">
 
           <div class="icon-box">
             <i class="bi bi-box-arrow-in-down fs-4"></i>
@@ -169,17 +186,35 @@
 
           </div>
 
-          <div *ngIf="foundImageName" class="text-center">
+          <div *ngIf="foundImageName" class="preview-box">
 
-            <i class="bi bi-check-circle-fill fs-1 mb-2"></i>
+  <div class="preview-image-wrapper">
 
-            <p class="mb-0 fw-bold text-dark">
-              {{ foundImageName }}
-            </p>
+    <img
+      [src]="foundImagePreview"
+      class="preview-image"
+      alt="Found Pet">
 
-            <small>Ready to compare</small>
+    <div class="preview-check success">
+      <i class="bi bi-check-lg"></i>
+    </div>
 
-          </div>
+  </div>
+
+  <div class="preview-content">
+
+    <h5>{{ foundImageName }}</h5>
+
+    <small>Ready to compare</small>
+
+    <button class="change-btn">
+      Change Photo
+      <i class="bi bi-pencil ms-2"></i>
+    </button>
+
+  </div>
+
+</div>
 
         </div>
 
@@ -292,16 +327,16 @@
 
         <ng-container *ngFor="let a of animals">
 
-          <button
-            class="btn"
-            [class.active-chip]="animalFilter===a"
-            (click)="setAnimalFilter(a)">
+  <button
+    class="animal-btn"
+    [class.active-chip]="animalFilter===a"
+    (click)="setAnimalFilter(a)">
 
-            {{ a }}
+    {{ a }}
 
-          </button>
+  </button>
 
-        </ng-container>
+</ng-container>
 
       </div>
 
@@ -333,13 +368,6 @@
 
             </span>
 
-            <button
-              class="btn-fav position-absolute"
-              style="right:12px;top:12px">
-
-              <i class="bi bi-heart"></i>
-
-            </button>
 
           </div>
 

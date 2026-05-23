@@ -11,8 +11,12 @@ import { FormsModule } from '@angular/forms';
 })
 export class LostFoundComponent implements OnInit {
 
+
   lostImageName: string | null = null;
   foundImageName: string | null = null;
+
+  lostImagePreview: string | ArrayBuffer | null = null;
+foundImagePreview: string | ArrayBuffer | null = null;
 
   // متغيرات العدادات
   lostCount: number = 0;
@@ -57,19 +61,52 @@ export class LostFoundComponent implements OnInit {
 
   // دوال الصور (كما هي)
   onFileSelected(event: any, type: string) {
-    const file = event.target.files[0];
-    if (file) {
-      if (type === 'lost') this.lostImageName = file.name;
-      else this.foundImageName = file.name;
-    }
+
+  const file = event.target.files[0];
+
+  if (file) {
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      if (type === 'lost') {
+
+        this.lostImageName = file.name;
+        this.lostImagePreview = reader.result;
+
+      } else {
+
+        this.foundImageName = file.name;
+        this.foundImagePreview = reader.result;
+
+      }
+
+      this.cdr.detectChanges();
+
+    };
+
+    reader.readAsDataURL(file);
+
   }
 
+}
+
   clearImages() {
-    this.lostImageName = null;
-    this.foundImageName = null;
-    if (this.lostInputVariable) this.lostInputVariable.nativeElement.value = '';
-    if (this.foundInputVariable) this.foundInputVariable.nativeElement.value = '';
-  }
+
+  this.lostImageName = null;
+  this.foundImageName = null;
+
+  this.lostImagePreview = null;
+  this.foundImagePreview = null;
+
+  if (this.lostInputVariable)
+    this.lostInputVariable.nativeElement.value = '';
+
+  if (this.foundInputVariable)
+    this.foundInputVariable.nativeElement.value = '';
+
+}
 
   // Community Reports data and helpers
   viewFilter: 'all' | 'lost' | 'found' = 'all';
