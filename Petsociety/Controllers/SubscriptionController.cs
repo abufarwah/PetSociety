@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Petsociety.Model;
+using Petsociety.Models;
 
 namespace Petsociety.Controllers
 {
