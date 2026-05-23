@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../services/auth';
+import { SubscriptionService } from '../../services/subscription.service';
 
 interface Package {
   name: string;
@@ -21,6 +22,8 @@ export class Payment implements OnInit {
   selectedPackage: Package | null = null;
   showSuccess = false;
   isLoggedIn = false;
+  paymentError = '';
+  isSubmitting = false;
 
   packages: Package[] = [
     {
@@ -60,7 +63,11 @@ export class Payment implements OnInit {
     },
   ];
 
-  constructor(private router: Router, private auth: Auth) {}
+  constructor(
+    private router: Router,
+    private auth: Auth,
+    private subscriptionService: SubscriptionService
+  ) {}
 
   ngOnInit() {
     // Subscribe to auth state AND check localStorage directly
@@ -135,6 +142,9 @@ export class Payment implements OnInit {
       return;
     }
 
+    this.isSubmitting = true;
+    this.paymentError = '';
+
     // Simulate payment processing
     console.log('Processing payment...', {
       package: this.selectedPackage,
@@ -142,8 +152,16 @@ export class Payment implements OnInit {
       total: this.total,
     });
 
-    // Show success modal
-    this.showSuccess = true;
+    this.subscriptionService.processPayment(this.selectedPackage.name).subscribe({
+      next: () => {
+        this.showSuccess = true;
+        this.isSubmitting = false;
+      },
+      error: (error) => {
+        this.paymentError = error?.error?.message || error?.message || 'Payment failed';
+        this.isSubmitting = false;
+      }
+    });
   }
 
   closeSuccess() {
