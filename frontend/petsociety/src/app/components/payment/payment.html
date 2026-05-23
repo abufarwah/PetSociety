@@ -35,6 +35,10 @@
           <h3 class="section-title mb-4">2. Payment Information</h3>
 
           <form [formGroup]="paymentForm" (ngSubmit)="processPayment()">
+            <div *ngIf="paymentError" class="alert alert-danger mb-3">
+              {{ paymentError }}
+            </div>
+
             <!-- Card Number -->
             <div class="mb-3">
               <label class="form-label">Card Number</label>
@@ -172,9 +176,9 @@
             <button
               type="submit"
               class="btn btn-primary w-100 pay-btn d-none d-lg-block"
-              [disabled]="!selectedPackage || paymentForm.invalid">
+              [disabled]="!selectedPackage || paymentForm.invalid || isSubmitting">
               <i class="fa fa-lock me-2"></i>
-              Pay ${{ selectedPackage?.price || 0 }}/month
+              {{ isSubmitting ? 'Processing...' : 'Pay $' + (selectedPackage?.price || 0) + '/month' }}
             </button>
           </form>
         </div>
@@ -231,10 +235,10 @@
             <button
               type="button"
               class="btn btn-primary w-100 pay-btn d-lg-none mt-3"
-              [disabled]="!selectedPackage || paymentForm.invalid"
+              [disabled]="!selectedPackage || paymentForm.invalid || isSubmitting"
               (click)="processPayment()">
               <i class="fa fa-lock me-2"></i>
-              Pay ${{ total }}/month
+              {{ isSubmitting ? 'Processing...' : 'Pay $' + total + '/month' }}
             </button>
           </div>
 
