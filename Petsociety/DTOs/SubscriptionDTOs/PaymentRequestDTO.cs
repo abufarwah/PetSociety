@@ -4,30 +4,23 @@ namespace Petsociety.DTOs.SubscriptionDTOs
 {
     public class PaymentRequestDTO
     {
-       
         [Required]
-        public int UserId { get; set; } 
+        public string PackageName { get; set; } = string.Empty;
 
         [Required]
-        public string PackageName { get; set; } // Basic, Premium, Deluxe
+        public string CardNumber { get; set; } = string.Empty;
 
         [Required]
-        public decimal TotalAmount { get; set; } 
+        public string CardName { get; set; } = string.Empty;
 
         [Required]
-        public string CardNumber { get; set; }
+        public string Expiry { get; set; } = string.Empty;
 
         [Required]
-        public string CardName { get; set; }
+        public string Cvv { get; set; } = string.Empty;
 
-        [Required]
-        public string Expiry { get; set; }
-
-        [Required]
-        public string Cvv { get; set; }
-
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string PostalCode { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? PostalCode { get; set; }
     }
 }
