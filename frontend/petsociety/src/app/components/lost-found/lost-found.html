@@ -51,24 +51,22 @@
 
   <!-- UPLOAD SECTION -->
 
-  <div class="row g-4">
+  <div class="row g-4 justify-content-center">
 
-    <!-- LOST -->
+    <div class="col-xl-8">
 
-    <div class="col-md-6">
-
-      <div class="upload-card lost-card p-4">
+      <div class="upload-card query-card p-4">
 
         <div class="d-flex align-items-center gap-3 mb-3">
 
           <div class="icon-box">
-            <i class="bi bi-box-arrow-up fs-4"></i>
+            <i class="bi bi-upload fs-4"></i>
           </div>
 
           <div>
-            <h5 class="fw-bold mb-0">Lost Pet Photo</h5>
+            <h5 class="fw-bold mb-0">Upload Pet Photo</h5>
             <small class="text-muted">
-              Upload the original photo of your lost pet
+              Upload one image now. لاحقاً سيقوم AI بمقارنتها مع صور قاعدة البيانات.
             </small>
           </div>
 
@@ -76,23 +74,23 @@
 
         <input
           type="file"
-          #lostInput
+          #queryInput
           hidden
-          (change)="onFileSelected($event, 'lost')"
+          (change)="onFileSelected($event)"
           accept="image/*">
 
         <div
           class="upload-area-container dashed-pink"
-          (click)="lostInput.click()">
+          (click)="queryInput.click()">
 
-          <div *ngIf="!lostImageName" class="text-center">
+          <div *ngIf="!queryImageName" class="text-center">
 
             <div class="upload-icon-circle">
               <i class="bi bi-upload fs-1"></i>
             </div>
 
             <p class="mb-1 fw-bold text-dark">
-              Click to upload lost pet photo
+              Click to upload a pet photo
             </p>
 
             <small class="text-muted">
@@ -101,14 +99,14 @@
 
           </div>
 
-          <div *ngIf="lostImageName" class="preview-box">
+          <div *ngIf="queryImageName" class="preview-box">
 
   <div class="preview-image-wrapper">
 
     <img
-      [src]="lostImagePreview"
+      [src]="queryImagePreview"
       class="preview-image"
-      alt="Lost Pet">
+      alt="Pet Photo">
 
     <div class="preview-check">
       <i class="bi bi-check-lg"></i>
@@ -118,11 +116,11 @@
 
   <div class="preview-content">
 
-    <h5>{{ lostImageName }}</h5>
+    <h5>{{ queryImageName }}</h5>
 
-    <small>Ready to compare</small>
+    <small>Ready to search similar pets</small>
 
-    <button class="change-btn">
+    <button class="change-btn" type="button" (click)="clearImage()">
       Change Photo
       <i class="bi bi-pencil ms-2"></i>
     </button>
@@ -137,106 +135,26 @@
 
     </div>
 
-    <!-- FOUND -->
-
-    <div class="col-md-6">
-
-      <div class="upload-card found-card p-4">
-
-     <div class="d-flex align-items-center gap-3 mb-3">
-
-          <div class="icon-box">
-            <i class="bi bi-box-arrow-in-down fs-4"></i>
-          </div>
-
-          <div>
-            <h5 class="fw-bold mb-0">Found Pet Photo</h5>
-
-            <small class="text-muted">
-              Upload the photo of the pet you found
-            </small>
-          </div>
-
-        </div>
-
-        <input
-          type="file"
-          #foundInput
-          hidden
-          (change)="onFileSelected($event, 'found')"
-          accept="image/*">
-
-        <div
-          class="upload-area-container dashed-green"
-          (click)="foundInput.click()">
-
-          <div *ngIf="!foundImageName" class="text-center">
-
-            <div class="upload-icon-circle">
-              <i class="bi bi-upload fs-1"></i>
-            </div>
-
-            <p class="mb-1 fw-bold text-dark">
-              Click to upload found pet photo
-            </p>
-
-            <small class="text-muted">
-              JPG, PNG up to 10MB
-            </small>
-
-          </div>
-
-          <div *ngIf="foundImageName" class="preview-box">
-
-  <div class="preview-image-wrapper">
-
-    <img
-      [src]="foundImagePreview"
-      class="preview-image"
-      alt="Found Pet">
-
-    <div class="preview-check success">
-      <i class="bi bi-check-lg"></i>
-    </div>
-
-  </div>
-
-  <div class="preview-content">
-
-    <h5>{{ foundImageName }}</h5>
-
-    <small>Ready to compare</small>
-
-    <button class="change-btn">
-      Change Photo
-      <i class="bi bi-pencil ms-2"></i>
-    </button>
-
-  </div>
-
-</div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- COMPARE BUTTON -->
+    <!-- SEARCH BUTTON -->
 
     <div class="text-center mt-5">
 
       <button
         class="compare-btn"
-        [disabled]="!lostImageName || !foundImageName">
+        [disabled]="!queryImageName"
+        (click)="searchSimilarPets()">
 
         <i class="bi bi-stars me-2"></i>
 
-        Upload Both Images to Compare
+        Search Similar Pets
 
         <i class="bi bi-arrow-right ms-2"></i>
 
       </button>
+
+      <p *ngIf="searchResultMessage" class="small text-muted mt-3">
+        {{ searchResultMessage }}
+      </p>
 
     </div>
 

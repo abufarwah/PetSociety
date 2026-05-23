@@ -12,19 +12,17 @@ import { FormsModule } from '@angular/forms';
 export class LostFoundComponent implements OnInit {
 
 
-  lostImageName: string | null = null;
-  foundImageName: string | null = null;
-
-  lostImagePreview: string | ArrayBuffer | null = null;
-foundImagePreview: string | ArrayBuffer | null = null;
+  queryImageName: string | null = null;
+  queryImagePreview: string | ArrayBuffer | null = null;
+  queryImageFile: File | null = null;
+  searchResultMessage: string | null = null;
 
   // متغيرات العدادات
   lostCount: number = 0;
   foundCount: number = 0;
   reunitedCount: number = 0;
 
-  @ViewChild('lostInput') lostInputVariable!: ElementRef;
-  @ViewChild('foundInput') foundInputVariable!: ElementRef;
+  @ViewChild('queryInput') queryInputVariable!: ElementRef;
 
   // 2. يجب إضافة constructor لاستخدام كاشف التغييرات
   constructor(private cdr: ChangeDetectorRef) {}
@@ -60,53 +58,41 @@ foundImagePreview: string | ArrayBuffer | null = null;
   }
 
   // دوال الصور (كما هي)
-  onFileSelected(event: any, type: string) {
+  onFileSelected(event: any) {
 
-  const file = event.target.files[0];
+    const file = event.target.files[0];
 
-  if (file) {
+    if (file) {
 
-    const reader = new FileReader();
+      const reader = new FileReader();
 
-    reader.onload = () => {
+      reader.onload = () => {
+        this.queryImageName = file.name;
+        this.queryImagePreview = reader.result;
+        this.queryImageFile = file;
+        this.searchResultMessage = null;
+        this.cdr.detectChanges();
+      };
 
-      if (type === 'lost') {
-
-        this.lostImageName = file.name;
-        this.lostImagePreview = reader.result;
-
-      } else {
-
-        this.foundImageName = file.name;
-        this.foundImagePreview = reader.result;
-
-      }
-
-      this.cdr.detectChanges();
-
-    };
-
-    reader.readAsDataURL(file);
-
+      reader.readAsDataURL(file);
+    }
   }
 
-}
+  clearImage() {
+    this.queryImageName = null;
+    this.queryImagePreview = null;
+    this.queryImageFile = null;
+    this.searchResultMessage = null;
 
-  clearImages() {
+    if (this.queryInputVariable)
+      this.queryInputVariable.nativeElement.value = '';
+  }
 
-  this.lostImageName = null;
-  this.foundImageName = null;
-
-  this.lostImagePreview = null;
-  this.foundImagePreview = null;
-
-  if (this.lostInputVariable)
-    this.lostInputVariable.nativeElement.value = '';
-
-  if (this.foundInputVariable)
-    this.foundInputVariable.nativeElement.value = '';
-
-}
+  searchSimilarPets() {
+    if (!this.queryImageFile) return;
+    this.searchResultMessage = 'تم رفع الصورة. الميزة المستقبلية للـ AI ستقارن هذه الصورة مع صور قاعدة البيانات.';
+    console.log('Ready to compare image with AI service:', this.queryImageFile);
+  }
 
   // Community Reports data and helpers
   viewFilter: 'all' | 'lost' | 'found' = 'all';
