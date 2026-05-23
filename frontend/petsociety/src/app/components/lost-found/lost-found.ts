@@ -113,6 +113,9 @@ foundImagePreview: string | ArrayBuffer | null = null;
   animalFilter: string = 'All Animals';
   animals: string[] = ['All Animals', 'Dog', 'Cat', 'Rabbit', 'Hamster', 'Bird', 'Turtle'];
 
+  selectedContactPostId: number | null = null;
+  selectedContactPhone: string | null = null;
+
   posts: Array<any> = [
     {
       id: 1,
@@ -122,7 +125,8 @@ foundImagePreview: string | ArrayBuffer | null = null;
       excerpt: 'Went missing near Abdoun bridge. Has a red collar with a small tag. Very friendly.',
       location: 'Abdoun, Amman',
       dateText: 'Last seen 18 May 2025',
-      image: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=1200&q=80'
+      image: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=1200&q=80',
+      phone: '+962 79 123 4567'
     },
     {
       id: 2,
@@ -132,7 +136,8 @@ foundImagePreview: string | ArrayBuffer | null = null;
       excerpt: 'Found near the Sweifieh roundabout. Seems well-fed and friendly, probably someone\'s pet.',
       location: 'Sweifieh, Amman',
       dateText: 'Found on 19 May 2025',
-      image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=1200&q=80'
+      image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=1200&q=80',
+      phone: '+962 79 234 5678'
     },
     {
       id: 3,
@@ -142,7 +147,8 @@ foundImagePreview: string | ArrayBuffer | null = null;
       excerpt: '2-year-old Persian cat, shy and may be hiding. Last seen near the park in Khalda.',
       location: 'Khalda, Amman',
       dateText: 'Last seen 17 May 2025',
-      image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=1200&q=80'
+      image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=1200&q=80',
+      phone: '+962 79 345 6789'
     }
   ];
 
@@ -157,8 +163,15 @@ foundImagePreview: string | ArrayBuffer | null = null;
   setViewFilter(mode: 'all' | 'lost' | 'found') { this.viewFilter = mode; }
   setAnimalFilter(name: string) { this.animalFilter = name; }
 
-  contactOwner(post: any) { alert('Contact owner for: ' + post.title); }
-  contactFinder(post: any) { alert('Contact finder for: ' + post.title); }
+  contactOwner(post: any) {
+    this.selectedContactPostId = post.id;
+    this.selectedContactPhone = post.phone;
+  }
+
+  contactFinder(post: any) {
+    this.selectedContactPostId = post.id;
+    this.selectedContactPhone = post.phone;
+  }
 
   // --- Reporting modal state & handlers ---
   reportModalVisible: boolean = false;

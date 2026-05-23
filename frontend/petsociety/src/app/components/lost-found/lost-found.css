@@ -672,6 +672,15 @@
     0 14px 28px rgba(207,164,109,0.4),
     inset 0 1px 0 rgba(255,255,255,0.45) !important;
 }
+
+.contact-phone {
+  color: var(--dark);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 /* ================= MODAL ================= */
 
 .modal-overlay {
