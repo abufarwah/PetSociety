@@ -407,4 +407,100 @@
 
   </div>
 
+  <!-- REPORT MODAL -->
+  <div *ngIf="reportModalVisible" class="modal-overlay" (click)="closeReport()">
+    <div class="report-modal" (click)="$event.stopPropagation()">
+
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center gap-3">
+          <div class="step-icon bg-purple">
+            <i class="bi" [ngClass]="{'bi-exclamation-triangle-fill': modalMode==='lost', 'bi-check-circle-fill': modalMode==='found'}"></i>
+          </div>
+
+          <div>
+            <h4 class="fw-bold mb-0">Report a {{ modalMode === 'lost' ? 'Lost' : 'Found' }} Pet</h4>
+            <small class="text-muted">Fill in the details to alert the community</small>
+          </div>
+        </div>
+
+        <button class="btn btn-sm" (click)="closeReport()">✕</button>
+      </div>
+
+      <form (ngSubmit)="submitReport()">
+
+        <div class="row g-3 mb-3">
+          <div class="col-12">
+            <label class="form-label small text-muted">PET TYPE <span class="text-danger">*</span></label>
+            <div class="d-flex gap-2 flex-wrap">
+              <button type="button" class="chip" [class.chip-active]="reportForm.petType==='Dog'" (click)="reportForm.petType='Dog'">Dog</button>
+              <button type="button" class="chip" [class.chip-active]="reportForm.petType==='Cat'" (click)="reportForm.petType='Cat'">Cat</button>
+              <button type="button" class="chip" [class.chip-active]="reportForm.petType==='Rabbit'" (click)="reportForm.petType='Rabbit'">Rabbit</button>
+              <button type="button" class="chip" [class.chip-active]="reportForm.petType==='Hamster'" (click)="reportForm.petType='Hamster'">Hamster</button>
+              <button type="button" class="chip" [class.chip-active]="reportForm.petType==='Bird'" (click)="reportForm.petType='Bird'">Bird</button>
+              <button type="button" class="chip" [class.chip-active]="reportForm.petType==='Turtle'" (click)="reportForm.petType='Turtle'">Turtle</button>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small text-muted">BREED</label>
+            <input class="form-control" [(ngModel)]="reportForm.breed" name="breed" placeholder="e.g. Golden Retriever">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small text-muted">COLOR / MARKINGS <span class="text-danger">*</span></label>
+            <input class="form-control" [(ngModel)]="reportForm.color" name="color" placeholder="e.g. Brown with white chest">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small text-muted">DATE LAST SEEN <span class="text-danger">*</span></label>
+            <input class="form-control" type="date" [(ngModel)]="reportForm.dateLastSeen" name="dateLastSeen">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small text-muted">LAST SEEN LOCATION <span class="text-danger">*</span></label>
+            <input class="form-control" [(ngModel)]="reportForm.location" name="location" placeholder="Street, neighborhood, city...">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small text-muted">DESCRIPTION</label>
+            <textarea class="form-control" rows="3" [(ngModel)]="reportForm.description" name="description" placeholder="Collar color, distinctive marks, behavior, any other details..."></textarea>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small text-muted">PET PHOTO</label>
+            <div class="upload-dashed text-center p-4" (click)="modalPhoto.click()">
+              <input type="file" hidden (change)="onModalPhotoSelected($event)" #modalPhoto>
+              <div>
+                <i class="bi bi-cloud-upload fs-2 text-muted"></i>
+                <p class="mb-0 fw-bold">Click to upload photo</p>
+                <small class="text-muted">JPG, PNG up to 10MB</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small text-muted">YOUR NAME <span class="text-danger">*</span></label>
+            <input class="form-control" [(ngModel)]="reportForm.reporterName" name="reporterName" placeholder="Full name">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small text-muted">PHONE NUMBER <span class="text-danger">*</span></label>
+            <input class="form-control" [(ngModel)]="reportForm.phone" name="phone" placeholder="+962 ...">
+          </div>
+
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-light" (click)="closeReport()">Cancel</button>
+          <button type="submit" class="report-submit-btn">
+            <i class="bi" [ngClass]="{'bi-exclamation-triangle-fill me-2': modalMode==='lost', 'bi-check-circle-fill me-2': modalMode==='found'}"></i>
+            Post {{ modalMode === 'lost' ? 'Lost' : 'Found' }} Pet Report
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
 </div>

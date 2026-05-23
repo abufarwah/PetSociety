@@ -492,3 +492,26 @@
     display: none;
   }
 }
+.report-submit-btn {
+  background: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.report-submit-btn:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+}
+
+.report-submit-btn:focus,
+.report-submit-btn:active {
+  background: #0f172a !important;
+  color: white !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
