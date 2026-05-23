@@ -139,6 +139,125 @@
   </div>
 
 
+  <!-- Community Reports (inserted below upload area) -->
+  <div class="mt-5">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div>
+        <h2 class="fw-bold mb-1">Community Reports</h2>
+        <small class="text-muted">{{ posts.length }} posts found</small>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-danger report-btn" (click)="openReport('lost')">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i> Report Lost Pet
+        </button>
+        <button class="btn btn-success report-btn" (click)="openReport('found')">
+          <i class="bi bi-check-circle-fill me-2"></i> Report Found Pet
+        </button>
+      </div>
+    </div>
+
+    <div class="mb-3 d-flex align-items-center gap-3 flex-wrap">
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-outline-secondary" [class.active]="viewFilter==='all'" (click)="setViewFilter('all')">All</button>
+        <button type="button" class="btn btn-outline-secondary" [class.active]="viewFilter==='lost'" (click)="setViewFilter('lost')">Lost</button>
+        <button type="button" class="btn btn-outline-secondary" [class.active]="viewFilter==='found'" (click)="setViewFilter('found')">Found</button>
+      </div>
+
+      <div class="animal-chips d-flex gap-2 align-items-center">
+        <ng-container *ngFor="let a of animals">
+          <button class="btn btn-sm btn-outline-secondary" [class.active-chip]="animalFilter===a" (click)="setAnimalFilter(a)">{{ a }}</button>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4" *ngFor="let post of filteredPosts">
+        <div class="card report-card shadow-sm h-100">
+          <div class="position-relative">
+            <img [src]="post.image" class="card-img-top" alt="{{post.title}}">
+            <span class="badge position-absolute badge-top ms-3 mt-3" [ngClass]="{'badge-lost': post.type==='lost','badge-found': post.type==='found'}">{{ post.type | uppercase }}</span>
+            <button class="btn btn-light btn-sm position-absolute btn-fav" style="right:12px;top:12px"><i class="bi bi-heart"></i></button>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title fw-bold">{{ post.title }}</h5>
+            <p class="text-muted small mb-2">{{ post.species }}</p>
+            <p class="card-text text-muted mb-3">{{ post.excerpt }}</p>
+            <div class="mt-auto">
+              <div class="d-flex justify-content-between align-items-center mb-3 small text-muted">
+                <div><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ post.location }}</div>
+                <div><i class="bi bi-clock me-1"></i>{{ post.dateText }}</div>
+              </div>
+
+              <button *ngIf="post.type==='lost'" class="btn btn-outline-danger w-100" (click)="contactOwner(post)"><i class="bi bi-telephone me-2"></i> Contact Owner</button>
+              <button *ngIf="post.type==='found'" class="btn btn-outline-success w-100" (click)="contactFinder(post)"><i class="bi bi-telephone me-2"></i> Contact Finder</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reporting Modal -->
+  <div *ngIf="reportModalVisible" class="modal-overlay">
+    <div class="report-modal shadow-lg">
+      <div class="d-flex align-items-start justify-content-between mb-3">
+        <div>
+          <h5 class="fw-bold">{{ modalMode==='lost' ? 'Report a Lost Pet' : 'Report a Found Pet' }}</h5>
+          <small class="text-muted">Fill in the details to alert the community</small>
+        </div>
+        <button class="btn btn-light btn-sm" (click)="closeReport()"><i class="bi bi-x-lg"></i></button>
+      </div>
+
+      <div class="mb-3">
+        <div class="d-flex gap-2 flex-wrap">
+          <button *ngFor="let a of animals" class="chip" [class.chip-active]="reportForm.petType===a" (click)="reportForm.petType=a">{{ a }}</button>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input class="form-control" placeholder="Breed (e.g. Golden Retriever)" [value]="reportForm.breed" (input)="reportForm.breed = $any($event.target).value">
+        </div>
+        <div class="col-md-6">
+          <input class="form-control" placeholder="Color / Markings" [value]="reportForm.color" (input)="reportForm.color = $any($event.target).value">
+        </div>
+      </div>
+
+      <div class="row g-3 mt-2">
+        <div class="col-md-6">
+          <input type="date" class="form-control" (change)="reportForm.dateLastSeen = $any($event.target).value">
+        </div>
+        <div class="col-md-6">
+          <input class="form-control" placeholder="Last seen location" (input)="reportForm.location = $any($event.target).value">
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <textarea class="form-control" rows="3" placeholder="Description" (input)="reportForm.description = $any($event.target).value"></textarea>
+      </div>
+
+      <div class="mt-3">
+        <label class="upload-dashed w-100 p-3 text-center">
+          <input type="file" hidden (change)="onModalPhotoSelected($event)" accept="image/*">
+          <div class="text-muted">Click to upload photo<br><small>JPG, PNG up to 10MB</small></div>
+        </label>
+      </div>
+
+      <div class="row g-3 mt-3">
+        <div class="col-md-6"><input class="form-control" placeholder="Full name" (input)="reportForm.reporterName = $any($event.target).value"></div>
+        <div class="col-md-6"><input class="form-control" placeholder="Phone number" (input)="reportForm.phone = $any($event.target).value"></div>
+      </div>
+
+      <div class="mt-4 text-center">
+        <button class="btn w-100 btn-lg btn-danger" *ngIf="modalMode==='lost'" (click)="submitReport()"><i class="bi bi-exclamation-triangle-fill me-2"></i> Post Lost Pet Report</button>
+        <button class="btn w-100 btn-lg btn-success" *ngIf="modalMode==='found'" (click)="submitReport()"><i class="bi bi-check-lg me-2"></i> Post Found Pet Report</button>
+      </div>
+    </div>
+  </div>
+
+
+
 
 
 

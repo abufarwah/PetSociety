@@ -194,4 +194,100 @@
   opacity: 1;
 }
 
+/* Community Reports styles */
+.report-btn{border-radius:28px; padding:10px 18px; font-weight:700; box-shadow:0 6px 20px rgba(15,23,42,0.06)}
+.report-btn .bi{font-size:1.05rem}
+.animal-chips .btn{border-radius:999px; padding:6px 12px}
+.animal-chips .active-chip{background:#0d6efd;color:#fff;border-color:#0d6efd}
+.report-card{border-radius:12px; overflow:hidden}
+.report-card .card-img-top{height:200px; object-fit:cover}
+.badge-top{padding:6px 10px; border-radius:999px; font-weight:700}
+.badge-lost{background:#ff5a5a; color:#fff}
+.badge-found{background:#19b46a; color:#fff}
+.btn-fav{width:40px;height:40px;border-radius:999px;display:flex;align-items:center;justify-content:center}
+.report-card .card-body{padding:1.25rem}
+.report-card .card-title{font-size:1.05rem}
+.report-card .card-text{font-size:.95rem}
+
+@media (max-width: 767px){
+  .report-card .card-img-top{height:160px}
+}
+
+/* Modal styles */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.45);display:flex;align-items:flex-start;justify-content:center;padding:40px;z-index:1050}
+.report-modal{background:#fff;border-radius:14px;max-width:760px;width:100%;padding:22px;box-shadow:0 30px 60px rgba(2,6,23,0.2);max-height:90vh;overflow:auto}
+.report-modal .chip{border:1px solid #e9e9ef;padding:8px 14px;border-radius:999px;background:#fff;color:#374151;font-weight:600}
+.report-modal .chip + .chip{margin-left:8px}
+.report-modal .chip-active{background:#fff4e6;border-color:#fb923c;color:#b45309}
+.upload-dashed{border:2px dashed #ffd6d6;border-radius:12px;background:#fff;padding:24px;cursor:pointer}
+.upload-dashed:hover{background:#fff7f7}
+.report-modal .btn-danger{background:#ef4444;border:none;border-radius:12px}
+.report-modal .btn-success{background:#16a34a;border:none;border-radius:12px}
+
+/* --- Button & Filter styling to match attachment --- */
+:root{
+  --tan:#d4b08a;
+  --tan-dark:#b78f67;
+  --muted:#6b7280;
+  --report-red:#ef4444;
+  --report-green:#16a34a;
+}
+
+/* Report buttons (rounded pill with strong color and soft shadow) */
+.report-btn{
+  border-radius:40px;
+  padding:10px 22px;
+  font-weight:700;
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  gap:.6rem;
+  box-shadow:0 10px 30px rgba(15,23,42,0.12);
+  border:none;
+}
+.report-btn.btn-danger{background:linear-gradient(180deg,#ff6b6b,#ef4444)}
+.report-btn.btn-success{background:linear-gradient(180deg,#2fb56f,#0f9b3a)}
+.report-btn:focus{outline:none;box-shadow:0 8px 24px rgba(15,23,42,0.12)}
+.report-btn:active{transform:translateY(1px)}
+
+/* Top view filter pills (All / Lost / Found) */
+.btn-group .btn{
+  border-radius:999px;
+  padding:8px 14px;
+  background:#fff;
+  border:1px solid rgba(15,23,42,0.06);
+  color:var(--muted);
+  box-shadow:none;
+}
+.btn-group .btn.active{
+  background:#fff; /* keep subtle — screenshot shows white with soft shadow */
+  box-shadow:0 6px 20px rgba(15,23,42,0.04);
+}
+
+/* Animal chips (tags) */
+.animal-chips .btn{
+  border-radius:999px;
+  padding:8px 14px;
+  background:#fff;
+  border:1px solid var(--tan);
+  color:var(--tan-dark);
+  font-weight:600;
+}
+.animal-chips .btn:hover{background:rgba(212,176,138,0.06)}
+.animal-chips .active-chip{
+  background:var(--tan);
+  color:#fff;
+  border-color:var(--tan);
+  box-shadow:0 8px 18px rgba(167,129,87,0.12);
+}
+
+/* Ensure outline/spacing like screenshot */
+.report-card{border-radius:12px;overflow:hidden}
+.report-card .card-body{padding:1.25rem}
+
+@media (max-width:768px){
+  .report-btn{padding:8px 14px;font-size:.95rem}
+  .animal-chips .btn{padding:6px 10px}
+}
+
 
