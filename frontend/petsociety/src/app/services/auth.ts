@@ -15,4 +15,24 @@ export class Auth {
     }
   }
 
+
+login() {
+    this.isLoggedIn$.next(true);
+    try {
+      sessionStorage.setItem('isLoggedIn', 'true');
+    } catch {}
+    try {
+      localStorage.setItem('isLoggedIn', 'true');
+    } catch {}
+  }
+
+  logout() {
+    this.isLoggedIn$.next(false);
+    try {
+      sessionStorage.removeItem('isLoggedIn');
+    } catch {}
+    try {
+      localStorage.removeItem('isLoggedIn');
+    } catch {}
+  }
 }
