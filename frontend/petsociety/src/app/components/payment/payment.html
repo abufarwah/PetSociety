@@ -35,6 +35,9 @@
           <h3 class="section-title mb-4">2. Payment Information</h3>
 
           <form [formGroup]="paymentForm" (ngSubmit)="processPayment()">
+            <div *ngIf="paymentSuccessMessage" class="alert alert-success mb-3">
+              {{ paymentSuccessMessage }}
+            </div>
             <div *ngIf="paymentError" class="alert alert-danger mb-3">
               {{ paymentError }}
             </div>

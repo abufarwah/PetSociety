@@ -17,19 +17,14 @@ export interface SubscriptionStatusResponse {
   providedIn: 'root'
 })
 export class SubscriptionService {
-  private readonly apiUrl = '/api/subscription';
-
+private readonly apiUrl = 'https://localhost:4200/api/subscription';
   constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      throw new Error('Missing auth token');
-    }
+    const userEmail = localStorage.getItem('userEmail') || ''; 
 
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`
+      'User-Email': userEmail 
     });
   }
 
