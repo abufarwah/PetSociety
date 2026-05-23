@@ -1,293 +1,494 @@
-/*    خلفية المتدرجههه  */
+/* ================= ROOT ================= */
+
+:root {
+  --primary: #d6b48c;
+  --primary-dark: #c9a774;
+  --dark: #0f172a;
+  --muted: #64748b;
+  --bg-soft: #f8f5f0;
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= HERO ================= */
+
 .hero-bg {
-  background: radial-gradient(circle at top left, #fafafa, #e9d6b9);
-  border-radius: 20px; 
-  padding: 40px; /* مسافة داخلية */
+  background: linear-gradient(to right, #fffaf3, #f8f5f0);
+  border-radius: 32px;
+  padding: 70px 50px;
+  box-shadow: var(--card-shadow);
 }
 
-
-
-/* النصوص والعناوين */
-.star-icon { color: #F8B64C; }
-.main-title { color: #333333; }
-.description-text { max-width: 75%; margin: 0 auto; font-size: 1.1rem; }
-
-/* الكروت العامة */
-.upload-card {
-  border: 1px solid #eee; /* حدود خفيفة جداً */
-  height: 100%;
-  transition: all 0.3s ease; /* لجعل الحركة ناعمة */
-
-  /* --- هذا هو سطر الظل --- */
-  /* القيم تعني: إزاحة أفقية 0، عمودية 8px، ضبابية 24px، لون أسود شفاف جداً */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}.icon-box { background-color: #fff; padding: 0.5rem; border-radius: 0.5rem; margin-right: 1rem; box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
-
-
-/* (اختياري) تأثير جميل عند مرور الماوس: يزيد الظل ويرتفع الكرت */
-.upload-card:hover {
-  transform: translateY(-5px); /* يرتفع للأعلى قليلاً */
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12); /* ظل أعمق */
+.star-icon {
+  color: var(--primary);
+  display: inline-block;
+  animation: twinkle 2.5s infinite ease-in-out;
 }
 
-
-
-
-/* منطقة الرفع */
-.upload-area-container {
-  min-height: 250px;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
-  background-color: #fff; border-radius: 0.5rem; transition: all 0.3s; cursor: pointer;
+.main-title {
+  color: var(--dark);
+  font-size: 42px;
+  font-weight: 700;
 }
-.upload-icon-circle { background-color: #f8f9fa; padding: 1rem; border-radius: 50%; margin-bottom: 1rem; }
 
-/* الكرت الوردي */
-.lost-card { background-color: #FFF0F0; box-shadow: #a0a0a0; }
-.dashed-pink { border: 2px dashed #FF6B6B; }
-.dashed-pink:hover { background-color: #ffe5e5; border-color: #ff85a7; }
+.description-text {
+  max-width: 700px;
+  margin: auto;
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
 
-/* الكرت الأخضر */
-.found-card { background-color: #F0FFF4; }
-.dashed-green { border: 2px dashed #48C774; }
-.dashed-green:hover { background-color: #e6ffec; border-color: #2f9e52; }
+/* ================= TWINKLE ================= */
 
+@keyframes twinkle {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(214,180,140,0));
+  }
 
+  50% {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 10px rgba(214,180,140,0.7));
+  }
 
-/*  زر اللي تتححتت بعد رفع الصور عشان نقارن */
-.compare-btn {
-  background-color: #FCD34D; 
-  color: white;
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(214,180,140,0));
+  }
+}
+
+/* ================= STATS ================= */
+
+.stats-container {
+  background: white;
+  border-radius: 999px;
+  padding: 20px 30px;
   border: none;
-  font-weight: bold;
-  font-size: 1.1rem; 
+  box-shadow: var(--card-shadow);
   transition: all 0.3s ease;
 }
 
-.compare-btn:hover:not(:disabled) {
-  background-color: #e6c044; 
-  transform: translateY(-2px); 
-  box-shadow: 0 4px 15px rgba(252, 211, 77, 0.4);
-}
-
-/* شكل الزر لما يكون مش مفعل (قبل رفع الصور) */
-.compare-btn:disabled {
-  background-color: #e0e0e0;
-  color: #a0a0a0;
-  cursor: not-allowed;
-}
-
-
-
-
-
-
-
-
-
-/* تنسيق عام لأيقونات الخطوات */
-.step-icon {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto; /* توسيط الأيقونة */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 18px; /* حواف ناعمة مربعة */
-  font-size: 1.75rem; /* حجم الأيقونة */
-  transition: transform 0.3s;
-}
-
-.step-item:hover .step-icon {
-  transform: translateY(-5px); /* حركة خفيفة عند المرور */
-}
-
-/* 1. اللون النهدي (Upload) */
-.bg-purple {
-  background-color: #F3E8FF;
-  color: #9333EA;
-}
-
-/* 2. اللون الأزرق (AI Analysis) */
-.bg-blue {
-  background-color: #E0F2FE;
-  color: #F8B64C;
-}
-
-/* 3. اللون السماوي (Get Results) */
-.bg-cyan {
-  background-color: #CCFBF1;
-  color: #45b3ea;
-}
-
-/* 4. اللون الأخضر (Take Action) */
-.bg-green {
-  background-color: #DCFCE7;
-  color: #22C55E;
-}
-
-.works-title {
-  color: #333333;
-}
-
-
-
-
-
-
-/* هاد عشان الكود عشان اخلي الايكون ببداية البيج دايناميك  */
-
-
-/* 1. تعريف الحركة (Keyframes) */
-@keyframes twinkle {
-  0% { 
-    transform: scale(1); 
-    filter: drop-shadow(0 0 0px rgba(248, 182, 76, 0)); 
-  }
-  50% { 
-    transform: scale(1.2); /* تكبير بسيط */
-    filter: drop-shadow(0 0 10px rgba(248, 182, 76, 0.8)); /* توهج (لمعة) */
-  }
-  100% { 
-    transform: scale(1); 
-    filter: drop-shadow(0 0 0px rgba(248, 182, 76, 0)); 
-  }
-}
-
-/* 2. تطبيق الحركة على الأيقونة */
-.star-icon {
-  color: #F8B64C; /* اللون الأصفر الأصلي */
-  display: inline-block; /* ضروري لكي تعمل خاصية transform */
-  animation: twinkle 2.5s infinite ease-in-out; /* تكرار الحركة كل ثانيتين */
-}
-
-
-
-
-
-
-
-
-
-/* كونتينررر الل الإحصائيات */
-.stats-container {
-  border: 1px solid #f0f0f0;
-  transition: transform 0.3s ease;
-  background: #ffffff;
-}
-
 .stats-container:hover {
-  transform: translateY(-3px); /* حركة طفيفة عند المرور */
-  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+  transform: translateY(-3px);
 }
 
-/* تنسيق الأرقام */
 .counter {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* خط أرقام واضح */
-  letter-spacing: -1px;
+  color: var(--dark);
+  font-weight: 700;
 }
 
-/* الفاصل العمودي */
 .vr {
-  background-color: #e0e0e0;
   width: 1px;
   height: 40px;
+  background: #e5e7eb;
   opacity: 1;
 }
 
-/* Community Reports styles */
-.report-btn{border-radius:28px; padding:10px 18px; font-weight:700; box-shadow:0 6px 20px rgba(15,23,42,0.06)}
-.report-btn .bi{font-size:1.05rem}
-.animal-chips .btn{border-radius:999px; padding:6px 12px}
-.animal-chips .active-chip{background:#0d6efd;color:#fff;border-color:#0d6efd}
-.report-card{border-radius:12px; overflow:hidden}
-.report-card .card-img-top{height:200px; object-fit:cover}
-.badge-top{padding:6px 10px; border-radius:999px; font-weight:700}
-.badge-lost{background:#ff5a5a; color:#fff}
-.badge-found{background:#19b46a; color:#fff}
-.btn-fav{width:40px;height:40px;border-radius:999px;display:flex;align-items:center;justify-content:center}
-.report-card .card-body{padding:1.25rem}
-.report-card .card-title{font-size:1.05rem}
-.report-card .card-text{font-size:.95rem}
+/* ================= UPLOAD CARDS ================= */
 
-@media (max-width: 767px){
-  .report-card .card-img-top{height:160px}
+.upload-card {
+  background: white;
+  border-radius: 24px;
+  border: none;
+  height: 100%;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: all 0.35s ease;
 }
 
-/* Modal styles */
-.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.45);display:flex;align-items:flex-start;justify-content:center;padding:40px;z-index:1050}
-.report-modal{background:#fff;border-radius:14px;max-width:760px;width:100%;padding:22px;box-shadow:0 30px 60px rgba(2,6,23,0.2);max-height:90vh;overflow:auto}
-.report-modal .chip{border:1px solid #e9e9ef;padding:8px 14px;border-radius:999px;background:#fff;color:#374151;font-weight:600}
-.report-modal .chip + .chip{margin-left:8px}
-.report-modal .chip-active{background:#fff4e6;border-color:#fb923c;color:#b45309}
-.upload-dashed{border:2px dashed #ffd6d6;border-radius:12px;background:#fff;padding:24px;cursor:pointer}
-.upload-dashed:hover{background:#fff7f7}
-.report-modal .btn-danger{background:#ef4444;border:none;border-radius:12px}
-.report-modal .btn-success{background:#16a34a;border:none;border-radius:12px}
-
-/* --- Button & Filter styling to match attachment --- */
-:root{
-  --tan:#d4b08a;
-  --tan-dark:#b78f67;
-  --muted:#6b7280;
-  --report-red:#ef4444;
-  --report-green:#16a34a;
+.upload-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
 }
 
-/* Report buttons (rounded pill with strong color and soft shadow) */
-.report-btn{
-  border-radius:40px;
-  padding:10px 22px;
-  font-weight:700;
-  color:#fff;
-  display:inline-flex;
-  align-items:center;
-  gap:.6rem;
-  box-shadow:0 10px 30px rgba(15,23,42,0.12);
-  border:none;
-}
-.report-btn.btn-danger{background:linear-gradient(180deg,#ff6b6b,#ef4444)}
-.report-btn.btn-success{background:linear-gradient(180deg,#2fb56f,#0f9b3a)}
-.report-btn:focus{outline:none;box-shadow:0 8px 24px rgba(15,23,42,0.12)}
-.report-btn:active{transform:translateY(1px)}
-
-/* Top view filter pills (All / Lost / Found) */
-.btn-group .btn{
-  border-radius:999px;
-  padding:8px 14px;
-  background:#fff;
-  border:1px solid rgba(15,23,42,0.06);
-  color:var(--muted);
-  box-shadow:none;
-}
-.btn-group .btn.active{
-  background:#fff; /* keep subtle — screenshot shows white with soft shadow */
-  box-shadow:0 6px 20px rgba(15,23,42,0.04);
+.icon-box {
+  background: white;
+  padding: 0.7rem;
+  border-radius: 16px;
+  margin-right: 1rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
 }
 
-/* Animal chips (tags) */
-.animal-chips .btn{
-  border-radius:999px;
-  padding:8px 14px;
-  background:#fff;
-  border:1px solid var(--tan);
-  color:var(--tan-dark);
-  font-weight:600;
-}
-.animal-chips .btn:hover{background:rgba(212,176,138,0.06)}
-.animal-chips .active-chip{
-  background:var(--tan);
-  color:#fff;
-  border-color:var(--tan);
-  box-shadow:0 8px 18px rgba(167,129,87,0.12);
+/* ================= UPLOAD AREA ================= */
+
+.upload-area-container {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fcfcfc;
+  border-radius: 22px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* Ensure outline/spacing like screenshot */
-.report-card{border-radius:12px;overflow:hidden}
-.report-card .card-body{padding:1.25rem}
-
-@media (max-width:768px){
-  .report-btn{padding:8px 14px;font-size:.95rem}
-  .animal-chips .btn{padding:6px 10px}
+.upload-icon-circle {
+  background: white;
+  padding: 1rem;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
 }
 
+.dashed-pink,
+.dashed-green {
+  border: 2px dashed var(--primary);
+  border-radius: 22px;
+}
 
+.dashed-pink:hover,
+.dashed-green:hover {
+  background: #faf7f2;
+  border-color: var(--primary-dark);
+}
+
+/* ================= BUTTONS ================= */
+
+.compare-btn {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  border-radius: 999px;
+  padding: 16px 34px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(214,180,140,0.25);
+}
+
+.compare-btn:hover:not(:disabled) {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.compare-btn:disabled {
+  background: #e5e7eb;
+  color: #94a3b8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ================= REPORT BUTTONS ================= */
+
+.report-btn {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(214,180,140,0.25);
+}
+
+.report-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ================= FILTER BUTTONS ================= */
+
+.btn-group .btn {
+  border-radius: 999px;
+  border: 1px solid var(--primary);
+  background: white;
+  color: var(--dark);
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+}
+
+.btn-group .btn:hover {
+  background: #faf7f2;
+}
+
+.btn-group .btn.active {
+  background: var(--primary);
+  color: #000;
+  font-weight: 600;
+}
+
+/* ================= ANIMAL TAGS ================= */
+
+.animal-chips .btn {
+  border-radius: 999px;
+  padding: 8px 14px;
+  border: 1px solid var(--primary);
+  background: white;
+  color: var(--dark);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.animal-chips .btn:hover {
+  background: #faf7f2;
+}
+
+.animal-chips .active-chip {
+  background: var(--primary);
+  color: #000;
+  border-color: var(--primary);
+}
+
+/* ================= REPORT CARDS ================= */
+
+.report-card {
+  border: none;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: all 0.35s ease;
+}
+
+.report-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+.report-card .card-img-top {
+  height: 240px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.report-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.report-card .card-body {
+  padding: 1.4rem;
+}
+
+.report-card .card-title {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.report-card .card-text {
+  color: var(--muted);
+}
+
+/* ================= BADGES ================= */
+
+.badge-top {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.badge-lost,
+.badge-found {
+  background: var(--primary);
+  color: #000;
+}
+
+/* ================= FAVORITE BUTTON ================= */
+
+.btn-fav {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: white;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* ================= CONTACT BUTTON ================= */
+
+.contact-btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 30px;
+  background: #0f172a;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  outline: none;
+  box-shadow: none;
+}
+
+.contact-btn:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(15,23,42,0.2);
+}
+
+.contact-btn:focus,
+.contact-btn:active {
+  background: #0f172a !important;
+  color: white !important;
+  outline: none !important;
+  box-shadow: 0 10px 20px rgba(15,23,42,0.2) !important;
+  border: none !important;
+}
+/* ================= MODAL ================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  z-index: 1050;
+}
+
+.report-modal {
+  background: white;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 760px;
+  padding: 30px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+  animation: modalShow 0.3s ease;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+@keyframes modalShow {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================= INPUTS ================= */
+
+.form-control {
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 14px;
+  box-shadow: none !important;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+}
+
+/* ================= MODAL CHIPS ================= */
+
+.report-modal .chip {
+  border: 1px solid var(--primary);
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: white;
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.report-modal .chip-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #000;
+}
+
+/* ================= UPLOAD DASHED ================= */
+
+.upload-dashed {
+  border: 2px dashed var(--primary);
+  border-radius: 20px;
+  background: #fafafa;
+  padding: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-dashed:hover {
+  background: #faf7f2;
+}
+
+/* ================= MODAL BUTTONS ================= */
+
+.report-modal .btn-danger,
+.report-modal .btn-success {
+  background: var(--dark);
+  border: none;
+  border-radius: 999px;
+  padding: 14px;
+  transition: all 0.3s ease;
+}
+
+.report-modal .btn-danger:hover,
+.report-modal .btn-success:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+}
+
+/* ================= HOW IT WORKS ================= */
+
+.works-title {
+  color: var(--dark);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.step-icon {
+  width: 70px;
+  height: 70px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  font-size: 1.6rem;
+  transition: all 0.3s ease;
+}
+
+.step-item:hover .step-icon {
+  transform: translateY(-5px);
+}
+
+.bg-purple,
+.bg-blue,
+.bg-cyan,
+.bg-green {
+  background: #f8f5f0;
+  color: var(--primary-dark);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  .hero-bg {
+    padding: 40px 25px;
+  }
+
+  .main-title {
+    font-size: 32px;
+  }
+
+  .description-text {
+    max-width: 100%;
+  }
+
+  .report-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .report-card .card-img-top {
+    height: 200px;
+  }
+
+  .stats-container {
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 24px;
+  }
+
+  .vr {
+    display: none;
+  }
+}
