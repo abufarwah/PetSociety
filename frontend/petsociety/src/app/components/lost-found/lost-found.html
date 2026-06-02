@@ -293,6 +293,9 @@
 
             <h5 class="card-title fw-bold">
               {{ post.title }}
+              <span *ngIf="post.confidence" class="badge bg-success float-end rounded-pill" style="font-size: 0.7rem;">
+                Match: {{ post.confidence }}
+              </span>
             </h5>
 
             <p class="text-muted small mb-2">

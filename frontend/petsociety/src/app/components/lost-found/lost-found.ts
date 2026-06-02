@@ -32,6 +32,9 @@ export class LostFoundComponent implements OnInit {
     this.startCounter('lostCount', 120);
     this.startCounter('foundCount', 85);
     this.startCounter('reunitedCount', 50);
+
+    // Call loadPosts
+    this.loadPosts();
   }
 
   startCounter(prop: 'lostCount' | 'foundCount' | 'reunitedCount', target: number) {
@@ -96,27 +99,51 @@ export class LostFoundComponent implements OnInit {
     const formData = new FormData();
     formData.append('queryImage', this.queryImageFile, this.queryImageFile.name);
 
-    // Call the newly created ASP.NET AiController
     fetch('https://localhost:4200/api/Ai/compare', { 
       method: 'POST',
       body: formData
     })
     .then(response => {
-      // For demo purposes, we accept it might fail if backend/proxy isn't running
       if (!response.ok) throw new Error('Network response was not ok');
       return response.json();
     })
     .then(data => {
       console.log('AI Response:', data);
-      this.searchResultMessage = 'AI comparison completed successfully! Match confidence: ' + 
-        (data.matches && data.matches.length > 0 ? (data.matches[0].confidence * 100) + '%' : 'Unknown');
+      this.searchResultMessage = 'تم الانتهاء من المقارنة بالذكاء الاصطناعي بنجاح! نسبة التطابق: ' + 
+        (data.matches && data.matches.length > 0 ? (data.matches[0].confidence * 100) + '%' : 'غير معروف');
       this.cdr.detectChanges();
     })
     .catch(error => {
       console.error('Error connecting to AI service:', error);
-      this.searchResultMessage = 'Image uploaded but failed to connect to the AI backend service.';
+      this.searchResultMessage = 'تم رفع الصورة ولكن لم يتم الاتصال بالخدمة الخلفية للذكاء الاصطناعي.';
       this.cdr.detectChanges();
     });
+  }
+
+  // --- Real DB Posts Loading ---
+  loadPosts() {
+    fetch('https://localhost:4200/api/Ai/posts')
+      .then(response => {
+        if (!response.ok) throw new Error('Could not fetch posts');
+        return response.json();
+      })
+      .then(data => {
+        this.posts = data.map((p: any) => ({
+          id: p.id,
+          type: p.type,
+          title: p.title,
+          species: p.species,
+          excerpt: p.description,
+          location: p.location,
+          dateText: p.dateText,
+          image: p.imageUrl,
+          phone: p.phone
+        }));
+        this.cdr.detectChanges();
+      })
+      .catch(error => {
+        console.error('Error loading posts:', error);
+      });
   }
 
   // Community Reports data and helpers
@@ -127,41 +154,7 @@ export class LostFoundComponent implements OnInit {
   selectedContactPostId: number | null = null;
   selectedContactPhone: string | null = null;
 
-  posts: Array<any> = [
-    {
-      id: 1,
-      type: 'lost',
-      title: 'Golden Retriever',
-      species: 'Dog · Golden / cream',
-      excerpt: 'Went missing near Abdoun bridge. Has a red collar with a small tag. Very friendly.',
-      location: 'Abdoun, Amman',
-      dateText: 'Last seen 18 May 2025',
-      image: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=1200&q=80',
-      phone: '+962 79 123 4567'
-    },
-    {
-      id: 2,
-      type: 'found',
-      title: 'Tabby',
-      species: 'Cat · Brown & black stripes',
-      excerpt: 'Found near the Sweifieh roundabout. Seems well-fed and friendly, probably someone\'s pet.',
-      location: 'Sweifieh, Amman',
-      dateText: 'Found on 19 May 2025',
-      image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=1200&q=80',
-      phone: '+962 79 234 5678'
-    },
-    {
-      id: 3,
-      type: 'lost',
-      title: 'Persian',
-      species: 'Cat · White & grey',
-      excerpt: '2-year-old Persian cat, shy and may be hiding. Last seen near the park in Khalda.',
-      location: 'Khalda, Amman',
-      dateText: 'Last seen 17 May 2025',
-      image: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=1200&q=80',
-      phone: '+962 79 345 6789'
-    }
-  ];
+  posts: Array<any> = [];
 
   get filteredPosts() {
     return this.posts.filter(p => {
@@ -222,18 +215,36 @@ export class LostFoundComponent implements OnInit {
   }
 
   submitReport() {
-    // minimal client-side submission: add to local posts list
-    const newPost = {
-      id: Date.now(),
-      type: this.modalMode,
-      title: this.reportForm.breed || (this.modalMode === 'lost' ? 'Lost Pet' : 'Found Pet'),
-      species: this.reportForm.petType,
-      excerpt: this.reportForm.description || '',
-      location: this.reportForm.location || '',
-      dateText: this.reportForm.dateLastSeen || new Date().toLocaleDateString(),
-      image: 'https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?w=1200&q=80'
-    };
-    this.posts.unshift(newPost);
-    this.closeReport();
+    const formData = new FormData();
+    formData.append('Type', this.modalMode);
+    formData.append('Title', this.reportForm.breed || (this.modalMode === 'lost' ? 'Lost Pet' : 'Found Pet'));
+    formData.append('Species', this.reportForm.petType);
+    formData.append('Description', this.reportForm.description || '');
+    formData.append('Location', this.reportForm.location || '');
+    formData.append('DateText', this.reportForm.dateLastSeen || new Date().toLocaleDateString());
+    formData.append('Phone', this.reportForm.phone || '');
+    
+    // In a real scenario, you'd bind a file input from the modal here
+    // For now we mock it with the main query file if it exists, or fail
+    if (this.queryImageFile) {
+        formData.append('image', this.queryImageFile);
+    } else {
+        alert("Please select a pet image first from the top of the page to add a report.");
+        return;
+    }
+
+    fetch('https://localhost:4200/api/Ai/add-post', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+       console.log('Post Added:', data);
+       this.closeReport();
+       this.loadPosts(); // refresh from DB
+    })
+    .catch(err => {
+      console.error('Add Post Error:', err);
+    });
   }
 }
