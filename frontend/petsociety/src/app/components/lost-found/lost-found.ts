@@ -90,8 +90,33 @@ export class LostFoundComponent implements OnInit {
 
   searchSimilarPets() {
     if (!this.queryImageFile) return;
-    this.searchResultMessage = 'تم رفع الصورة. الميزة المستقبلية للـ AI ستقارن هذه الصورة مع صور قاعدة البيانات.';
-    console.log('Ready to compare image with AI service:', this.queryImageFile);
+
+    this.searchResultMessage = 'جاري تحليل الصورة والبحث عن تطابق...';
+
+    const formData = new FormData();
+    formData.append('queryImage', this.queryImageFile, this.queryImageFile.name);
+
+    // Call the newly created ASP.NET AiController
+    fetch('https://localhost:4200/api/Ai/compare', { 
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      // For demo purposes, we accept it might fail if backend/proxy isn't running
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.json();
+    })
+    .then(data => {
+      console.log('AI Response:', data);
+      this.searchResultMessage = 'تم الانتهاء من المقارنة بالذكاء الاصطناعي بنجاح! نسبة التطابق: ' + 
+        (data.matches && data.matches.length > 0 ? (data.matches[0].confidence * 100) + '%' : 'غير معروف');
+      this.cdr.detectChanges();
+    })
+    .catch(error => {
+      console.error('Error connecting to AI service:', error);
+      this.searchResultMessage = 'تم رفع الصورة ولكن لم يتم الاتصال بالخدمة الخلفية للذكاء الاصطناعي.';
+      this.cdr.detectChanges();
+    });
   }
 
   // Community Reports data and helpers
