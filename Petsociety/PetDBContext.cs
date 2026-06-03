@@ -15,7 +15,7 @@ namespace Petsociety.Model
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Subscription> Subscriptions { get; set; } = null!;
         public DbSet<Payment> Payments { get; set; } = null!;
-        public DbSet<LostFoundReport> LostFoundReports { get; set; }
+        //public DbSet<LostFoundReport> LostFoundReports { get; set; }
 
         // Community feature
         public DbSet<CommunityChannel> CommunityChannels { get; set; } = null!;
