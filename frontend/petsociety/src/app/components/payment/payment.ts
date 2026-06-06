@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../services/auth';
+import { SubscriptionService } from '../../services/subscription.service';
 
 interface Package {
   name: string;
@@ -20,7 +21,9 @@ export class Payment implements OnInit {
   paymentForm!: FormGroup;
   selectedPackage: Package | null = null;
   showSuccess = false;
-  isLoggedIn = false;
+  paymentError = '';
+  paymentSuccessMessage = '';
+  isSubmitting = false;
 
   packages: Package[] = [
     {
@@ -60,21 +63,11 @@ export class Payment implements OnInit {
     },
   ];
 
-  constructor(private router: Router, private auth: Auth) {}
+  constructor(
+    
+  ) {}
 
   ngOnInit() {
-    // Subscribe to auth state AND check localStorage directly
-    this.auth.isLoggedIn$.subscribe((loggedIn) => {
-      this.isLoggedIn = loggedIn;
-    });
-
-    // Also check localStorage as backup since login.ts uses it directly
-    const storedLogin = localStorage.getItem('isLoggedIn') === 'true';
-    this.isLoggedIn = storedLogin;
-    if (storedLogin) {
-      this.auth.isLoggedIn$.next(true);
-    }
-
     this.paymentForm = new FormGroup({
       cardNumber: new FormControl('', [Validators.required, Validators.pattern(/^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/)]),
       cardName: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -118,36 +111,84 @@ export class Payment implements OnInit {
     return parseFloat((this.selectedPackage.price + this.tax).toFixed(2));
   }
 
+  // processPayment() {
+  //   // Check login state from both Auth service and localStorage
+  //   const isLoggedInAuth = this.isLoggedIn;
+  //   const isLoggedInStorage = localStorage.getItem('isLoggedIn') === 'true';
+  //   const isLoggedIn = isLoggedInAuth || isLoggedInStorage;
+
+  //   if (!isLoggedIn) {
+  //     alert('Please login first to subscribe 🐾');
+  //     this.router.navigate(['/login'], { queryParams: { redirect: 'payment' } });
+  //     return;
+  //   }
+
+  //   if (this.paymentForm.invalid || !this.selectedPackage) {
+  //     this.paymentForm.markAllAsTouched();
+  //     return;
+  //   }
+
+  //   this.isSubmitting = true;
+  //   this.paymentError = '';
+
+  //   // Simulate payment processing
+  //   console.log('Processing payment...', {
+  //     package: this.selectedPackage,
+  //     payment: this.paymentForm.value,
+  //     total: this.total,
+  //   });
+
+  //   this.subscriptionService.processPayment(this.selectedPackage.name).subscribe({
+  //     next: () => {
+  //       this.showSuccess = true;
+  //       this.isSubmitting = false;
+  //     },
+  //     error: (error) => {
+  //       this.paymentError = error?.error?.message || error?.message || 'Payment failed';
+  //       this.isSubmitting = false;
+  //     }
+  //   });
+  // }
+  
+
   processPayment() {
-    // Check login state from both Auth service and localStorage
-    const isLoggedInAuth = this.isLoggedIn;
-    const isLoggedInStorage = localStorage.getItem('isLoggedIn') === 'true';
-    const isLoggedIn = isLoggedInAuth || isLoggedInStorage;
-
-    if (!isLoggedIn) {
-      alert('Please login first to subscribe 🐾');
-      this.router.navigate(['/login'], { queryParams: { redirect: 'payment' } });
-      return;
-    }
-
     if (this.paymentForm.invalid || !this.selectedPackage) {
       this.paymentForm.markAllAsTouched();
       return;
     }
 
-    // Simulate payment processing
-    console.log('Processing payment...', {
+    this.isSubmitting = true;
+    this.paymentError = '';
+    this.paymentSuccessMessage = '';
+
+    console.log('Processing payment locally...', {
       package: this.selectedPackage,
       payment: this.paymentForm.value,
       total: this.total,
     });
 
-    // Show success modal
-    this.showSuccess = true;
+    try {
+      this.showSuccess = true;
+      this.paymentSuccessMessage = `Your payment for ${this.selectedPackage.name} was successful.`;
+
+      // حفظ حالة الاشتراك واسم الباقة في التخزين المحلي لاستخدامها في واجهات أخرى
+      try {
+        localStorage.setItem('hasActiveSubscription', 'true');
+      } catch {}
+      try {
+        localStorage.setItem('subscribedPackage', this.selectedPackage.name);
+      } catch {}
+    } catch (error: any) {
+      this.paymentError = error?.message || 'Payment failed';
+      this.showSuccess = false;
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   closeSuccess() {
     this.showSuccess = false;
+    this.paymentSuccessMessage = '';
   }
 
   resetForm() {

@@ -1,197 +1,990 @@
-/*    خلفية المتدرجههه  */
+/* ================= ROOT ================= */
+
+:root {
+  --primary: #d6b48c;
+  --primary-dark: #c9a774;
+  --dark: #0f172a;
+  --muted: #64748b;
+  --bg-soft: #f8f5f0;
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= HERO PREMIUM DESIGN ================= */
+
 .hero-bg {
-  background: radial-gradient(circle at top left, #fafafa, #e9d6b9);
-  border-radius: 20px; 
-  padding: 40px; /* مسافة داخلية */
+  background: linear-gradient(135deg, #fff8ef 0%, #f7ead7 100%);
+  border-radius: 36px;
+  padding: 80px 50px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+  position: relative;
+  overflow: hidden;
 }
 
+/* SOFT SHAPES */
 
-
-/* النصوص والعناوين */
-.star-icon { color: #F8B64C; }
-.main-title { color: #333333; }
-.description-text { max-width: 75%; margin: 0 auto; font-size: 1.1rem; }
-
-/* الكروت العامة */
-.upload-card {
-  border: 1px solid #eee; /* حدود خفيفة جداً */
-  height: 100%;
-  transition: all 0.3s ease; /* لجعل الحركة ناعمة */
-
-  /* --- هذا هو سطر الظل --- */
-  /* القيم تعني: إزاحة أفقية 0، عمودية 8px، ضبابية 24px، لون أسود شفاف جداً */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}.icon-box { background-color: #fff; padding: 0.5rem; border-radius: 0.5rem; margin-right: 1rem; box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
-
-
-/* (اختياري) تأثير جميل عند مرور الماوس: يزيد الظل ويرتفع الكرت */
-.upload-card:hover {
-  transform: translateY(-5px); /* يرتفع للأعلى قليلاً */
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12); /* ظل أعمق */
+.hero-bg::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 320px;
+  height: 320px;
+  background: rgba(255,255,255,0.28);
+  border-radius: 50%;
 }
 
-
-
-
-/* منطقة الرفع */
-.upload-area-container {
-  min-height: 250px;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
-  background-color: #fff; border-radius: 0.5rem; transition: all 0.3s; cursor: pointer;
-}
-.upload-icon-circle { background-color: #f8f9fa; padding: 1rem; border-radius: 50%; margin-bottom: 1rem; }
-
-/* الكرت الوردي */
-.lost-card { background-color: #FFF0F0; box-shadow: #a0a0a0; }
-.dashed-pink { border: 2px dashed #FF6B6B; }
-.dashed-pink:hover { background-color: #ffe5e5; border-color: #ff85a7; }
-
-/* الكرت الأخضر */
-.found-card { background-color: #F0FFF4; }
-.dashed-green { border: 2px dashed #48C774; }
-.dashed-green:hover { background-color: #e6ffec; border-color: #2f9e52; }
-
-
-
-/*  زر اللي تتححتت بعد رفع الصور عشان نقارن */
-.compare-btn {
-  background-color: #FCD34D; 
-  color: white;
-  border: none;
-  font-weight: bold;
-  font-size: 1.1rem; 
-  transition: all 0.3s ease;
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  bottom: -120px;
+  left: -120px;
+  width: 340px;
+  height: 340px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
 }
 
-.compare-btn:hover:not(:disabled) {
-  background-color: #e6c044; 
-  transform: translateY(-2px); 
-  box-shadow: 0 4px 15px rgba(252, 211, 77, 0.4);
+/* PAW ICONS */
+
+.hero-paw {
+  position: absolute;
+  color: rgba(214,180,140,0.18);
+  font-size: 42px;
+  z-index: 0;
 }
 
-/* شكل الزر لما يكون مش مفعل (قبل رفع الصور) */
-.compare-btn:disabled {
-  background-color: #e0e0e0;
-  color: #a0a0a0;
-  cursor: not-allowed;
+.paw-1 {
+  top: 60px;
+  left: 50px;
+  transform: rotate(-20deg);
 }
 
+.paw-2 {
+  top: 40px;
+  right: 180px;
+  transform: rotate(15deg);
+}
 
+.paw-3 {
+  bottom: 70px;
+  right: 60px;
+  transform: rotate(-15deg);
+}
 
+/* CONTENT ABOVE SHAPES */
 
+.hero-bg > * {
+  position: relative;
+  z-index: 2;
+}
 
+/* CENTER ICON */
 
-
-
-
-/* تنسيق عام لأيقونات الخطوات */
-.step-icon {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto; /* توسيط الأيقونة */
+.star-icon {
+  width: 78px;
+  height: 78px;
+  margin: auto;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 18px; /* حواف ناعمة مربعة */
-  font-size: 1.75rem; /* حجم الأيقونة */
-  transition: transform 0.3s;
+  color: #7a5230;
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  animation: floatIcon 3s ease-in-out infinite;
 }
 
-.step-item:hover .step-icon {
-  transform: translateY(-5px); /* حركة خفيفة عند المرور */
-}
+/* FLOATING */
 
-/* 1. اللون النهدي (Upload) */
-.bg-purple {
-  background-color: #F3E8FF;
-  color: #9333EA;
-}
-
-/* 2. اللون الأزرق (AI Analysis) */
-.bg-blue {
-  background-color: #E0F2FE;
-  color: #F8B64C;
-}
-
-/* 3. اللون السماوي (Get Results) */
-.bg-cyan {
-  background-color: #CCFBF1;
-  color: #45b3ea;
-}
-
-/* 4. اللون الأخضر (Take Action) */
-.bg-green {
-  background-color: #DCFCE7;
-  color: #22C55E;
-}
-
-.works-title {
-  color: #333333;
-}
-
-
-
-
-
-
-/* هاد عشان الكود عشان اخلي الايكون ببداية البيج دايناميك  */
-
-
-/* 1. تعريف الحركة (Keyframes) */
-@keyframes twinkle {
-  0% { 
-    transform: scale(1); 
-    filter: drop-shadow(0 0 0px rgba(248, 182, 76, 0)); 
+@keyframes floatIcon {
+  0% {
+    transform: translateY(0px);
   }
-  50% { 
-    transform: scale(1.2); /* تكبير بسيط */
-    filter: drop-shadow(0 0 10px rgba(248, 182, 76, 0.8)); /* توهج (لمعة) */
+
+  50% {
+    transform: translateY(-6px);
   }
-  100% { 
-    transform: scale(1); 
-    filter: drop-shadow(0 0 0px rgba(248, 182, 76, 0)); 
+
+  100% {
+    transform: translateY(0px);
   }
 }
 
-/* 2. تطبيق الحركة على الأيقونة */
-.star-icon {
-  color: #F8B64C; /* اللون الأصفر الأصلي */
-  display: inline-block; /* ضروري لكي تعمل خاصية transform */
-  animation: twinkle 2.5s infinite ease-in-out; /* تكرار الحركة كل ثانيتين */
-}
+/* TITLE */
 
-
-
-
-
-
-
-
-
-/* كونتينررر الل الإحصائيات */
-.stats-container {
-  border: 1px solid #f0f0f0;
-  transition: transform 0.3s ease;
-  background: #ffffff;
-}
-
-.stats-container:hover {
-  transform: translateY(-3px); /* حركة طفيفة عند المرور */
-  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-}
-
-/* تنسيق الأرقام */
-.counter {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* خط أرقام واضح */
+.main-title {
+  color: #1f2937;
+  font-size: 52px;
+  font-weight: 800;
   letter-spacing: -1px;
 }
 
-/* الفاصل العمودي */
+/* DESCRIPTION */
+
+.description-text {
+  color: #5b6472;
+  font-size: 1.12rem;
+  line-height: 1.9;
+}
+
+/* GLASS STATS */
+
+.stats-container {
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(14px);
+  border-radius: 999px;
+  padding: 26px 40px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+/* ================= TWINKLE ================= */
+
+@keyframes twinkle {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(214,180,140,0));
+  }
+
+  50% {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 10px rgba(214,180,140,0.7));
+  }
+
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(214,180,140,0));
+  }
+}
+
+/* ================= STATS ================= */
+
+.stats-container {
+  background: white;
+  border-radius: 999px;
+  padding: 20px 30px;
+  border: none;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+}
+
+.stats-container:hover {
+  transform: translateY(-3px);
+}
+
+.counter {
+  color: var(--dark);
+  font-weight: 700;
+}
+
 .vr {
-  background-color: #e0e0e0;
   width: 1px;
   height: 40px;
+  background: #e5e7eb;
   opacity: 1;
 }
 
+/* ================= UPLOAD CARD ================= */
 
+.upload-card {
+  border-radius: 28px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.upload-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* ================= ICON BOX ================= */
+
+.icon-box {
+  width: 58px;
+  height: 58px;
+  background: #f8f5f0;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+/* ================= UPLOAD AREA ================= */
+
+.upload-area-container {
+  min-height: 320px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+}
+/* LOST AREA */
+
+.lost-card .upload-area-container {
+  background: #fff7f7;
+  border: 2px dashed #f6b8b8;
+}
+
+
+/* LOST CARD */
+
+.lost-card {
+  background: linear-gradient(
+    135deg,
+    #fff1f1 0%,
+    #ffe7e7 100%
+  );
+}
+/* LOST */
+
+.dashed-pink {
+  border: 2px dashed #d6b48c;
+}
+
+.dashed-pink:hover {
+  background: #f8f5f0;
+  border-color: #c9a774;
+  transform: translateY(-2px);
+}
+/* FOUND AREA */
+
+.found-card .upload-area-container {
+  background: #f5fcf7;
+  border: 2px dashed #b7e8c8;
+}
+/* FOUND CARD */
+
+.found-card {
+  background: linear-gradient(
+    135deg,
+    #eefcf3 0%,
+    #dff7e8 100%
+  );
+}
+/* FOUND */
+
+.dashed-green {
+  border: 2px dashed #d6b48c;
+}
+
+.dashed-green:hover {
+  background: #f8f5f0;
+  border-color: #c9a774;
+  transform: translateY(-2px);
+}
+/* HOVER */
+
+.lost-card .upload-area-container:hover {
+  background: rgba(255,255,255,0.7);
+  border-color: #ff8f8f;
+}
+
+.found-card .upload-area-container:hover {
+  background: rgba(255,255,255,0.7);
+  border-color: #69cf92;
+}
+/* ================= ICON BOX ================= */
+
+.icon-box {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.65);
+}
+/* ================= CENTER ICON ================= */
+
+.upload-icon-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+}
+/* LOST CIRCLE */
+
+.lost-card .upload-icon-circle {
+  background: rgba(255,255,255,0.55);
+}
+/* FOUND CIRCLE */
+
+.found-card .upload-icon-circle {
+  background: rgba(255,255,255,0.55);
+}
+
+.upload-area-container:hover .upload-icon-circle {
+  transform: scale(1.05);
+}
+/* LOST ICON */
+
+.lost-card .icon-box i,
+.lost-card h5 {
+  color: #ff4d4d;
+}
+
+/* FOUND ICON */
+
+.found-card .icon-box i,
+.found-card h5 {
+  color: #16c05d;
+}
+
+/* ICON */
+
+.upload-icon-circle i {
+  font-size: 56px !important;
+  color: #0f172a;
+}
+
+/* ================= TEXT ================= */
+
+.upload-area-container p {
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.upload-area-container small {
+  color: #64748b;
+  font-size: 15px;
+}
+
+/* ================= SUCCESS STATE ================= */
+
+.upload-area-container .bi-check-circle-fill {
+  color: #d6b48c;
+  font-size: 60px !important;
+}
+
+/* ================= BUTTONS ================= */
+
+.compare-btn {
+  background: linear-gradient(
+    135deg,
+    #e2c08f 0%,
+    #cfa46d 100%
+  );
+
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 18px 40px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 10px 25px rgba(207,164,109,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+.compare-btn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+
+  box-shadow:
+    0 14px 30px rgba(207,164,109,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.compare-btn:disabled {
+  background: #e5e7eb;
+  color: #94a3b8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ================= REPORT BUTTONS ================= */
+
+.report-btn {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(214,180,140,0.25);
+}
+
+.report-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ================= FILTERS WRAPPER ================= */
+
+.filters-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-bottom: 35px;
+}
+
+/* ================= TOP FILTERS ================= */
+
+.btn-group {
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 8px;
+  width: fit-content;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+.btn-group .btn {
+  border: none;
+  background: transparent;
+  color: #3d3d3d;
+
+  padding: 10px 24px;
+  border-radius: 999px;
+
+  font-weight: 700;
+  font-size: 15px;
+
+  transition: all 0.3s ease;
+}
+/* ACTIVE */
+
+.btn-group .btn.active {
+  background: linear-gradient(
+    135deg,
+    #e2c08f 0%,
+    #cfa46d 100%
+  );
+
+  color: white;
+
+  box-shadow:
+    0 8px 20px rgba(207,164,109,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+/* HOVER */
+
+.btn-group .btn:hover {
+  transform: translateY(-1px);
+}
+
+
+/* ================= ANIMAL BUTTONS ================= */
+
+.animal-chips {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.animal-btn {
+  border: none !important;
+  outline: none !important;
+  background: transparent;
+
+  padding: 8px 14px;
+  border-radius: 999px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #7a5a35;
+
+  transition: all 0.25s ease;
+}
+.animal-btn:hover {
+  background: #f8f2e8;
+  transform: translateY(-2px);
+}
+
+/* ACTIVE */
+
+.active-chip {
+  background: linear-gradient(
+    135deg,
+    #e2c08f 0%,
+    #cfa46d 100%
+  ) !important;
+
+  color: white !important;
+
+  box-shadow:
+    0 10px 22px rgba(207,164,109,0.25);
+
+  padding: 10px 22px;
+}
+
+/* ================= ANIMAL TAGS ================= */
+
+.animal-chips .btn {
+  border-radius: 999px;
+  padding: 8px 14px;
+  border: 1px solid var(--primary);
+  background: white;
+  color: var(--dark);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.animal-chips .btn:hover {
+  background: #faf7f2;
+}
+
+.animal-chips .active-chip {
+  background: var(--primary);
+  color: #000;
+  border-color: var(--primary);
+}
+
+/* ================= REPORT CARDS ================= */
+
+.report-card {
+  border: none;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: all 0.35s ease;
+}
+
+.report-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+.report-card .card-img-top {
+  height: 240px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.report-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.report-card .card-body {
+  padding: 1.4rem;
+}
+
+.report-card .card-title {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.report-card .card-text {
+  color: var(--muted);
+}
+
+/* ================= BADGES ================= */
+
+.badge-top {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.badge-lost,
+.badge-found {
+  background: var(--primary);
+  color: #000;
+}
+
+/* ================= FAVORITE BUTTON ================= */
+
+.btn-fav {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: white;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* ================= CONTACT BUTTON ================= */
+
+.contact-btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    135deg,
+    #e2c08f 0%,
+    #cfa46d 100%
+  );
+
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 10px 22px rgba(207,164,109,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.contact-btn:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 14px 28px rgba(207,164,109,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.45);
+}
+
+.contact-btn:focus,
+.contact-btn:active {
+  outline: none !important;
+  border: none !important;
+
+  background: linear-gradient(
+    135deg,
+    #e2c08f 0%,
+    #cfa46d 100%
+  ) !important;
+
+  color: white !important;
+
+  box-shadow:
+    0 14px 28px rgba(207,164,109,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.45) !important;
+}
+
+.contact-phone {
+  color: var(--dark);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ================= MODAL ================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  z-index: 1050;
+}
+
+.report-modal {
+  background: white;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 760px;
+  padding: 30px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+  animation: modalShow 0.3s ease;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+@keyframes modalShow {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================= INPUTS ================= */
+
+.form-control {
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 14px;
+  box-shadow: none !important;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+}
+
+/* ================= MODAL CHIPS ================= */
+
+.report-modal .chip {
+  border: 1px solid var(--primary);
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: white;
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.report-modal .chip-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #000;
+}
+
+/* ================= UPLOAD DASHED ================= */
+
+.upload-dashed {
+  border: 2px dashed var(--primary);
+  border-radius: 20px;
+  background: #fafafa;
+  padding: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-dashed:hover {
+  background: #faf7f2;
+}
+
+/* ================= MODAL BUTTONS ================= */
+
+.report-modal .btn-danger,
+.report-modal .btn-success {
+  background: var(--dark);
+  border: none;
+  border-radius: 999px;
+  padding: 14px;
+  transition: all 0.3s ease;
+}
+
+.report-modal .btn-danger:hover,
+.report-modal .btn-success:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+}
+
+/* ================= HOW IT WORKS ================= */
+
+.works-title {
+  color: var(--dark);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.step-icon {
+  width: 70px;
+  height: 70px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  font-size: 1.6rem;
+  transition: all 0.3s ease;
+}
+
+.step-item:hover .step-icon {
+  transform: translateY(-5px);
+}
+
+.bg-purple,
+.bg-blue,
+.bg-cyan,
+.bg-green {
+  background: #f8f5f0;
+  color: var(--primary-dark);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+  .hero-bg {
+    padding: 40px 25px;
+  }
+
+  .main-title {
+    font-size: 32px;
+  }
+
+  .description-text {
+    max-width: 100%;
+  }
+
+  .report-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .report-card .card-img-top {
+    height: 200px;
+  }
+
+  .stats-container {
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 24px;
+  }
+
+  .vr {
+    display: none;
+  }
+}
+.report-submit-btn {
+  background: linear-gradient(
+    135deg,
+    #e2c08f 0%,
+    #cfa46d 100%
+  );
+
+  color: white;
+  border: none;
+  border-radius: 999px;
+
+  padding: 14px 32px;
+  font-weight: 700;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 10px 22px rgba(207,164,109,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.report-submit-btn:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 14px 28px rgba(207,164,109,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.45);
+}
+
+.report-submit-btn:focus,
+.report-submit-btn:active {
+  outline: none !important;
+  border: none !important;
+
+  background: linear-gradient(
+    135deg,
+    #e2c08f 0%,
+    #cfa46d 100%
+  ) !important;
+
+  color: white !important;
+
+  box-shadow:
+    0 14px 28px rgba(207,164,109,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.45) !important;
+}
+/* ================= IMAGE PREVIEW ================= */
+
+.preview-box {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+}
+
+.preview-image-wrapper {
+  position: relative;
+}
+
+.preview-image {
+  width: 230px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 26px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.preview-check {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #ff6b6b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.preview-check.success {
+  background: #4fd17b;
+}
+
+.preview-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.preview-content h5 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1f2937;
+}
+
+.preview-content small {
+  color: #6b7280;
+  font-size: 16px;
+  margin-bottom: 28px;
+}
+
+.change-btn {
+  border: none;
+  background: white;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: #9a6b3d;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+}
+
+.change-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+  .preview-box {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .preview-content {
+    align-items: center;
+  }
+
+  .preview-image {
+    width: 100%;
+    max-width: 240px;
+    height: 220px;
+  }
+
+}

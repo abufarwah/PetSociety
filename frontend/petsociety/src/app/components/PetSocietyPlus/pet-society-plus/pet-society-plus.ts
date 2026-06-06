@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Auth } from '../../../services/auth';
 
 @Component({
   selector: 'app-pet-society-plus',
@@ -11,11 +12,11 @@ import { CommonModule } from '@angular/common';
 export class PetSocietyPlus {
   showLoginModal = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private auth: Auth) {}
 
   goToPayment(plan: string) {
     // Check if user is logged in
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const isLoggedIn = this.auth.isLoggedIn$.value;
 
     if (!isLoggedIn) {
       this.showLoginModal = true;

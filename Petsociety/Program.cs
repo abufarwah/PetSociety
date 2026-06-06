@@ -1,23 +1,55 @@
+using Microsoft.EntityFrameworkCore;
+using Petsociety.Model;
+using Petsociety.Services;
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+//builder.Services.AddDbContext<PetDbContext>(options =>
+//    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
+//    ?? "Data Source=petsociety.db"));
+
+//builder.Services.AddDbContext<PetDbContext>(options =>
+//    options.UseSqlServer(
+//        builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<PetDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("HrContext")));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularClient", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+//
+
+builder.Services.AddScoped<IImageStorageService, LocalImageStorageService>();
+builder.Services.AddScoped<IAiPetMatchingService, AiPetMatchingService>();
+//
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseStaticFiles();
 
+app.UseCors("AllowAngularClient");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
