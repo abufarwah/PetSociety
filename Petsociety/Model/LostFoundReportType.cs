@@ -55,5 +55,10 @@ namespace Petsociety.Model
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? ReunitedAt { get; set; }
+        public string FeatureVector { get; internal set; }
+        public object Title { get; internal set; }
+        public object Species { get; internal set; }
+        public object DateText { get; internal set; }
+        public object Phone { get; internal set; }
     }
 }
