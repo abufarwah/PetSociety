@@ -33,5 +33,6 @@ namespace Petsociety.Model
         public bool IsAvailable { get; set; } = true;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string Status { get; set; } = "Available";
     }
 }
