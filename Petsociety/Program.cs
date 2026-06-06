@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Petsociety.Model;
+using Petsociety.Services;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,11 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+//
+
+builder.Services.AddScoped<IImageStorageService, LocalImageStorageService>();
+builder.Services.AddScoped<IAiPetMatchingService, AiPetMatchingService>();
+//
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
