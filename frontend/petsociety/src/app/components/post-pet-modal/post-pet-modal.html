@@ -55,46 +55,45 @@
       
 
      <div class="form-group">
-  <label>Age *</label>
+  <label>Exact Age (years) *</label>
+
+  <input
+    type="number"
+    min="0"
+    step="0.1"
+    [(ngModel)]="petAgeYears"
+    name="petAgeYears"
+    #petAgeYearsRef="ngModel" />
+
+  <small class="error"
+    *ngIf="(petAgeYearsRef.touched || isSubmitted) && petAgeYears === null">
+    Exact age is required
+  </small>
+</div>
+
+      <div class="form-group">
+  <label>Gender *</label>
 
   <select
-    [(ngModel)]="petAge"
-    name="petAge"
-    #petAgeRef="ngModel">
-    <option value="">Select age</option>
-    <option>Baby</option>
-    <option>Young</option>
-    <option>Adult</option>
+    [(ngModel)]="petGender"
+    name="petGender"
+    #petGenderRef="ngModel">
+    <option value="">Select gender</option>
+    <option>Male</option>
+    <option>Female</option>
   </select>
 
   <small class="error"
-    *ngIf="(petAgeRef.touched || isSubmitted) && !petAge">
-    Age is required
+    *ngIf="(petGenderRef.touched || isSubmitted) && !petGender">
+    Gender is required
   </small>
 </div>
 
     </div>
 
     <div class="form-group">
-  <label>Location *</label>
-
-  <input
-    type="text"
-    [(ngModel)]="petLocation"
-    name="petLocation"
-    #petLocationRef="ngModel"
-  />
-
-  <small class="error"
-    *ngIf="(petLocationRef.touched || isSubmitted) && !petLocation">
-    Location is required
-  </small>
-</div>
-
-
-    <div class="form-group">
-      <label>Description</label>
-      <textarea placeholder="Tell us about this pet..." [(ngModel)]="petDescription" name="petDescription"></textarea>
+      <label>Description (Health Status)</label>
+      <textarea placeholder="Tell us about this pet and their health status..." [(ngModel)]="petDescription" name="petDescription"></textarea>
     </div>
 
     <div class="form-group">
