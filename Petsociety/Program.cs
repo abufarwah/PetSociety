@@ -8,9 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+//builder.Services.AddDbContext<PetDbContext>(options =>
+//    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
+//    ?? "Data Source=petsociety.db"));
+
+//builder.Services.AddDbContext<PetDbContext>(options =>
+//    options.UseSqlServer(
+//        builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContext<PetDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Data Source=petsociety.db"));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("HrContext")));
 
 builder.Services.AddCors(options =>
 {
