@@ -13,10 +13,10 @@ export class PostPetModalComponent {
   imagePreview: string | null = null;
   selectedImageFile: File | null = null;
 
-  petAge: string = '';
+  petAgeYears: number | null = null;
+  petGender: string = '';
   petName: string = '';
   petType: string = '';
-  petLocation: string = '';
   petDescription: string = '';
   isSubmitted = false;
 
@@ -27,12 +27,17 @@ export class PostPetModalComponent {
     'Playful',
     'Calm',
     'Energetic',
-    'Indoor',
-    'Outdoor',
+    'Security',
     'Trained',
   ];
 
   selectedTags: string[] = [];
+
+  calculateAgeCategory(ageYears: number): string {
+    if (ageYears < 1) return 'Baby';
+    if (ageYears < 3) return 'Young';
+    return 'Adult';
+  }
 
   toggleTag(tag: string) {
     if (this.selectedTags.includes(tag)) {
@@ -65,18 +70,21 @@ export class PostPetModalComponent {
   if (
     !this.petName ||
     !this.petType ||
-    !this.petAge ||
-    !this.petLocation ||
+    this.petAgeYears === null ||
+    !this.petGender ||
     !this.selectedImageFile
   ) {
     return;
   }
 
+  const ageCategory = this.calculateAgeCategory(this.petAgeYears);
+
   const newPet = {
     breed: this.petName,
     type: this.petType,
-    age: this.petAge,
-    location: this.petLocation,
+    age: ageCategory,
+    ageYears: this.petAgeYears,
+    gender: this.petGender,
     description: this.petDescription,
     image: this.imagePreview,
     tags: this.selectedTags,

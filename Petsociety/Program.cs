@@ -22,10 +22,13 @@ try
     // ── 1. CONTROLLERS ───────────────────────────────────────────────────────
     builder.Services.AddControllers();
 
-    // ── 1b. APPLICATION SERVICES ──────────────────────────────────────────────
-    // Singleton: MessageModerationService is stateless (no mutable fields).
-    // A singleton avoids re-allocating the same keyword array on every request.
+    // ── 1b. APPLICATION SERVICES ─────────────────────────────────────────────
+    // Moderation service: singleton because it is stateless (static keyword arrays).
     builder.Services.AddSingleton<IMessageModerationService, MessageModerationService>();
+
+    // AI / Image services from teammate's branch (scoped — use DbContext per request).
+    builder.Services.AddScoped<IImageStorageService, LocalImageStorageService>();
+    builder.Services.AddScoped<IAiPetMatchingService, AiPetMatchingService>();
 
     // ── 2. DATABASE CONTEXT ──────────────────────────────────────────────────
     builder.Services.AddDbContext<PetDbContext>(options =>

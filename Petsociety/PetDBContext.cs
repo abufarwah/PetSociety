@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Petsociety.Models;
+using Petsociety.Model;    // LostFoundReport, LostFoundReportType enum, enums
+using Petsociety.Models;   // Pet, User, AdoptionRequest, Subscription, Payment
 
 namespace Petsociety.Model
 {
@@ -9,15 +10,17 @@ namespace Petsociety.Model
         {
         }
 
-        // existing domain sets
+        // ── Core domain sets ─────────────────────────────────────────────────
         public DbSet<Pet> Pets { get; set; } = null!;
         public DbSet<AdoptionRequest> AdoptionRequests { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Subscription> Subscriptions { get; set; } = null!;
         public DbSet<Payment> Payments { get; set; } = null!;
+
+        // ── Lost & Found (unified entity — Petsociety.Model namespace) ───────
         public DbSet<LostFoundReport> LostFoundReports { get; set; } = null!;
 
-        // Community feature
+        // ── Community feature ─────────────────────────────────────────────────
         public DbSet<CommunityChannel> CommunityChannels { get; set; } = null!;
         public DbSet<CommunityMessage> CommunityMessages { get; set; } = null!;
 
@@ -31,14 +34,13 @@ namespace Petsociety.Model
                 .HasForeignKey(m => m.ChannelId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             modelBuilder.Entity<CommunityMessage>()
                 .HasOne(m => m.User)
                 .WithMany()
                 .HasForeignKey(m => m.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // optional: indexes for queries
+            // Optional: indexes for common queries
             modelBuilder.Entity<CommunityChannel>()
                 .HasIndex(c => c.Name);
 
