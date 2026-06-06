@@ -23,10 +23,11 @@ try
     builder.Services.AddControllers();
 
     // ── 1b. APPLICATION SERVICES ─────────────────────────────────────────────
-    // Moderation service: singleton because it is stateless (static keyword arrays).
+    // MessageModerationService: Singleton — stateless (static keyword arrays).
+    // A singleton avoids re-allocating the keyword list on every request.
     builder.Services.AddSingleton<IMessageModerationService, MessageModerationService>();
 
-    // AI / Image services from teammate's branch (scoped — use DbContext per request).
+    // AI & Image services: Scoped — use PetDbContext which is itself Scoped.
     builder.Services.AddScoped<IImageStorageService, LocalImageStorageService>();
     builder.Services.AddScoped<IAiPetMatchingService, AiPetMatchingService>();
 
