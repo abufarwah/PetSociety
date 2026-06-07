@@ -236,101 +236,13 @@ export class Admin implements OnInit {
     this.closeManageSubModal();
   }
 
-  // ════════════════════════════════════════════════════════════════════════
-  //  AI LOST & FOUND — DISPUTED MATCHES
-  // ════════════════════════════════════════════════════════════════════════
-  // Only shows cases where IsDisputed == true AND ResolvedAt == null.
-  // Mirrors GET /api/moderation/ai-disputes
-  //
-  // TODO [TEAM INTEGRATION]: Replace mock array by calling:
-  //   this.http.get<any[]>(`${this.apiBase}/moderation/ai-disputes`)
-  //     .subscribe({ next: data => this.disputedMatches = data, error: ... });
-
-  disputedMatches: any[] = [
-    {
-      id: 'DISP-201',
-      title:       'Lost Golden Retriever — Mecca Street',
-      species:     'Dog',
-      location:    'Amman, Mecca Street',
-      finderUser:  'Layan Sawalha',
-      ownerUser:   'Omar Khasawneh',
-      finderSays:  'Match Confirmed ✓',
-      ownerSays:   'Not My Pet ✗',
-      conflictNote:'Finder accepts the AI match. Owner insists it\'s a different dog with similar markings.',
-      createdAt:   '2026-03-14',
-      status:      'Open'
-    },
-    {
-      id: 'DISP-202',
-      title:       'Found White Cat — Dabouq Area',
-      species:     'Cat',
-      location:    'Amman, Dabouq',
-      finderUser:  'Sami Farawneh',
-      ownerUser:   'Rana Mofeed',
-      finderSays:  'Not Sure ?',
-      ownerSays:   'That\'s My Cat ✓',
-      conflictNote:'Owner is certain from the ear marking. Finder says photo angle is misleading.',
-      createdAt:   '2026-04-02',
-      status:      'Open'
-    },
-    {
-      id: 'DISP-203',
-      title:       'Lost Persian Cat — Sweifieh',
-      species:     'Cat',
-      location:    'Amman, Sweifieh',
-      finderUser:  'Hana Bitar',
-      ownerUser:   'Yazeed Nabulsi',
-      finderSays:  'Match Confirmed ✓',
-      ownerSays:   'Wrong Breed ✗',
-      conflictNote:'Both parties have supporting photos. Requires manual image comparison by admin.',
-      createdAt:   '2026-05-19',
-      status:      'Open'
-    }
-  ];
-
-  // ── Resolve dispute ────────────────────────────────────────────────────
-  resolveDispute(id: string): void {
-    const dispute = this.disputedMatches.find(d => d.id === id);
-    if (!dispute) return;
-    if (!confirm(
-      `Resolve dispute "${id}"?\n\nThis will mark the case as resolved and close it. ` +
-      `Both parties will be notified.`
-    )) return;
-
-    console.log('[MOCK] PUT /api/moderation/ai-disputes/' + id + '/resolve', { reportId: id });
-
-    // TODO [TEAM INTEGRATION]: Un-comment for integration.
-    // this.http.put(`${this.apiBase}/moderation/ai-disputes/${id}/resolve`, 'Admin resolved after manual review').subscribe({
-    //   next: () => { /* remove from queue below */ },
-    //   error: err => console.error('Resolve dispute failed', err)
-    // });
-
-    this.disputedMatches = this.disputedMatches.filter(d => d.id !== id);
-  }
-
-  // ── Dismiss dispute ────────────────────────────────────────────────────
-  dismissDispute(id: string): void {
-    const dispute = this.disputedMatches.find(d => d.id === id);
-    if (!dispute) return;
-    if (!confirm(
-      `Dismiss dispute "${id}" due to insufficient evidence?\n\n` +
-      `The case will be closed without a resolution.`
-    )) return;
-
-    console.log('[MOCK] PUT /api/moderation/ai-disputes/' + id + '/dismiss', { reportId: id });
-
-    // TODO [TEAM INTEGRATION]: Un-comment for integration.
-    // this.http.put(`${this.apiBase}/moderation/ai-disputes/${id}/dismiss`, {}).subscribe({
-    //   next: () => { /* remove from queue below */ },
-    //   error: err => console.error('Dismiss dispute failed', err)
-    // });
-
-    this.disputedMatches = this.disputedMatches.filter(d => d.id !== id);
-  }
+  // To support the 'Open Disputes' KPI card without the table.
+  disputedMatches: any[] = [];
 
   // ════════════════════════════════════════════════════════════════════════
   //  CHAT & COMMUNITY
   // ════════════════════════════════════════════════════════════════════════
+
 
   chatStats = { dailyMessages: 140, flaggedCount: 12 };
 

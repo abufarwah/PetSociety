@@ -492,15 +492,13 @@
     </div>
 </div>
 
-
-<!-- ══════════════════════ DISPUTED AI MATCHES ══════════════════════════ -->
+<!-- ══════════════════════ LOST & FOUND AI ══════════════════════════ -->
 <div class="section-content no-bg" *ngIf="activeTab === 'reports'">
     <div class="subs-header-row">
         <div class="header-texts">
-            <h2>⚠️ Disputed AI Matches</h2>
+            <h2>🤖 Lost & Found AI Overview</h2>
             <p>
-                Cases where the Finder and Owner gave <strong>conflicting responses</strong> to the AI
-                match suggestion. These cannot be auto-resolved and require manual admin adjudication.
+                Metrics and success rates for the AI-powered pet image matching pipeline.
             </p>
         </div>
     </div>
@@ -523,113 +521,6 @@
             </div>
             <span class="ai-rate-note">Vector-match rate · Disputes excluded from this count</span>
         </div>
-    </div>
-
-    <!-- Disputed Matches Table -->
-    <div class="table-container-white">
-        <div class="section-header-small">
-            <div class="section-title-group">
-                <h3>🔍 Active Disputes Requiring Admin Review</h3>
-                <span class="moderation-note">
-                    Showing cases where <code>IsDisputed == true</code> AND
-                    <code>ResolvedAt == null</code>
-                </span>
-            </div>
-            <span class="badge-count red">{{ disputedMatches.length }} Open</span>
-        </div>
-
-        <table class="data-table mod-table dispute-table">
-            <thead>
-                <tr>
-                    <th>Pet &amp; Case ID</th>
-                    <th>Finder Says</th>
-                    <th>Owner Says</th>
-                    <th>Conflict Summary</th>
-                    <th>Reported</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let dispute of disputedMatches" class="row-dispute">
-
-                    <!-- Col 1: Pet & Case -->
-                    <td>
-                        <div class="user-cell">
-                            <div class="pet-thumb dispute-pet-icon">
-                                <i class="fa-solid fa-paw"></i>
-                            </div>
-                            <div class="user-info-text">
-                                <span class="user-name">{{ dispute.title }}</span>
-                                <span class="sub-text">{{ dispute.species }} · {{ dispute.location }}</span>
-                                <span class="sub-text dispute-id">ID: {{ dispute.id }}</span>
-                            </div>
-                        </div>
-                    </td>
-
-                    <!-- Col 2: Finder's response -->
-                    <td>
-                        <div class="dispute-party">
-                            <span class="party-label">Finder</span>
-                            <span class="party-name">{{ dispute.finderUser }}</span>
-                            <span class="party-verdict"
-                                  [ngClass]="dispute.finderSays.includes('✓') ? 'verdict-yes' : dispute.finderSays.includes('✗') ? 'verdict-no' : 'verdict-unsure'">
-                                {{ dispute.finderSays }}
-                            </span>
-                        </div>
-                    </td>
-
-                    <!-- Col 3: Owner's response -->
-                    <td>
-                        <div class="dispute-party">
-                            <span class="party-label">Owner</span>
-                            <span class="party-name">{{ dispute.ownerUser }}</span>
-                            <span class="party-verdict"
-                                  [ngClass]="dispute.ownerSays.includes('✓') ? 'verdict-yes' : dispute.ownerSays.includes('✗') ? 'verdict-no' : 'verdict-unsure'">
-                                {{ dispute.ownerSays }}
-                            </span>
-                        </div>
-                    </td>
-
-                    <!-- Col 4: Conflict note -->
-                    <td class="msg-content-cell">
-                        <p class="dispute-note">{{ dispute.conflictNote }}</p>
-                    </td>
-
-                    <!-- Col 5: Date -->
-                    <td>
-                        <span class="sub-text-small">{{ dispute.createdAt }}</span>
-                    </td>
-
-                    <!-- Col 6: Actions -->
-                    <td>
-                        <div class="action-buttons mod-actions">
-                            <!-- Resolve Conflict -->
-                            <button class="icon-btn resolve-btn"
-                                    (click)="resolveDispute(dispute.id)"
-                                    title="Resolve Conflict — Mark as Adjudicated"
-                                    aria-label="Resolve Conflict">
-                                <i class="fa-solid fa-gavel"></i>
-                            </button>
-                            <!-- Dismiss (insufficient evidence) -->
-                            <button class="icon-btn dismiss"
-                                    (click)="dismissDispute(dispute.id)"
-                                    title="Dismiss — Insufficient Evidence"
-                                    aria-label="Dismiss Dispute">
-                                <i class="fa-solid fa-circle-xmark"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- Empty state -->
-                <tr *ngIf="disputedMatches.length === 0">
-                    <td colspan="6" class="empty-state-cell">
-                        <i class="fa-solid fa-robot"></i>
-                        No open disputes — all AI matches have been resolved.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 
