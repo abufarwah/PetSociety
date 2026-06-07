@@ -236,10 +236,8 @@ export class Admin implements OnInit {
     this.closeManageSubModal();
   }
 
-  // To support the 'Open Disputes' KPI card without the table.
-  disputedMatches: any[] = [];
-
   // ════════════════════════════════════════════════════════════════════════
+
   //  CHAT & COMMUNITY
   // ════════════════════════════════════════════════════════════════════════
 

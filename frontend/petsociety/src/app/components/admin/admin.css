@@ -315,6 +315,7 @@
     margin-bottom: 35px;
 }
 .grid-3-cols { grid-template-columns: repeat(3, 1fr); } /* كلاس احتياطي */
+.grid-2-cols { grid-template-columns: repeat(2, 1fr); }
 
 .stat-card {
     background: white; padding: 30px; border-radius: 20px; border: none;
