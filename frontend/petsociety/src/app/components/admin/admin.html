@@ -20,11 +20,7 @@
                 <option *ngFor="let r of addUserRoles" [value]="r">{{ r }}</option>
             </select>
         </div>
-        <p class="modal-note">
-            <i class="fa-solid fa-circle-info"></i>
-            A temporary password will be assigned. The backend call is mocked —
-            see <code>admin.ts → submitAddUser()</code> for the integration TODO.
-        </p>
+        
     </div>
     <div class="modal-footer">
         <button class="btn-modal-cancel" (click)="closeAddUserModal()">Cancel</button>
@@ -69,10 +65,7 @@
                 <option value="Cancelled">Cancelled</option>
             </select>
         </div>
-        <p class="modal-note">
-            <i class="fa-solid fa-circle-info"></i>
-            Saving calls <code>PUT /api/subscription/subscriptions/{{ selectedSub.id }}/manage</code> (mocked).
-        </p>
+        
     </div>
     <div class="modal-footer">
         <button class="btn-modal-cancel" (click)="closeManageSubModal()">Cancel</button>
