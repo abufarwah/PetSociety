@@ -8,7 +8,7 @@ using Petsociety.Models;
 
 namespace Petsociety.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SubscriptionController : ControllerBase

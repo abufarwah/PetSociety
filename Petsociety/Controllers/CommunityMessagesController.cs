@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Petsociety.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CommunityMessagesController : ControllerBase

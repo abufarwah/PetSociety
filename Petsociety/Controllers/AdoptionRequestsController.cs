@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Petsociety.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AdoptionRequestsController : ControllerBase
@@ -75,6 +75,45 @@ namespace Petsociety.Controllers
             }
         }
 
+        //[HttpPost("Add")]
+        //public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
+        //{
+        //    try
+        //    {
+        //        var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
+        //        if (pet == null)
+        //        {
+        //            return BadRequest("Pet Does Not Exist");
+        //        }
+
+        //        if (!pet.IsAvailable)
+        //        {
+        //            return BadRequest("Pet Is Not Available For Adoption");
+        //        }
+
+        //        var request = new AdoptionRequest
+        //        {
+        //            Id = 0,
+        //            PetId = dto.PetId,
+        //            PhoneNumber = dto.PhoneNumber,
+        //            DeliveryMethod = dto.DeliveryMethod,
+        //            Status = dto.Status ?? "Pending",
+        //            CreatedAt = DateTime.UtcNow
+        //        };
+
+        //        _dbContext.AdoptionRequests.Add(request);
+        //        _dbContext.SaveChanges();
+
+        //        // Note: not changing pet.IsAvailable here to preserve admin approval workflow
+
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
         [HttpPost("Add")]
         public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
         {
@@ -82,31 +121,25 @@ namespace Petsociety.Controllers
             {
                 var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
                 if (pet == null)
-                {
                     return BadRequest("Pet Does Not Exist");
-                }
 
                 if (!pet.IsAvailable)
-                {
-                    return BadRequest("Pet Is Not Available For Adoption");
-                }
+                    return BadRequest("Pet Is Not Available");
 
                 var request = new AdoptionRequest
                 {
-                    Id = 0,
                     PetId = dto.PetId,
+                    UserId = 1, 
                     PhoneNumber = dto.PhoneNumber,
                     DeliveryMethod = dto.DeliveryMethod,
-                    Status = dto.Status ?? "Pending",
+                    Status = "Pending",
                     CreatedAt = DateTime.UtcNow
                 };
 
                 _dbContext.AdoptionRequests.Add(request);
                 _dbContext.SaveChanges();
 
-                // Note: not changing pet.IsAvailable here to preserve admin approval workflow
-
-                return Ok();
+                return Ok(request.Id); 
             }
             catch (Exception ex)
             {
@@ -161,5 +194,19 @@ namespace Petsociety.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("UpdateStatus")]
+        public IActionResult UpdateStatus(long id, string status)
+        {
+            var pet = _dbContext.Pets.Find(id);
+            if (pet == null) return NotFound();
+
+            pet.Status = status;
+            pet.IsAvailable = status != "Adopted";
+
+            _dbContext.SaveChanges();
+            return Ok();
+        }
+
     }
 }

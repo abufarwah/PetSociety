@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace Petsociety.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
