@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Petsociety.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AdoptionRequestsController : ControllerBase

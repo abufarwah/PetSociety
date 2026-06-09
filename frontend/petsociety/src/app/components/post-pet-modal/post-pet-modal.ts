@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,7 +9,9 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './post-pet-modal.html',
   styleUrls: ['./post-pet-modal.css'],
 })
-export class PostPetModalComponent {
+export class PostPetModalComponent implements OnChanges {
+  @Input() pet: any | null = null;
+
   imagePreview: string | null = null;
   selectedImageFile: File | null = null;
 
@@ -47,6 +49,40 @@ export class PostPetModalComponent {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['pet']) {
+      if (this.pet) {
+        this.loadPet(this.pet);
+      } else {
+        this.resetForm();
+      }
+    }
+  }
+
+  loadPet(pet: any) {
+    this.petName = pet.breed || '';
+    this.petType = pet.type || '';
+    this.petAgeYears = pet.ageYears ?? null;
+    this.petGender = pet.gender || '';
+    this.petDescription = pet.description || '';
+    this.selectedTags = pet.tags ? [...pet.tags] : [];
+    this.selectedImageFile = null;
+    this.imagePreview = pet.image || pet.imageUrl || '';
+    this.isSubmitted = false;
+  }
+
+  resetForm() {
+    this.petName = '';
+    this.petType = '';
+    this.petAgeYears = null;
+    this.petGender = '';
+    this.petDescription = '';
+    this.selectedTags = [];
+    this.selectedImageFile = null;
+    this.imagePreview = null;
+    this.isSubmitted = false;
+  }
+
   onImageSelected(event: any) {
     const file = event.target.files[0];
     if (!file) return;
@@ -65,32 +101,38 @@ export class PostPetModalComponent {
   @Output() petCreated = new EventEmitter<any>();
 
   submitPet() {
-  this.isSubmitted = true;
+    this.isSubmitted = true;
 
-  if (
-    !this.petName ||
-    !this.petType ||
-    this.petAgeYears === null ||
-    !this.petGender ||
-    !this.selectedImageFile
-  ) {
-    return;
+    const isEditing = !!this.pet?.id;
+
+    if (
+      !this.petName ||
+      !this.petType ||
+      this.petAgeYears === null ||
+      !this.petGender ||
+      (!this.selectedImageFile && !isEditing)
+    ) {
+      return;
+    }
+
+    const ageCategory = this.calculateAgeCategory(this.petAgeYears);
+
+    const newPet = {
+      id: this.pet?.id,
+      breed: this.petName,
+      type: this.petType,
+      age: ageCategory,
+      ageYears: this.petAgeYears,
+      ageCategory: ageCategory,
+      gender: this.petGender,
+      description: this.petDescription,
+      image: this.imagePreview,
+      imageFile: this.selectedImageFile,
+      tags: this.selectedTags,
+      isAvailable: true
+    };
+
+    this.petCreated.emit(newPet);
+    this.close.emit();
   }
-
-  const ageCategory = this.calculateAgeCategory(this.petAgeYears);
-
-  const newPet = {
-    breed: this.petName,
-    type: this.petType,
-    age: ageCategory,
-    ageYears: this.petAgeYears,
-    gender: this.petGender,
-    description: this.petDescription,
-    image: this.imagePreview,
-    tags: this.selectedTags,
-  };
-
-  this.petCreated.emit(newPet);
-  this.close.emit();
-}
 }

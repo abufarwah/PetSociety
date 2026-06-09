@@ -171,7 +171,7 @@ export class Payment implements OnInit {
       this.showSuccess = true;
       this.paymentSuccessMessage = `Your payment for ${this.selectedPackage.name} was successful.`;
 
-      // حفظ حالة الاشتراك واسم الباقة في التخزين المحلي لاستخدامها في واجهات أخرى
+      // Save subscription state and package name in local storage for other views
       try {
         localStorage.setItem('hasActiveSubscription', 'true');
       } catch {}

@@ -153,27 +153,27 @@ export class Admin {
       id: 'MATCH-101', 
       reporter: 'Sami Farawneh', 
       matchPercent: 98, 
-      status: 'User Confirmed', // المستخدم أكد أنه حيوانه
+      status: 'User Confirmed', // The user confirmed this is their pet
       lastUpdate: '2 hours ago'
     },
     { 
       id: 'MATCH-102', 
       reporter: 'Layan S.', 
       matchPercent: 92, 
-      status: 'Waiting User',   // النظام لقى تطابق وبستنى رد المستخدم
+      status: 'Waiting User',   // The system found a match and is waiting for the user
       lastUpdate: '1 day ago'
     },
     { 
       id: 'MATCH-103', 
       reporter: 'Omar K.', 
       matchPercent: 45, 
-      status: 'User Rejected',  // المستخدم قال "لا، مش حيواني"
+      status: 'User Rejected',  // The user said "No, this is not my pet"
       lastUpdate: '3 days ago'
     }
   ];
 
 
-  // ==================== طلبات التبني (Adoption Requests) ==
+  // ==================== Adoption Requests ====================
   adoptionRequests = [
     { 
       id: 'REQ-101', 
@@ -202,7 +202,7 @@ export class Admin {
   ];
 
 
-  //  إدارة الشات  (Chat & Community) ====================
+  //  Chat & Community Management ====================
   
   chatStats = {
     dailyMessages: 140,

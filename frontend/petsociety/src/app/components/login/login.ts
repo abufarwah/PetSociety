@@ -23,28 +23,23 @@ export class Login  {
   ) {}
 
   login() {
-    
+    if (!this.loginForm.valid) {
+      return;
+    }
 
-    if (this.loginForm.valid) {
+    const email = this.loginForm.value.email || '';
     console.log('BUTTON CLICKED');
-    this.auth.login();
-    // this.router.navigate(['/Home']);
-    
-  }
-  
-  if (this.loginForm.valid) {
+    this.auth.login(email);
 
+    try {
+      localStorage.setItem('isLoggedIn', 'true');
+    } catch {}
 
-    localStorage.setItem('isLoggedIn', 'true');
-
-
-    localStorage.setItem(
-      'userEmail',
-      this.loginForm.value.email || ''
-    );
+    try {
+      localStorage.setItem('userEmail', email);
+    } catch {}
 
     this.router.navigate(['/Home']);
-  }
   }
 
   

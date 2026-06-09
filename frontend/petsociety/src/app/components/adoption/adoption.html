@@ -89,6 +89,17 @@
     <div class="pets-grid">
 
         <div class="pet-card" *ngFor="let pet of filteredPets">
+              <div class="post-actions">
+                <div class="menu-wrapper">
+                  <button class="menu-toggle" type="button" (click)="toggleOptionsMenu(getPetId(pet), $event)">
+                    ⋯
+                  </button>
+                  <div class="menu-dropdown" *ngIf="optionsMenuOpenId === getPetId(pet)" (click)="$event.stopPropagation()">
+                    <button class="menu-item" type="button" (click)="editPet(pet)">Edit</button>
+                    <button class="menu-item delete" type="button" (click)="deletePet(pet)">Delete</button>
+                  </div>
+                </div>
+              </div>
 
             <div class="pet-img" (click)="openPet(pet)">
                 <img [src]="pet.image" alt />
@@ -111,7 +122,9 @@
                         <h3>{{ pet.breed }}</h3>
                         <span class="gender">{{ pet.gender }}</span>
                     </div>
-                    <span class="tag">{{ pet.type }}</span>
+                    <div class="header-actions">
+                      <span class="tag">{{ pet.type }}</span>
+                    </div>
                 </div>
 
                 <p class="age">Age: {{ formatAge(pet.ageYears) }}</p>
@@ -120,12 +133,11 @@
                     <span *ngFor="let tag of pet.tags">{{ tag }}</span>
                 </div>
 
-                <!-- <button class="adopt-btn" (click)="openPet(pet)">
+                <div class="pet-card-actions">
+                  <button class="adopt-btn" (click)="handleAdoption(pet)">
                     Adopt Now
-                </button> -->
-                <button class="adopt-btn" (click)="handleAdoption(pet)">
-                    Adopt Now
-                </button>
+                  </button>
+                </div>
 
             </div>
 
@@ -224,12 +236,20 @@
             Pet Added Successfully <i class="fa-solid fa-paw"></i>
         </h3>
 
+        <h3 *ngIf="successType === 'edit'">
+            Pet Updated Successfully <i class="fa-solid fa-paw"></i>
+        </h3>
+
         <h3 *ngIf="successType === 'adopt'">
             Request Sent <i class="fa-solid fa-paw"></i>
         </h3>
 
         <p *ngIf="successType === 'add'">
             Your pet has been added to the adoption list.
+        </p>
+
+        <p *ngIf="successType === 'edit'">
+            Your pet has been updated successfully.
         </p>
 
         <p *ngIf="successType === 'adopt'">
@@ -245,6 +265,7 @@
 
 <app-post-pet-modal
     *ngIf="showPostModal"
+    [pet]="editingPet"
     (close)="closePostModal()"
-    (petCreated)="addPet($event)">
+    (petCreated)="savePet($event)">
 </app-post-pet-modal>
