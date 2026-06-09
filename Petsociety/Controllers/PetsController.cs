@@ -196,27 +196,29 @@ namespace Petsociety.Controllers
             }
         }
 
-        //[HttpDelete("Delete")]
-        //public IActionResult Delete([FromQuery] long Id)
-        //{
-        //    try
-        //    {
-        //        var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == Id);
-        //        if (pet == null)
-        //        {
-        //            return BadRequest("Pet Does Not Exist");
-        //        }
-        //        _dbContext.Pets.Remove(pet);
-        //        _dbContext.SaveChanges();
-        //        return Ok();
-        //    }
+        [HttpDelete("Delete")]
+        public IActionResult Delete([FromQuery] long Id)
+        {
+            try
+            {
+                var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == Id);
+                if (pet == null)
+                {
+                    return BadRequest("Pet Does Not Exist");
+                }
+                _dbContext.Pets.Remove(pet);
+                _dbContext.SaveChanges();
+                return Ok();
+            }
 
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-        //}
+        }
+
+
 
         [HttpPut("Adopt")]
         public IActionResult AdoptPet(int id)
