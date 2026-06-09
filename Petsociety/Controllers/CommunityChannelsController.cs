@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Petsociety.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CommunityChannelsController : ControllerBase

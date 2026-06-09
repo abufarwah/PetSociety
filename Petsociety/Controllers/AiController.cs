@@ -60,7 +60,7 @@ namespace Petsociety.Controllers
         }
 
         [HttpPost("add-post")]
-        public async Task<IActionResult> AddPost([FromForm] LostFoundReport report, IFormFile image)
+        public async Task<IActionResult> AddPost([FromForm] Model.LostFoundReport report, IFormFile image)
         {
             if (image == null || image.Length == 0) return BadRequest("Image is required.");
 

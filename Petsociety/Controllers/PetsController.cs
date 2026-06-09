@@ -1,26 +1,22 @@
-using Petsociety.DTOs.Pets;
-using Petsociety.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Petsociety.DTOs.Pets;
+using Petsociety.Model;
 using System;
 using System.Linq;
-using System.IO;
 
 namespace Petsociety.Controllers
 {
-    [AllowAnonymous]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PetsController : ControllerBase
     {
         private PetDbContext _dbContext;
-        private readonly IWebHostEnvironment _env;
-
-        public PetsController(PetDbContext dbContext, IWebHostEnvironment env)
+        public PetsController(PetDbContext dbContext)
         {
             _dbContext = dbContext;
-            _env = env;
         }
 
         [HttpGet("GetAll")]
@@ -29,8 +25,6 @@ namespace Petsociety.Controllers
             try
             {
                 // Materialize the query first to avoid expression tree issues with .Split and .ToList
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
-
                 var data = _dbContext.Pets
                     .Where(pet =>
                         (filterDto.Breed == null || pet.Breed.Contains(filterDto.Breed)) &&  //*******
@@ -48,11 +42,7 @@ namespace Petsociety.Controllers
                         AgeCategory = pet.AgeCategory,
                         AgeYears = pet.AgeYears,
                         Gender = pet.Gender,
-                        ImageUrl = string.IsNullOrWhiteSpace(pet.ImageUrl)
-                            ? baseUrl + "/images/default-pet.png"
-                            : pet.ImageUrl.StartsWith("/")
-                                ? baseUrl + pet.ImageUrl
-                                : pet.ImageUrl,
+                        ImageUrl = pet.ImageUrl,
                         Tags = pet.Tags == null
                             ? new System.Collections.Generic.List<string>()
                             : pet.Tags.Split(',').Select(t => t.Trim()).Where(t => t != string.Empty).ToList(),
@@ -79,8 +69,6 @@ namespace Petsociety.Controllers
                 if (petEntity == null)
                     return Ok(null);
 
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
-
                 var pet = new PetDto
                 {
                     Id = petEntity.Id,
@@ -89,11 +77,7 @@ namespace Petsociety.Controllers
                     AgeCategory = petEntity.AgeCategory,
                     AgeYears = petEntity.AgeYears,
                     Gender = petEntity.Gender,
-                    ImageUrl = string.IsNullOrWhiteSpace(petEntity.ImageUrl)
-                        ? baseUrl + "/images/default-pet.png"
-                        : petEntity.ImageUrl.StartsWith("/")
-                            ? baseUrl + petEntity.ImageUrl
-                            : petEntity.ImageUrl,
+                    ImageUrl = petEntity.ImageUrl,
                     Tags = petEntity.Tags == null
                         ? new System.Collections.Generic.List<string>()
                         : petEntity.Tags.Split(',').Select(t => t.Trim()).Where(t => t != string.Empty).ToList(),
@@ -118,7 +102,8 @@ namespace Petsociety.Controllers
                 if (string.IsNullOrWhiteSpace(petDto.Breed))
                     return BadRequest("Breed is required");
 
-                // Image is optional; only save if provided
+                if (petDto.Image == null)
+                    return BadRequest("Image is required");
 
                 var pet = new Pet
                 {
@@ -134,33 +119,25 @@ namespace Petsociety.Controllers
                     IsAvailable = petDto.IsAvailable
                 };
 
-                if (petDto.Image != null)
+                var uploadsFolder = Path.Combine("wwwroot/images");
+
+                if (!Directory.Exists(uploadsFolder))
                 {
-                    var uploadsFolder = Path.Combine(_env.WebRootPath ?? "wwwroot", "images");
-
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    var fileName = Guid.NewGuid() + Path.GetExtension(petDto.Image.FileName);
-                    var path = Path.Combine(uploadsFolder, fileName);
-
-                    using var stream = new FileStream(path, FileMode.Create);
-                    petDto.Image.CopyTo(stream);
-
-                    pet.ImageUrl = "/images/" + fileName;
+                    Directory.CreateDirectory(uploadsFolder);
                 }
-                else
-                {
-                    // assign a default placeholder so DB non-null constraint is satisfied
-                    pet.ImageUrl = "/images/default-pet.png";
-                }
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(petDto.Image.FileName);
+                var path = Path.Combine(uploadsFolder, fileName);
+
+                using var stream = new FileStream(path, FileMode.Create);
+                petDto.Image.CopyTo(stream);
+
+                pet.ImageUrl = "/images/" + fileName;
 
                 _dbContext.Pets.Add(pet);
                 _dbContext.SaveChanges();
 
-                return Ok(new { id = pet.Id, imageUrl = pet.ImageUrl });
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -196,7 +173,7 @@ namespace Petsociety.Controllers
 
                 if (petDto.Image != null)
                 {
-                    var uploadsFolder = Path.Combine(_env.WebRootPath ?? "wwwroot", "images");
+                    var uploadsFolder = Path.Combine("wwwroot/images");
 
                     if (!Directory.Exists(uploadsFolder))
                         Directory.CreateDirectory(uploadsFolder);
@@ -239,6 +216,23 @@ namespace Petsociety.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+
+
+        [HttpPut("Adopt")]
+        public IActionResult AdoptPet(int id)
+        {
+            var pet = _dbContext.Pets.Find(id);
+
+            if (pet == null)
+                return NotFound();
+
+            pet.Status = "Adopted";
+
+            _dbContext.SaveChanges();
+
+            return Ok(pet);
         }
     }
 }

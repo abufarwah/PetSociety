@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Petsociety.DTOs.SubscriptionDTOs;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
@@ -8,7 +8,7 @@ using Petsociety.Models;
 
 namespace Petsociety.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SubscriptionController : ControllerBase
@@ -88,6 +88,37 @@ namespace Petsociety.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { success = true, message = "Payment successful! Subscription activated." });
+        }
+
+        // ── PUT /api/subscription/subscriptions/{id}/manage ───────────────────
+        // Admin endpoint: toggle a subscription's active/cancelled status.
+        // Does NOT require the caller to be the subscription owner.
+
+        /// <summary>
+        /// Toggles a subscription's IsActive status (Active ↔ Cancelled).
+        /// Intended for admin use from the dashboard.
+        /// </summary>
+        /// <response code="200">Status toggled successfully.</response>
+        /// <response code="404">Subscription not found.</response>
+        [AllowAnonymous] // TODO [TEAM INTEGRATION]: Replace with [Authorize(Roles = "Admin")] once role claims are set up.
+        [HttpPut("subscriptions/{id}/manage")]
+        public async Task<IActionResult> ManageSubscription(int id)
+        {
+            var subscription = await _context.Subscriptions.FindAsync(id);
+            if (subscription is null)
+                return NotFound(new { error = $"Subscription with id {id} not found." });
+
+            // Toggle: Active → Cancelled, Cancelled → Active
+            subscription.IsActive = !subscription.IsActive;
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                subscriptionId = subscription.Id,
+                isActive       = subscription.IsActive,
+                newStatus      = subscription.IsActive ? "Active" : "Cancelled",
+                message        = $"Subscription {id} is now {(subscription.IsActive ? "Active" : "Cancelled")}."
+            });
         }
     }
 }
