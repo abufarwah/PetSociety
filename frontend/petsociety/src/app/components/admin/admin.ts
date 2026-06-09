@@ -183,9 +183,80 @@ export class Admin implements OnInit {
     this.showAddUserModal = false;
   }
 
+  openManageSubModal(sub: any): void {
+    this.selectedSub = sub;
+    this.manageSubNewStatus = sub?.status ?? 'Active';
+    this.showManageSubModal = true;
+  }
+
+  closeManageSubModal(): void {
+    this.showManageSubModal = false;
+    this.selectedSub = null;
+  }
+
+  submitManageSub(): void {
+    if (!this.selectedSub) return;
+
+    const previousStatus = this.selectedSub.status;
+    this.selectedSub.status = this.manageSubNewStatus;
+    console.log('[MOCK] PUT /api/admin/subscriptions/' + this.selectedSub.id, {
+      status: this.manageSubNewStatus
+    });
+
+    if (previousStatus !== this.manageSubNewStatus) {
+      this.selectedSub.nextBilling = this.manageSubNewStatus === 'Cancelled'
+        ? 'N/A'
+        : this.selectedSub.nextBilling || '2026-07-01';
+    }
+
+    this.closeManageSubModal();
+  }
+
+  riskClass(risk: string): string {
+    switch (risk) {
+      case 'High': return 'risk-high';
+      case 'Medium': return 'risk-medium';
+      case 'Low': return 'risk-low';
+      default: return 'risk-neutral';
+    }
+  }
+
+  deleteMessage(id: string | number): void {
+    if (!confirm('Delete this reported message permanently?')) return;
+    this.reportedMessages = this.reportedMessages.filter(msg => msg.id !== id);
+  }
+
+  dismissMessage(id: string | number): void {
+    const message = this.reportedMessages.find(msg => msg.id === id);
+    if (!message) return;
+    message.reportCount = 0;
+    message.reportReason = 'Dismissed';
+    message.risk = 'Low';
+    message.isAutoFlagged = false;
+  }
+
+  banChatUser(sender: string): void {
+    if (!confirm(`Ban ${sender} from the community chat?`)) return;
+    this.reportedMessages = this.reportedMessages.map(msg =>
+      msg.sender === sender
+        ? { ...msg, reason: 'User banned', risk: 'High' }
+        : msg
+    );
+  }
+
   // ════════════════════════════════════════════════════════════════════════
   //  SUBSCRIPTIONS
   // ════════════════════════════════════════════════════════════════════════
+
+  showManageSubModal = false;
+  selectedSub: any = null;
+  manageSubNewStatus = 'Active';
+
+  planDistribution = [
+    { label: 'Basic',   count: 7, pct: 35, color: '#6c8ebf' },
+    { label: 'Premium', count: 3, pct: 15, color: '#8a5cf3' },
+    { label: 'Deluxe',  count: 4, pct: 20, color: '#f8b84c' }
+  ];
 
   searchText = '';
 
@@ -309,22 +380,34 @@ export class Admin implements OnInit {
       id: 'MSG-991', 
       sender: 'SpammerX', 
       content: 'Win a free iPhone now! Click here...', 
-      reason: 'Spam', 
-      risk: 'High' 
+      reportReason: 'Spam', 
+      reportCount: 5,
+      channelId: '12',
+      sentAt: 'Today 11:30 AM',
+      risk: 'High',
+      isAutoFlagged: true
     },
     { 
       id: 'MSG-992', 
       sender: 'AngryUser', 
       content: 'You are stupid and I hate this app', 
-      reason: 'Harassment', 
-      risk: 'Medium' 
+      reportReason: 'Harassment', 
+      reportCount: 4,
+      channelId: '6',
+      sentAt: 'Today 10:15 AM',
+      risk: 'Medium',
+      isAutoFlagged: false
     },
     { 
       id: 'MSG-993', 
       sender: 'Seller123', 
       content: 'Call me on 0799999 for discount', 
-      reason: 'Sharing Private Info', 
-      risk: 'Low' 
+      reportReason: 'Sharing Private Info', 
+      reportCount: 2,
+      channelId: '3',
+      sentAt: 'Yesterday 9:05 PM',
+      risk: 'Low',
+      isAutoFlagged: false
     }
   ];
 
