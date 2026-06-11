@@ -109,13 +109,13 @@ export class LostFoundComponent implements OnInit {
     })
     .then(data => {
       console.log('AI Response:', data);
-      this.searchResultMessage = 'تم الانتهاء من المقارنة بالذكاء الاصطناعي بنجاح! نسبة التطابق: ' + 
-        (data.matches && data.matches.length > 0 ? (data.matches[0].confidence * 100) + '%' : 'غير معروف');
+      this.searchResultMessage = 'AI comparison finished successfully! Match confidence: ' + 
+        (data.matches && data.matches.length > 0 ? (data.matches[0].confidence * 100) + '%' : 'unknown');
       this.cdr.detectChanges();
     })
     .catch(error => {
       console.error('Error connecting to AI service:', error);
-      this.searchResultMessage = 'تم رفع الصورة ولكن لم يتم الاتصال بالخدمة الخلفية للذكاء الاصطناعي.';
+      this.searchResultMessage = 'Image uploaded but the AI backend service is not reachable.';
       this.cdr.detectChanges();
     });
   }

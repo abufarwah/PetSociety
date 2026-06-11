@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Petsociety.Controllers
 {
-    //[Authorize]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AdoptionRequestsController : ControllerBase
@@ -27,6 +27,7 @@ namespace Petsociety.Controllers
             {
                 var data = from req in _dbContext.AdoptionRequests
                            from pet in _dbContext.Pets.Where(x => x.Id == req.PetId).DefaultIfEmpty()
+                           from user in _dbContext.Users.Where(x => x.Id == req.UserId).DefaultIfEmpty()
                            where (filterDto.PetId == null || req.PetId == filterDto.PetId) &&
                                  (filterDto.Status == null || filterDto.Status == "All" || req.Status.ToLower() == filterDto.Status!.ToLower())
                            select new AdoptionRequestDto
@@ -36,6 +37,8 @@ namespace Petsociety.Controllers
                                PetBreed = pet != null ? pet.Breed : string.Empty,
                                PhoneNumber = req.PhoneNumber,
                                DeliveryMethod = req.DeliveryMethod,
+                               RequesterEmail = user != null ? user.Email : string.Empty,
+                               RequesterName = user != null ? user.FullName : string.Empty,
                                Status = req.Status,
                                CreatedAt = req.CreatedAt
                            };
@@ -57,6 +60,7 @@ namespace Petsociety.Controllers
                             join pet in _dbContext.Pets
                             on req.PetId equals pet.Id into petGroup
                             from pet in petGroup.DefaultIfEmpty()
+                            from user in _dbContext.Users.Where(x => x.Id == req.UserId).DefaultIfEmpty()
                             where req.Id == Id
                             select new AdoptionRequestDto
                             {
@@ -65,6 +69,8 @@ namespace Petsociety.Controllers
                                 PetBreed = pet != null ? pet.Breed : string.Empty,
                                 PhoneNumber = req.PhoneNumber,
                                 DeliveryMethod = req.DeliveryMethod,
+                                RequesterEmail = user != null ? user.Email : string.Empty,
+                                RequesterName = user != null ? user.FullName : string.Empty,
                                 Status = req.Status,
                                 CreatedAt = req.CreatedAt
                             }).FirstOrDefault();
@@ -77,8 +83,45 @@ namespace Petsociety.Controllers
             }
         }
 
+        //[HttpPost("Add")]
+        //public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
+        //{
+        //    try
+        //    {
+        //        var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
+        //        if (pet == null)
+        //        {
+        //            return BadRequest("Pet Does Not Exist");
+        //        }
 
-        [Authorize]
+        //        if (!pet.IsAvailable)
+        //        {
+        //            return BadRequest("Pet Is Not Available For Adoption");
+        //        }
+
+        //        var request = new AdoptionRequest
+        //        {
+        //            Id = 0,
+        //            PetId = dto.PetId,
+        //            PhoneNumber = dto.PhoneNumber,
+        //            DeliveryMethod = dto.DeliveryMethod,
+        //            Status = dto.Status ?? "Pending",
+        //            CreatedAt = DateTime.UtcNow
+        //        };
+
+        //        _dbContext.AdoptionRequests.Add(request);
+        //        _dbContext.SaveChanges();
+
+        //        // Note: not changing pet.IsAvailable here to preserve admin approval workflow
+
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
         [HttpPost("Add")]
         public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
         {
@@ -95,25 +138,54 @@ namespace Petsociety.Controllers
 
                 var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
                 if (pet == null)
+                {
                     return BadRequest("Pet Does Not Exist");
+                }
 
                 if (!pet.IsAvailable)
-                    return BadRequest("Pet Is Not Available");
+                {
+                    return BadRequest("Pet Is Not Available For Adoption");
+                }
+
+                long userId = 0;
+                if (!string.IsNullOrWhiteSpace(dto.UserEmail))
+                {
+                    var normalizedEmail = dto.UserEmail.Trim().ToLower();
+                    var user = _dbContext.Users.FirstOrDefault(x => x.Email.ToLower() == normalizedEmail);
+                    if (user == null)
+                    {
+                        user = new User
+                        {
+                            FullName = normalizedEmail.Contains('@') ? normalizedEmail.Substring(0, normalizedEmail.IndexOf('@')) : normalizedEmail,
+                            Email = normalizedEmail,
+                            PasswordHash = "external-user",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsRestricted = false
+                        };
+                        _dbContext.Users.Add(user);
+                        _dbContext.SaveChanges();
+                    }
+                    userId = user.Id;
+                }
 
                 var request = new AdoptionRequest
                 {
+                    Id = 0,
                     PetId = dto.PetId,
-                    UserId = userId, 
+                    UserId = 1, 
                     PhoneNumber = dto.PhoneNumber,
                     DeliveryMethod = dto.DeliveryMethod,
-                    Status = "Pending",
+                    Status = dto.Status ?? "Pending",
                     CreatedAt = DateTime.UtcNow
                 };
 
                 _dbContext.AdoptionRequests.Add(request);
                 _dbContext.SaveChanges();
 
-                return Ok(request.Id); 
+                // Note: not changing pet.IsAvailable here to preserve admin approval workflow
+
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -171,7 +243,6 @@ namespace Petsociety.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateStatus")]
         public IActionResult UpdateStatus(long id, string status)
         {
@@ -183,43 +254,6 @@ namespace Petsociety.Controllers
 
             _dbContext.SaveChanges();
             return Ok();
-        }
-
-        [Authorize]
-        [HttpGet("MyRequests")]
-        public IActionResult MyRequests()
-        {
-            try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (string.IsNullOrEmpty(userIdClaim))
-                    return Unauthorized();
-
-                long userId = long.Parse(userIdClaim);
-
-                var data = from req in _dbContext.AdoptionRequests
-                           from pet in _dbContext.Pets
-                               .Where(x => x.Id == req.PetId)
-                               .DefaultIfEmpty()
-                           where req.UserId == userId
-                           select new AdoptionRequestDto
-                           {
-                               Id = req.Id,
-                               PetId = req.PetId,
-                               PetBreed = pet != null ? pet.Breed : "",
-                               PhoneNumber = req.PhoneNumber,
-                               DeliveryMethod = req.DeliveryMethod,
-                               Status = req.Status,
-                               CreatedAt = req.CreatedAt
-                           };
-
-                return Ok(data.ToList());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
     }

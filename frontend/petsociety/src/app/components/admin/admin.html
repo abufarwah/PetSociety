@@ -195,6 +195,7 @@
     <button [class.active]="activeTab === 'chat'"          (click)="setActiveTab('chat')">Chat &amp; Community</button>
     <button [class.active]="activeTab === 'analytics'"     (click)="setActiveTab('analytics')">Platform Analytics</button>
     <button [class.active]="activeTab === 'subscriptions'" (click)="setActiveTab('subscriptions')">Subscriptions</button>
+    <button [class.active]="activeTab === 'requests'"      (click)="setActiveTab('requests')">Adoption Requests</button>
     <button [class.active]="activeTab === 'reports'"       (click)="setActiveTab('reports')">Lost &amp; Found (AI)</button>
 </div>
 
@@ -517,6 +518,80 @@
             </div>
             <span class="ai-rate-note">Vector-match rate · Disputes excluded from this count</span>
         </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════ ADOPTION REQUESTS ══════════════════════════ -->
+<div class="section-content no-bg" *ngIf="activeTab === 'requests'">
+    <div class="subs-header-row">
+        <div class="header-texts">
+            <h2>Adoption Requests</h2>
+            <p>Requests submitted by users, including contact info and assigned pet details.</p>
+        </div>
+    </div>
+
+    <div class="subs-stats-row">
+        <div class="stat-card">
+            <span class="stat-label">Pending Requests</span>
+            <h3 class="stat-value revenue">{{ pendingAdoptionRequestCount }}</h3>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Total Requests</span>
+            <h3 class="stat-value active-count">{{ adoptionRequests.length }}</h3>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Last Request</span>
+            <h3 class="stat-value">{{ adoptionRequests.length ? (adoptionRequests[0]?.createdAt | date:'short') : 'N/A' }}</h3>
+        </div>
+    </div>
+
+    <div class="table-container-white">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Pet</th>
+                    <th>User</th>
+                    <th>Phone</th>
+                    <th>Delivery</th>
+                    <th>Status</th>
+                    <th>Requested At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let req of adoptionRequests">
+                    <td>#{{ req.id }}</td>
+                    <td>{{ req.petBreed }}</td>
+                    <td>
+                        <strong>{{ req.requesterName || req.requesterEmail || 'Guest' }}</strong>
+                        <div class="sub-text">{{ req.requesterEmail }}</div>
+                    </td>
+                    <td>{{ req.phoneNumber }}</td>
+                    <td>{{ req.deliveryMethod }}</td>
+                    <td>
+                        <span class="status-badge" [ngClass]="{
+                            'active-green': req.status === 'Approved',
+                            'cancelled-gray': req.status === 'Rejected',
+                            'status-pending': req.status === 'Pending'
+                        }">
+                            {{ req.status }}
+                        </span>
+                    </td>
+                    <td>{{ req.createdAt | date:'short' }}</td>
+                    <td>
+                        <button class="text-btn" (click)="updateAdoptionRequestStatus(req, 'Approved')" [disabled]="req.status === 'Approved'">Approve</button>
+                        <button class="text-btn" (click)="updateAdoptionRequestStatus(req, 'Rejected')" [disabled]="req.status === 'Rejected'">Reject</button>
+                    </td>
+                </tr>
+                <tr *ngIf="adoptionRequests.length === 0">
+                    <td colspan="8" class="empty-state-cell">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        No adoption requests yet. Once a user submits a request, it will appear here.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 

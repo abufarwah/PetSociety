@@ -9,6 +9,8 @@ namespace Petsociety.DTOs.AdoptionRequests
         public string PetBreed { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
         public string DeliveryMethod { get; set; } = null!;
+        public string RequesterEmail { get; set; } = string.Empty;
+        public string RequesterName { get; set; } = string.Empty;
         public string Status { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
     }

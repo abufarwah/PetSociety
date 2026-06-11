@@ -108,7 +108,11 @@ namespace Petsociety.Controllers
         {
             try
             {
-                var userId = GetUserId();
+                var email = User.Claims
+                    .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+                if (string.IsNullOrEmpty(email))
+                    return Unauthorized();
 
                 var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
 

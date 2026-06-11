@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdoptionService } from '../../services/adoption';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Interface — mirrors C# DashboardSummaryDto exactly (camelCase).
@@ -49,9 +50,12 @@ export class Admin implements OnInit {
   isSummaryLoading = false;
   summaryError: string | null = null;
 
-  constructor() {}
+  constructor(private adoptionService: AdoptionService) {}
 
-  ngOnInit(): void { this.loadSummary(); }
+  ngOnInit(): void {
+    this.loadSummary();
+    this.loadAdoptionRequests();
+  }
 
   loadSummary(): void {
     // TODO [TEAM INTEGRATION]: Replace the two lines below with the HttpClient call.
@@ -68,6 +72,50 @@ export class Admin implements OnInit {
   // ════════════════════════════════════════════════════════════════════════
 
   userSearchText = '';
+
+  adoptionRequests: any[] = [];
+  isAdoptionRequestsLoading = false;
+  adoptionRequestsError: string | null = null;
+
+  loadAdoptionRequests(): void {
+    this.isAdoptionRequestsLoading = true;
+    this.adoptionRequestsError = null;
+
+    this.adoptionService.getAll().subscribe({
+      next: (data: any) => {
+        this.adoptionRequests = Array.isArray(data) ? data : [];
+        this.isAdoptionRequestsLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load adoption requests:', err);
+        this.adoptionRequestsError = 'Unable to load adoption requests.';
+        this.isAdoptionRequestsLoading = false;
+      }
+    });
+  }
+
+  updateAdoptionRequestStatus(request: any, status: string): void {
+    const payload = {
+      id: request.id,
+      petId: request.petId,
+      phoneNumber: request.phoneNumber,
+      deliveryMethod: request.deliveryMethod,
+      status,
+    };
+
+    this.adoptionService.updateRequest(payload).subscribe({
+      next: () => {
+        request.status = status;
+      },
+      error: (err) => {
+        console.error('Failed to update adoption request status:', err);
+      }
+    });
+  }
+
+  get pendingAdoptionRequestCount(): number {
+    return this.adoptionRequests.filter((r: any) => r.status === 'Pending').length;
+  }
   selectedUser: any = null;
 
   get filteredUsers() {
@@ -183,9 +231,80 @@ export class Admin implements OnInit {
     this.showAddUserModal = false;
   }
 
+  openManageSubModal(sub: any): void {
+    this.selectedSub = sub;
+    this.manageSubNewStatus = sub?.status ?? 'Active';
+    this.showManageSubModal = true;
+  }
+
+  closeManageSubModal(): void {
+    this.showManageSubModal = false;
+    this.selectedSub = null;
+  }
+
+  submitManageSub(): void {
+    if (!this.selectedSub) return;
+
+    const previousStatus = this.selectedSub.status;
+    this.selectedSub.status = this.manageSubNewStatus;
+    console.log('[MOCK] PUT /api/admin/subscriptions/' + this.selectedSub.id, {
+      status: this.manageSubNewStatus
+    });
+
+    if (previousStatus !== this.manageSubNewStatus) {
+      this.selectedSub.nextBilling = this.manageSubNewStatus === 'Cancelled'
+        ? 'N/A'
+        : this.selectedSub.nextBilling || '2026-07-01';
+    }
+
+    this.closeManageSubModal();
+  }
+
+  riskClass(risk: string): string {
+    switch (risk) {
+      case 'High': return 'risk-high';
+      case 'Medium': return 'risk-medium';
+      case 'Low': return 'risk-low';
+      default: return 'risk-neutral';
+    }
+  }
+
+  deleteMessage(id: string | number): void {
+    if (!confirm('Delete this reported message permanently?')) return;
+    this.reportedMessages = this.reportedMessages.filter(msg => msg.id !== id);
+  }
+
+  dismissMessage(id: string | number): void {
+    const message = this.reportedMessages.find(msg => msg.id === id);
+    if (!message) return;
+    message.reportCount = 0;
+    message.reportReason = 'Dismissed';
+    message.risk = 'Low';
+    message.isAutoFlagged = false;
+  }
+
+  banChatUser(sender: string): void {
+    if (!confirm(`Ban ${sender} from the community chat?`)) return;
+    this.reportedMessages = this.reportedMessages.map(msg =>
+      msg.sender === sender
+        ? { ...msg, reason: 'User banned', risk: 'High' }
+        : msg
+    );
+  }
+
   // ════════════════════════════════════════════════════════════════════════
   //  SUBSCRIPTIONS
   // ════════════════════════════════════════════════════════════════════════
+
+  showManageSubModal = false;
+  selectedSub: any = null;
+  manageSubNewStatus = 'Active';
+
+  planDistribution = [
+    { label: 'Basic',   count: 7, pct: 35, color: '#6c8ebf' },
+    { label: 'Premium', count: 3, pct: 15, color: '#8a5cf3' },
+    { label: 'Deluxe',  count: 4, pct: 20, color: '#f8b84c' }
+  ];
 
   searchText = '';
 
@@ -205,177 +324,122 @@ export class Admin implements OnInit {
 
   planStats = { basic: 7, premium: 3, deluxe: 4 };
 
-  // ── Manage Subscription Modal ─────────────────────────────────────────
-  showManageSubModal  = false;
-  selectedSub: any    = null;
-  manageSubNewStatus  = '';
-
-  openManageSubModal(sub: any): void {
-    this.selectedSub        = sub;
-    this.manageSubNewStatus = sub.status === 'Active' ? 'Cancelled' : 'Active';
-    this.showManageSubModal = true;
-  }
-
-  closeManageSubModal(): void { this.showManageSubModal = false; this.selectedSub = null; }
-
-  submitManageSub(): void {
-    if (!this.selectedSub) return;
-
-    console.log(`[MOCK] PUT /api/subscription/subscriptions/${this.selectedSub.id}/manage`, {
-      currentStatus: this.selectedSub.status,
-      newStatus:     this.manageSubNewStatus
-    });
-
-    // TODO [TEAM INTEGRATION]: Un-comment for integration.
-    // this.http.put(`${this.apiBase}/subscription/subscriptions/${this.selectedSub.id}/manage`, {}).subscribe({
-    //   next: (res: any) => { this.selectedSub.status = res.newStatus; },
-    //   error: err => console.error('Manage subscription failed', err)
-    // });
-
-    this.selectedSub.status = this.manageSubNewStatus;
-    this.closeManageSubModal();
-  }
-
-  // ════════════════════════════════════════════════════════════════════════
-
-  //  CHAT & COMMUNITY
-  // ════════════════════════════════════════════════════════════════════════
+  // ... 
 
 
-  chatStats = { dailyMessages: 140, flaggedCount: 12 };
+  // ==================  (AI Lost & Found)-----.....
+  aiStats = {
+    totalReports: 46,
+    successfulMatches: 39,
+    accuracy: '92%'
+  };
 
-  bannedUsers: any[] = [
-    { id: 201, user: 'SpammerX',   reason: 'Sharing malicious links', bannedAt: '2026-01-20', duration: 'Permanent', status: 'Banned'    },
-    { id: 205, user: 'AngryUser',  reason: 'Offensive language',       bannedAt: '2026-02-22', duration: '7 Days',    status: 'Muted'     },
-    { id: 310, user: 'FakeSeller', reason: 'Scam attempt reported',    bannedAt: '2026-03-18', duration: '30 Days',   status: 'Suspended' }
-  ];
-
-  // ── Reported Messages (rich mock — two-tier moderation) ────────────────
-  // Mirrors GET /api/moderation/flagged-messages.
-  // Filter: (IsAutoFlagged == true OR ReportCount >= 3) AND IsSystemDeleted == false.
-  // Tombstoned messages (profanity tier) do NOT appear here — they are auto-handled.
-  //
-  // TODO [TEAM INTEGRATION]: Replace this array by calling:
-  //   this.http.get<any[]>(`${this.apiBase}/moderation/flagged-messages`)
-  //     .subscribe({ next: data => this.reportedMessages = data, error: ... });
-  reportedMessages: any[] = [
-    {
-      id: 'MSG-991', sender: 'SpammerX',     channelId: 2,
-      content:       'Win a free iPhone now! Click here for your prize!!!',
-      reportReason:  'Spam',
-      reportCount:    7,
-      isAutoFlagged:  true,      // Tier 2 (Suspicious): keyword "win now" / "free iphone"
-      isSystemDeleted: false,    // NOT tombstoned — text kept for admin review
-      risk:          'High',
-      sentAt:        '2026-01-20 14:32'
+  aiReports = [
+    { 
+      id: 'MATCH-101', 
+      reporter: 'Sami Farawneh', 
+      matchPercent: 98, 
+      status: 'User Confirmed', // المستخدم أكد أنه حيوانه
+      lastUpdate: '2 hours ago'
     },
-    {
-      id: 'MSG-992', sender: 'AngryUser',    channelId: 1,
-      content:       'That seller is a total scammer, do not trust him at all!',
-      reportReason:  'Harassment',
-      reportCount:    5,
-      isAutoFlagged:  true,      // Tier 2 (Suspicious): keyword "scammer"
-      isSystemDeleted: false,
-      risk:          'High',
-      sentAt:        '2026-02-14 09:15'
+    { 
+      id: 'MATCH-102', 
+      reporter: 'Layan S.', 
+      matchPercent: 92, 
+      status: 'Waiting User',   // النظام لقى تطابق وبستنى رد المستخدم
+      lastUpdate: '1 day ago'
     },
-    {
-      id: 'MSG-993', sender: 'Seller123',    channelId: 3,
-      content:       'Call me on 0799999999 for a special discount deal',
-      reportReason:  'Sharing Private Info',
-      reportCount:    4,
-      isAutoFlagged:  true,      // Tier 2 (Suspicious): keyword "079" (Jordanian phone)
-      isSystemDeleted: false,
-      risk:          'Medium',
-      sentAt:        '2026-03-10 11:45'
-    },
-    {
-      id: 'MSG-994', sender: 'SuspiciousAcc', channelId: 1,
-      content:       'Send money via western union, I am in trouble please help',
-      reportReason:  'Scam',
-      reportCount:    3,
-      isAutoFlagged:  false,     // Threshold only (>=3 reports, no keyword match)
-      isSystemDeleted: false,
-      risk:          'High',
-      sentAt:        '2026-04-23 16:01'
-    },
-    {
-      id: 'MSG-995', sender: 'NewUser22',    channelId: 2,
-      content:       'Anyone here? Need help with adoption process please',
-      reportReason:  'Other',
-      reportCount:    3,
-      isAutoFlagged:  false,     // Borderline: 3 reports, no keyword — likely false alarm
-      isSystemDeleted: false,
-      risk:          'Low',
-      sentAt:        '2026-05-24 08:30'
+    { 
+      id: 'MATCH-103', 
+      reporter: 'Omar K.', 
+      matchPercent: 45, 
+      status: 'User Rejected',  // المستخدم قال "لا، مش حيواني"
+      lastUpdate: '3 days ago'
     }
   ];
 
-  // ── Risk colour helper ─────────────────────────────────────────────────
-  riskClass(risk: string): string {
-    return risk === 'High' ? 'churn' : risk === 'Medium' ? 'pending-yellow' : 'active-green';
-  }
 
-  // ── Delete reported message (hard-delete via admin endpoint) ────────────
-  deleteMessage(id: string): void {
-    const msg = this.reportedMessages.find(m => m.id === id);
-    if (!msg) return;
-    if (!confirm(`Permanently delete message from "${msg.sender}"? This cannot be undone.`)) return;
+  //  إدارة الشات  (Chat & Community) ====================
+  
+  chatStats = {
+    dailyMessages: 140,
+    activeUsers: 45,
+    flaggedCount: 12
+  };
 
-    console.log('[MOCK] DELETE /api/moderation/messages/' + id, { messageId: id });
+  bannedUsers = [
+    { 
+      id: 201, 
+      user: 'SpammerX', 
+      reason: 'Sharing malicious links', 
+      bannedAt: '2024-12-20', 
+      duration: 'Permanent',
+      status: 'Banned'
+    },
+    { 
+      id: 205, 
+      user: 'AngryUser', 
+      reason: 'Offensive language', 
+      bannedAt: '2024-12-22', 
+      duration: '7 Days',
+      status: 'Muted'
+    },
+    { 
+      id: 310, 
+      user: 'FakeSeller', 
+      reason: 'Scam attempt reported', 
+      bannedAt: '2024-12-18', 
+      duration: '30 Days',
+      status: 'Suspended'
+    }
+  ]; 
 
-    // TODO [TEAM INTEGRATION]: Un-comment for integration.
-    // this.http.delete(`${this.apiBase}/moderation/messages/${id}`).subscribe({
-    //   next: () => { /* remove from array below */ },
-    //   error: err => console.error('Delete message failed', err)
-    // });
+  reportedMessages = [
+    { 
+      id: 'MSG-991', 
+      sender: 'SpammerX', 
+      content: 'Win a free iPhone now! Click here...', 
+      reportReason: 'Spam', 
+      reportCount: 5,
+      channelId: '12',
+      sentAt: 'Today 11:30 AM',
+      risk: 'High',
+      isAutoFlagged: true
+    },
+    { 
+      id: 'MSG-992', 
+      sender: 'AngryUser', 
+      content: 'You are stupid and I hate this app', 
+      reportReason: 'Harassment', 
+      reportCount: 4,
+      channelId: '6',
+      sentAt: 'Today 10:15 AM',
+      risk: 'Medium',
+      isAutoFlagged: false
+    },
+    { 
+      id: 'MSG-993', 
+      sender: 'Seller123', 
+      content: 'Call me on 0799999 for discount', 
+      reportReason: 'Sharing Private Info', 
+      reportCount: 2,
+      channelId: '3',
+      sentAt: 'Yesterday 9:05 PM',
+      risk: 'Low',
+      isAutoFlagged: false
+    }
+  ];
 
-    this.reportedMessages = this.reportedMessages.filter(m => m.id !== id);
-  }
 
-  // ── Dismiss false alarm (clears flags, keeps message) ──────────────────
-  dismissMessage(id: string): void {
-    const msg = this.reportedMessages.find(m => m.id === id);
-    if (!msg) return;
-    if (!confirm(`Dismiss report for message "${id}"? The message stays in the channel but all flags will be cleared.`)) return;
 
-    console.log('[MOCK] PUT /api/moderation/messages/' + id + '/dismiss', { messageId: id });
-
-    // TODO [TEAM INTEGRATION]: Un-comment for integration.
-    // this.http.put(`${this.apiBase}/moderation/messages/${id}/dismiss`, {}).subscribe({
-    //   next: () => { /* remove from review queue below */ },
-    //   error: err => console.error('Dismiss failed', err)
-    // });
-
-    this.reportedMessages = this.reportedMessages.filter(m => m.id !== id);
-  }
-
-  // ── Ban user from chat (from reported messages panel) ──────────────────
-  banChatUser(senderName: string): void {
-    if (!confirm(`Ban "${senderName}" from community chat?`)) return;
-
-    const payload = { userName: senderName, reason: 'Banned from Moderation Panel', duration: 'Permanent' };
-    console.log('[MOCK] POST /api/admin/users/ban-chat', payload);
-
-    // TODO [TEAM INTEGRATION]: Un-comment for integration.
-    // this.http.post(`${this.apiBase}/admin/users/ban-chat`, payload).subscribe({
-    //   next: () => console.log('User banned'),
-    //   error: err => console.error('Ban failed', err)
-    // });
-
-    this.reportedMessages = this.reportedMessages.filter(m => m.sender !== senderName);
-  }
-
-  // ════════════════════════════════════════════════════════════════════════
-  //  PLATFORM ANALYTICS
-  // ════════════════════════════════════════════════════════════════════════
-
-  get planDistribution() {
-    const total = this.planStats.basic + this.planStats.premium + this.planStats.deluxe;
-    return [
-      { label: 'Basic',   count: this.planStats.basic,   pct: total ? Math.round(this.planStats.basic   / total * 100) : 0, color: '#6c8ebf' },
-      { label: 'Premium', count: this.planStats.premium, pct: total ? Math.round(this.planStats.premium / total * 100) : 0, color: '#9c6bba' },
-      { label: 'Deluxe',  count: this.planStats.deluxe,  pct: total ? Math.round(this.planStats.deluxe  / total * 100) : 0, color: '#e8a838' },
-    ];
+  //  إحصائيات الداشبورد العلوية ( بتنحسب لحالها)
+  get stats() {
+    return {
+      totalUsers: this.users.length,
+      activeUsers: this.users.filter(u => u.status === 'Active').length,
+      petsCount: this.adoptionRequests.length, 
+      subscribers: this.subscriptionsList.filter(s => s.status === 'Active').length,
+      flaggedCount: this.reportedMessages.length
+    };
   }
 }
