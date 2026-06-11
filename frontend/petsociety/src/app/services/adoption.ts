@@ -15,13 +15,13 @@ export class AdoptionService {
   }
 
   requestAdoption(data: any) {
-  return this.http.post(`${this.baseUrl}/Add`, {
-    petId: data.petId,
-    phoneNumber: data.phoneNumber,
-    deliveryMethod: data.deliveryMethod,
-    userId: data.userId
-  });
-}
+    return this.http.post(`${this.baseUrl}/Add`, {
+      petId: data.petId,
+      phoneNumber: data.phoneNumber,
+      deliveryMethod: data.deliveryMethod,
+      userEmail: data.userEmail
+    });
+  }
 
   updateRequest(data: any) {
     return this.http.put(`${this.baseUrl}/Update`, data);

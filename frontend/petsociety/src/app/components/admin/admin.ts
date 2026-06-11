@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdoptionService } from '../../services/adoption';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Interface — mirrors C# DashboardSummaryDto exactly (camelCase).
@@ -49,9 +50,12 @@ export class Admin implements OnInit {
   isSummaryLoading = false;
   summaryError: string | null = null;
 
-  constructor() {}
+  constructor(private adoptionService: AdoptionService) {}
 
-  ngOnInit(): void { this.loadSummary(); }
+  ngOnInit(): void {
+    this.loadSummary();
+    this.loadAdoptionRequests();
+  }
 
   loadSummary(): void {
     // TODO [TEAM INTEGRATION]: Replace the two lines below with the HttpClient call.
@@ -68,6 +72,50 @@ export class Admin implements OnInit {
   // ════════════════════════════════════════════════════════════════════════
 
   userSearchText = '';
+
+  adoptionRequests: any[] = [];
+  isAdoptionRequestsLoading = false;
+  adoptionRequestsError: string | null = null;
+
+  loadAdoptionRequests(): void {
+    this.isAdoptionRequestsLoading = true;
+    this.adoptionRequestsError = null;
+
+    this.adoptionService.getAll().subscribe({
+      next: (data: any) => {
+        this.adoptionRequests = Array.isArray(data) ? data : [];
+        this.isAdoptionRequestsLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load adoption requests:', err);
+        this.adoptionRequestsError = 'Unable to load adoption requests.';
+        this.isAdoptionRequestsLoading = false;
+      }
+    });
+  }
+
+  updateAdoptionRequestStatus(request: any, status: string): void {
+    const payload = {
+      id: request.id,
+      petId: request.petId,
+      phoneNumber: request.phoneNumber,
+      deliveryMethod: request.deliveryMethod,
+      status,
+    };
+
+    this.adoptionService.updateRequest(payload).subscribe({
+      next: () => {
+        request.status = status;
+      },
+      error: (err) => {
+        console.error('Failed to update adoption request status:', err);
+      }
+    });
+  }
+
+  get pendingAdoptionRequestCount(): number {
+    return this.adoptionRequests.filter((r: any) => r.status === 'Pending').length;
+  }
   selectedUser: any = null;
 
   get filteredUsers() {
@@ -307,35 +355,6 @@ export class Admin implements OnInit {
       matchPercent: 45, 
       status: 'User Rejected',  // المستخدم قال "لا، مش حيواني"
       lastUpdate: '3 days ago'
-    }
-  ];
-
-
-  // ==================== طلبات التبني (Adoption Requests) ==
-  adoptionRequests = [
-    { 
-      id: 'REQ-101', 
-      pet: 'Golden Retriever (Dog)', 
-      applicant: 'kinda alsayed', 
-      owner: 'Ali Olwan',          
-      date: '2025-12-19', 
-      status: 'Waiting Owner'      
-    },
-    { 
-      id: 'REQ-102', 
-      pet: 'Maine Coon (Cat)', 
-      applicant: 'Nawras Amayreh', 
-      owner: 'Malah kh', 
-      date: '2025-12-18', 
-      status: 'In Discussion'      
-    },
-    { 
-      id: 'REQ-103', 
-      pet: 'Holland Lop (Rabbit)', 
-      applicant: 'Rawan R.', 
-      owner: 'Sami K.', 
-      date: '2025-11-17', 
-      status: 'Owner Approved'     
     }
   ];
 

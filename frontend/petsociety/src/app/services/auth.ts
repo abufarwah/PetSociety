@@ -41,11 +41,14 @@ export class Auth {
 
   logout() {
     this.isLoggedIn$.next(false);
+    this.isAdmin$.next(false);
     try {
       sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('isAdmin');
     } catch {}
     try {
       localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('isAdmin');
     } catch {}
   }
 }

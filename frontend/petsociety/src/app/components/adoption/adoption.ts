@@ -23,6 +23,7 @@ export class Adoption implements OnInit {
   editingPet: any = null;
   successType: 'add' | 'adopt' | 'edit' | null = null;
   selectedType: string = 'All';
+  private readonly jordanPhonePattern = /^(?:\+9627|07)(?:7|8|9)\d{7}$/;
   selectedAge: string = 'All';
   selectedGender: string = 'All';
   selectedTag: string = 'All';
@@ -319,23 +320,43 @@ export class Adoption implements OnInit {
     this.showAdoptionDetails = true;
   }
 
+  validatePhoneNumber(phone: string) {
+    const normalized = phone.replace(/\s+/g, '');
+    return this.jordanPhonePattern.test(normalized);
+  }
+
   submitAdoptionRequest() {
     this.adoptionError = '';
+    const phone = this.adopterPhone.trim();
 
-    if (!this.adopterPhone.trim()) {
+    if (!phone) {
       this.adoptionError = 'Please provide your phone number to continue.';
       return;
     }
 
+    if (!this.validatePhoneNumber(phone)) {
+      this.adoptionError = 'Enter a valid Jordanian phone number: 077, 078, 079 or +9627 followed by 7 digits.';
+      return;
+    }
+
+    if (!this.selectedPet) {
+      this.adoptionError = 'Unable to submit request. Please reopen the pet details and try again.';
+      return;
+    }
+
+    const userEmail = localStorage.getItem('userEmail') || '';
+
     this.adoptionService.requestAdoption({
       petId: this.selectedPet.id,
-      phoneNumber: this.adopterPhone,
-      deliveryMethod: this.adopterDeliveryMethod
+      phoneNumber: phone,
+      deliveryMethod: this.adopterDeliveryMethod,
+      userEmail
     }).subscribe({
       next: () => {
         this.showConfirm = true;
         this.successType = 'adopt';
         this.showAdoptionDetails = false;
+        this.selectedPet = null;
       },
       error: (err) => {
         console.error('Adoption request failed:', err);
@@ -343,6 +364,10 @@ export class Adoption implements OnInit {
       }
     });
   }
+
+  startAdoption() {
+  this.showAdoptionDetails = true;
+}
 
   closeAdoptionRequest() {
     this.showAdoptionDetails = false;
@@ -518,7 +543,10 @@ addPet(pet: any) {
   }
 
   ngOnInit() {
-    // Subscribe to auth streams so UI updates immediately on login/logout
+    // Initialize auth state immediately and subscribe to changes.
+    this.isLoggedIn = this.auth.isLoggedIn$.value;
+    this.isAdmin = this.auth.isAdmin$.value;
+
     this.auth.isLoggedIn$.subscribe((v: boolean) => {
       this.isLoggedIn = v;
     });
@@ -543,6 +571,7 @@ addPet(pet: any) {
 
             return {
               ...pet,
+              id: this.getPetId(pet) ?? pet.id ?? pet.Id,
               image,
               age: pet.age || pet.ageCategory || pet.AgeCategory,
               tags: pet.tags || pet.Tags || [],
@@ -558,5 +587,6 @@ addPet(pet: any) {
       }
     });
   }
+
 }
 
