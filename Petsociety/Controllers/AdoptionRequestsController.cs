@@ -122,6 +122,78 @@ namespace Petsociety.Controllers
         //    }
         //}
 
+        //[HttpPost("Add")]
+        //public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
+        //{
+        //    try
+        //    {
+        //        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        //        if (string.IsNullOrEmpty(userIdClaim))
+        //        {
+        //            return Unauthorized();
+        //        }
+
+        //        var userId = int.Parse(userIdClaim);
+
+        //        var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
+        //        if (pet == null)
+        //        {
+        //            return BadRequest("Pet Does Not Exist");
+        //        }
+
+        //        if (!pet.IsAvailable)
+        //        {
+        //            return BadRequest("Pet Is Not Available For Adoption");
+        //        }
+
+        //        long userId = 0;
+        //        if (!string.IsNullOrWhiteSpace(dto.UserEmail))
+        //        {
+        //            var normalizedEmail = dto.UserEmail.Trim().ToLower();
+        //            var user = _dbContext.Users.FirstOrDefault(x => x.Email.ToLower() == normalizedEmail);
+        //            if (user == null)
+        //            {
+        //                user = new User
+        //                {
+        //                    FullName = normalizedEmail.Contains('@') ? normalizedEmail.Substring(0, normalizedEmail.IndexOf('@')) : normalizedEmail,
+        //                    Email = normalizedEmail,
+        //                    PasswordHash = "external-user",
+        //                    IsActive = true,
+        //                    IsDeleted = false,
+        //                    IsRestricted = false
+        //                };
+        //                _dbContext.Users.Add(user);
+        //                _dbContext.SaveChanges();
+        //            }
+        //            userId = user.Id;
+        //        }
+
+        //        var request = new AdoptionRequest
+        //        {
+        //            Id = 0,
+        //            PetId = dto.PetId,
+        //            UserId = 1, 
+        //            PhoneNumber = dto.PhoneNumber,
+        //            DeliveryMethod = dto.DeliveryMethod,
+        //            Status = dto.Status ?? "Pending",
+        //            CreatedAt = DateTime.UtcNow
+        //        };
+
+        //        _dbContext.AdoptionRequests.Add(request);
+        //        _dbContext.SaveChanges();
+
+        //        // Note: not changing pet.IsAvailable here to preserve admin approval workflow
+
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
+        [Authorize]
         [HttpPost("Add")]
         public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
         {
@@ -134,9 +206,10 @@ namespace Petsociety.Controllers
                     return Unauthorized();
                 }
 
-                var userId = int.Parse(userIdClaim);
+                long userId = long.Parse(userIdClaim);
 
                 var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
+
                 if (pet == null)
                 {
                     return BadRequest("Pet Does Not Exist");
@@ -147,33 +220,11 @@ namespace Petsociety.Controllers
                     return BadRequest("Pet Is Not Available For Adoption");
                 }
 
-                long userId = 0;
-                if (!string.IsNullOrWhiteSpace(dto.UserEmail))
-                {
-                    var normalizedEmail = dto.UserEmail.Trim().ToLower();
-                    var user = _dbContext.Users.FirstOrDefault(x => x.Email.ToLower() == normalizedEmail);
-                    if (user == null)
-                    {
-                        user = new User
-                        {
-                            FullName = normalizedEmail.Contains('@') ? normalizedEmail.Substring(0, normalizedEmail.IndexOf('@')) : normalizedEmail,
-                            Email = normalizedEmail,
-                            PasswordHash = "external-user",
-                            IsActive = true,
-                            IsDeleted = false,
-                            IsRestricted = false
-                        };
-                        _dbContext.Users.Add(user);
-                        _dbContext.SaveChanges();
-                    }
-                    userId = user.Id;
-                }
-
                 var request = new AdoptionRequest
                 {
                     Id = 0,
                     PetId = dto.PetId,
-                    UserId = 1, 
+                    UserId = userId,
                     PhoneNumber = dto.PhoneNumber,
                     DeliveryMethod = dto.DeliveryMethod,
                     Status = dto.Status ?? "Pending",
@@ -183,9 +234,10 @@ namespace Petsociety.Controllers
                 _dbContext.AdoptionRequests.Add(request);
                 _dbContext.SaveChanges();
 
-                // Note: not changing pet.IsAvailable here to preserve admin approval workflow
-
-                return Ok();
+                return Ok(new
+                {
+                    Message = "Adoption request submitted successfully"
+                });
             }
             catch (Exception ex)
             {

@@ -103,16 +103,70 @@ namespace Petsociety.Controllers
         //    }
         //}
 
+        //[HttpGet("Dashboard")]
+        //public IActionResult GetDashboard()
+        //{
+        //    try
+        //    {
+        //        var email = User.Claims
+        //            .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+        //        if (string.IsNullOrEmpty(email))
+        //            return Unauthorized();
+
+        //        var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
+
+        //        if (user == null)
+        //            return NotFound("User not found");
+
+        //        var profile = new UserProfileDto
+        //        {
+        //            Name = user.FullName,
+        //            Email = user.Email,
+        //            MemberSince = "Unknown",
+        //            AvatarInitial = string.IsNullOrWhiteSpace(user.FullName)
+        //                ? "U"
+        //                : user.FullName[0].ToString().ToUpper()
+        //        };
+
+        //        var adoptedPets = (
+        //            from req in _dbContext.AdoptionRequests
+        //            join pet in _dbContext.Pets on req.PetId equals pet.Id
+        //            where req.UserId == user.Id &&
+        //                  req.Status.ToLower() == "approved"
+        //            select new AdoptedPetDto
+        //            {
+        //                Id = pet.Id,
+        //                Name = pet.Breed,
+        //                Thumbnail = pet.ImageUrl,
+        //                Status = req.Status
+        //            }
+        //        ).ToList();
+
+        //        var stats = new AccountStatsDto
+        //        {
+        //            SubscriptionsCount = 0,
+        //            AdoptedCount = adoptedPets.Count
+        //        };
+
+        //        return Ok(new DashboardDto
+        //        {
+        //            User = profile,
+        //            Stats = stats,
+        //            AdoptedPets = adoptedPets
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
         [HttpGet("Dashboard")]
         public IActionResult GetDashboard()
         {
             try
             {
-                var email = User.Claims
-                    .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
-                if (string.IsNullOrEmpty(email))
-                    return Unauthorized();
+                var userId = GetUserId();
 
                 var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
 
@@ -131,9 +185,10 @@ namespace Petsociety.Controllers
 
                 var adoptedPets = (
                     from req in _dbContext.AdoptionRequests
-                    join pet in _dbContext.Pets on req.PetId equals pet.Id
-                    where req.UserId == user.Id &&
-                          req.Status.ToLower() == "approved"
+                    join pet in _dbContext.Pets
+                        on req.PetId equals pet.Id
+                    where req.UserId == user.Id
+                          && req.Status.ToLower() == "approved"
                     select new AdoptedPetDto
                     {
                         Id = pet.Id,
@@ -149,19 +204,20 @@ namespace Petsociety.Controllers
                     AdoptedCount = adoptedPets.Count
                 };
 
-                return Ok(new DashboardDto
+                var dashboard = new DashboardDto
                 {
                     User = profile,
                     Stats = stats,
                     AdoptedPets = adoptedPets
-                });
+                };
+
+                return Ok(dashboard);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-
 
         // POST: api/Account/Logout
         [HttpPost("Logout")]
