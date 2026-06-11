@@ -43,9 +43,11 @@ try
     {
         options.AddPolicy("AllowAngularClient", policy =>
         {
-            policy.WithOrigins("http://localhost:4200")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            policy
+             .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
         });
     });
 
