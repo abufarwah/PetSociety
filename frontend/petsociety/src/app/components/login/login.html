@@ -39,16 +39,18 @@
 
           <!-- Password -->
           <label class="mb-1">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            placeholder="********"
-            formControlName="Password"
-            [class.is-invalid]="loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched"
-          />
-          <div class="text-danger small mb-2" *ngIf="loginForm.get('Password')?.invalid && loginForm.get('Password')?.touched">
-            <span *ngIf="loginForm.get('Password')?.errors?.['required']">Password is required</span>
-            <span *ngIf="loginForm.get('Password')?.errors?.['minlength']">Password must be at least 8 characters</span>
+<input
+  type="password"
+  class="form-control"
+  placeholder="********"
+  formControlName="password"  [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+/>
+<div class="text-danger small mb-2" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+  <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+</div>
+          <div class="text-danger small mb-2" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters</span>
           </div>
 
          
