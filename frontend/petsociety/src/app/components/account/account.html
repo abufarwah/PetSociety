@@ -1,64 +1,57 @@
 <div class="container py-5">
-
-  
   <div class="card shadow-sm mb-4 account-header">
-    <div class="card-body d-flex justify-content-between align-items-center">
-
+    <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
       <div class="d-flex align-items-center gap-3">
-        <div class="avatar-circle">D</div>
+        <div class="avatar-circle">{{ dashboard.user.avatarInitial || 'U' }}</div>
 
         <div>
-          <h5 class="mb-1">Welcome back, Dana</h5>
+          <h5 class="mb-1">{{ loading ? 'Loading your account…' : 'Welcome back, ' + (dashboard.user.name || 'Pet Parent') }}</h5>
 
-          <div class="text-muted small d-flex gap-3">
-            <span>
+          <div class="text-muted small d-flex flex-wrap gap-3">
+            <span *ngIf="dashboard.user.email; else noEmail">
               <i class="bi bi-envelope"></i>
-              danashalabieh@gmail.com
+              {{ dashboard.user.email }}
             </span>
+            <ng-template #noEmail>
+              <span><i class="bi bi-envelope"></i> Your email will appear here after sign in.</span>
+            </ng-template>
 
             <span>
               <i class="bi bi-calendar"></i>
-              Member since December 2025
+              {{ dashboard.user.memberSince || 'Member since recently' }}
             </span>
           </div>
         </div>
       </div>
 
-  
-<a
-  class="signout-link"
-  routerLink="/login"
-  (click)="logout($event)">
-  Sign Out
-</a>
-
+      <a class="signout-link" routerLink="/login" (click)="logout($event)">Sign Out</a>
     </div>
   </div>
 
-  
-  <div class="row g-4">
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-secondary" role="status"></div>
+    <p class="mt-3 text-muted">Loading your profile…</p>
+  </div>
 
-   
+  <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</div>
+
+  <div *ngIf="!loading && !error" class="row g-4">
     <div class="col-lg-8">
       <div class="card shadow-sm h-100">
         <div class="card-body">
-          <h6 class="fw-bold">No Active Subscription</h6>
-
+          <h6 class="fw-bold">{{ dashboard.stats.subscriptionsCount ? 'Active Subscription' : 'No Active Subscription' }}</h6>
           <p class="text-muted">
-            You don't have an active subscription yet.
-            Subscribe to Pet Society + to get monthly care packages for your pets!
+            {{ dashboard.stats.subscriptionsCount ? 'Your subscription is active and ready to use.' : 'You don\'t have an active subscription yet. Subscribe to Pet Society + to get monthly care packages for your pets!' }}
           </p>
 
-         <button class="ps-btn"   routerLink="/PetSocietyPlus">
-  <i class="bi bi-box"></i>
-  View Plans
-</button>
-
+          <button class="ps-btn" routerLink="/PetSocietyPlus">
+            <i class="bi bi-box"></i>
+            View Plans
+          </button>
         </div>
       </div>
     </div>
 
-    
     <div class="col-lg-4">
       <div class="card shadow-sm">
         <div class="card-body">
@@ -66,50 +59,50 @@
 
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex align-items-center gap-2">
-              <span class="icon-circle bg-success">
-                <i class="bi bi-box"></i>
-              </span>
+              <span class="icon-circle bg-success"><i class="bi bi-box"></i></span>
               Subscriptions
             </div>
-            <span>0</span>
+            <span>{{ dashboard.stats.subscriptionsCount }}</span>
           </div>
 
           <hr />
 
           <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center gap-2">
-              <span class="icon-circle bg-warning">
-                <i class="bi bi-heart"></i>
-              </span>
+              <span class="icon-circle bg-warning"><i class="bi bi-heart"></i></span>
               Adopted Pets
             </div>
-            <span>0</span>
+            <span>{{ dashboard.stats.adoptedCount }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card shadow-sm py-4">
+        <div class="card-body text-center">
+          <h5 class="fw-bold mb-3">Adopted Pets</h5>
+
+          <div *ngIf="(dashboard.adoptedPets.length || 0) === 0" class="text-center">
+            <div class="empty-state mb-3"><i class="bi bi-heart"></i></div>
+            <p class="text-muted">You haven't adopted any pets yet.</p>
+            <button class="ps-btn adopt-btn" routerLink="/Adoption">Browse Pets for Adoption</button>
           </div>
 
+          <div *ngIf="(dashboard.adoptedPets.length || 0) > 0" class="row g-3 text-start">
+            <div class="col-md-6 col-xl-4" *ngFor="let pet of dashboard.adoptedPets">
+              <div class="card h-100 border-0 shadow-sm">
+                <img *ngIf="pet.thumbnail" [src]="pet.thumbnail" class="card-img-top adopted-pet-image" [alt]="pet.name" />
+                <div class="card-body">
+                  <h6 class="fw-bold mb-1">{{ pet.name }}</h6>
+                  <p class="text-muted mb-2">Status: {{ pet.status }}</p>
+                  <span class="badge bg-light text-dark">Pet #{{ pet.id }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    
-    <div class="col-12">
-      <div class="card shadow-sm text-center py-5">
-        <h5 class="fw-bold mb-3">Adopted Pets</h5>
-
-        <div class="empty-state mb-3">
-          <i class="bi bi-heart"></i>
-        </div>
-
-        <p class="text-muted">
-          You haven't adopted any pets yet
-        </p>
-
-    <button class="ps-btn adopt-btn" routerLink="/Adoption">
-  Browse Pets for Adoption
-</button>
-
-
-      </div>
-    </div>
-
   </div>
 </div>

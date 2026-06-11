@@ -60,6 +60,11 @@
   display: block;
   text-align: center;
 }
+
+.adopted-pet-image {
+  height: 160px;
+  object-fit: cover;
+}
 .signout-link {
   text-decoration: none;
    background: #d6b896;
