@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace Petsociety.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -25,7 +25,9 @@ namespace Petsociety.Controllers
             try
             {
                 var email = User.Claims
-                    .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                    .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value
+                    ?? User.Claims.FirstOrDefault(c => c.Type == "email")?.Value
+                    ?? User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
 
                 if (string.IsNullOrEmpty(email))
                     return Unauthorized();

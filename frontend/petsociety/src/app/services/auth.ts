@@ -36,6 +36,9 @@ export class Auth {
     try {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('isAdmin', isAdmin ? 'true' : 'false');
+      if (typeof localStorage !== 'undefined' && localStorage.getItem('token')) {
+        sessionStorage.setItem('token', localStorage.getItem('token') || '');
+      }
     } catch {}
   }
 
@@ -48,7 +51,6 @@ export class Auth {
     } catch {}
     try {
       localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('isAdmin');
     } catch {}
   }
 }
