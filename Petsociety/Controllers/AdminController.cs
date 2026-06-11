@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Petsociety.DTOs.Admin;
 using Petsociety.Model;
 using Petsociety.Models;
 using Swashbuckle.AspNetCore.Annotations;
+using BCrypt.Net;
 
 namespace Petsociety.Controllers
 {
@@ -17,6 +19,9 @@ namespace Petsociety.Controllers
     /// This adds: IsDeleted, IsActive, IsRestricted, DeletedAt to the User table.
     /// Until then, the delete and ban endpoints are partially scaffolded (see comments).
     /// </summary>
+    /// 
+
+    [Authorize(Roles = "Admin")]
     [Route("api/admin/users")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -53,7 +58,8 @@ namespace Petsociety.Controllers
             {
                 FullName     = dto.FullName,
                 Email        = dto.Email,
-                PasswordHash = BCryptPlaceholder(dto.Password),
+                //PasswordHash = BCryptPlaceholder(dto.Password),
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 IsActive     = true,
                 IsDeleted    = false,
                 IsRestricted = false
@@ -170,7 +176,7 @@ namespace Petsociety.Controllers
         /// Placeholder — replace with BCrypt.Net.BCrypt.HashPassword(password)
         /// once the BCrypt.Net-Next NuGet package is installed.
         /// </summary>
-        private static string BCryptPlaceholder(string password)
-            => Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
+        //private static string BCryptPlaceholder(string password)
+        //    => Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
     }
 }

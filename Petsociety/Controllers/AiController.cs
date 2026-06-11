@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -59,6 +60,7 @@ namespace Petsociety.Controllers
             return Ok(posts);
         }
 
+        [Authorize]
         [HttpPost("add-post")]
         public async Task<IActionResult> AddPost([FromForm] Model.LostFoundReport report, IFormFile image)
         {
@@ -98,6 +100,7 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("compare")]
         public async Task<IActionResult> CompareImages(IFormFile queryImage)
         {

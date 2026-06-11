@@ -2,6 +2,7 @@ using Petsociety.DTOs.AdoptionRequests;
 using Petsociety.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System;
 using System.Linq;
 
@@ -18,6 +19,7 @@ namespace Petsociety.Controllers
             _dbContext = dbContext;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetAll")]
         public IActionResult GetAll([FromQuery] FilterAdoptionRequestsDto filterDto)
         {
@@ -75,50 +77,22 @@ namespace Petsociety.Controllers
             }
         }
 
-        //[HttpPost("Add")]
-        //public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
-        //{
-        //    try
-        //    {
-        //        var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
-        //        if (pet == null)
-        //        {
-        //            return BadRequest("Pet Does Not Exist");
-        //        }
 
-        //        if (!pet.IsAvailable)
-        //        {
-        //            return BadRequest("Pet Is Not Available For Adoption");
-        //        }
-
-        //        var request = new AdoptionRequest
-        //        {
-        //            Id = 0,
-        //            PetId = dto.PetId,
-        //            PhoneNumber = dto.PhoneNumber,
-        //            DeliveryMethod = dto.DeliveryMethod,
-        //            Status = dto.Status ?? "Pending",
-        //            CreatedAt = DateTime.UtcNow
-        //        };
-
-        //        _dbContext.AdoptionRequests.Add(request);
-        //        _dbContext.SaveChanges();
-
-        //        // Note: not changing pet.IsAvailable here to preserve admin approval workflow
-
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
+        [Authorize]
         [HttpPost("Add")]
         public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
         {
             try
             {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    return Unauthorized();
+                }
+
+                var userId = int.Parse(userIdClaim);
+
                 var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
                 if (pet == null)
                     return BadRequest("Pet Does Not Exist");
@@ -129,7 +103,7 @@ namespace Petsociety.Controllers
                 var request = new AdoptionRequest
                 {
                     PetId = dto.PetId,
-                    UserId = 1, 
+                    UserId = userId, 
                     PhoneNumber = dto.PhoneNumber,
                     DeliveryMethod = dto.DeliveryMethod,
                     Status = "Pending",
@@ -147,6 +121,7 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("Update")]
         public IActionResult Update([FromBody] SaveAdoptionRequestDto dto)
         {
@@ -175,6 +150,7 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("Delete")]
         public IActionResult Delete([FromQuery] long Id)
         {
@@ -195,6 +171,7 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateStatus")]
         public IActionResult UpdateStatus(long id, string status)
         {
@@ -206,6 +183,43 @@ namespace Petsociety.Controllers
 
             _dbContext.SaveChanges();
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("MyRequests")]
+        public IActionResult MyRequests()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim))
+                    return Unauthorized();
+
+                long userId = long.Parse(userIdClaim);
+
+                var data = from req in _dbContext.AdoptionRequests
+                           from pet in _dbContext.Pets
+                               .Where(x => x.Id == req.PetId)
+                               .DefaultIfEmpty()
+                           where req.UserId == userId
+                           select new AdoptionRequestDto
+                           {
+                               Id = req.Id,
+                               PetId = req.PetId,
+                               PetBreed = pet != null ? pet.Breed : "",
+                               PhoneNumber = req.PhoneNumber,
+                               DeliveryMethod = req.DeliveryMethod,
+                               Status = req.Status,
+                               CreatedAt = req.CreatedAt
+                           };
+
+                return Ok(data.ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }

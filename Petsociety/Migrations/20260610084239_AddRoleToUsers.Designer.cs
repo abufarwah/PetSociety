@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Petsociety.Model;
 
@@ -11,9 +12,11 @@ using Petsociety.Model;
 namespace Petsociety.Migrations
 {
     [DbContext(typeof(PetDbContext))]
-    partial class PetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260610084239_AddRoleToUsers")]
+    partial class AddRoleToUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -279,9 +282,6 @@ namespace Petsociety.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Pets");
@@ -384,10 +384,6 @@ namespace Petsociety.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

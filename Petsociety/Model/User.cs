@@ -10,6 +10,8 @@ namespace Petsociety.Models
         [Required]
         [MaxLength(100)]
         public string FullName { get; set; } = null!;
+        [Required]
+        public string? Phone { get; set; }
 
         [Required]
         [EmailAddress]
@@ -17,6 +19,8 @@ namespace Petsociety.Models
 
         [Required]
         public string PasswordHash { get; set; } = null!;
+
+        public string Role { get; set; } = "User";
 
         // ── Moderation / Lifecycle fields ──────────────────────────────────────
         // MIGRATION REQUIRED to activate these fields:

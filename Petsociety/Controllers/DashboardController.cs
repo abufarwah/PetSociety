@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Petsociety.DTOs.Dashboard;
@@ -10,6 +11,8 @@ namespace Petsociety.Controllers
     /// Provides aggregated KPI metrics for the Admin Dashboard.
     /// All queries are read-only (AsNoTracking) and executed asynchronously.
     /// </summary>
+    /// 
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : ControllerBase

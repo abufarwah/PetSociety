@@ -7,6 +7,7 @@ namespace Petsociety.Model
     public class Pet
     {
         public long Id { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         public string Breed { get; set; } = null!;

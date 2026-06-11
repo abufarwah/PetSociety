@@ -20,21 +20,24 @@ namespace Petsociety.Controllers
             _context = context;
         }
 
+        [Authorize]
         [HttpPost("process-payment")]
         //public IActionResult ProcessPayment([FromBody] PaymentRequestDTO request)
         public async Task<IActionResult> ProcessPayment([FromBody] PaymentRequestDTO request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
-            if (userIdClaim == null)
-            {
-                return Unauthorized();
-            }
+            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
-            int userId = int.Parse(userIdClaim.Value);
+            //if (userIdClaim == null)
+            //{
+            //    return Unauthorized();
+            //}
 
+            //int userId = int.Parse(userIdClaim.Value);
+
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
             decimal actualPrice = request.PackageName?.ToLower() switch
             {
@@ -100,7 +103,9 @@ namespace Petsociety.Controllers
         /// </summary>
         /// <response code="200">Status toggled successfully.</response>
         /// <response code="404">Subscription not found.</response>
-        [AllowAnonymous] // TODO [TEAM INTEGRATION]: Replace with [Authorize(Roles = "Admin")] once role claims are set up.
+        //[AllowAnonymous] // TODO [TEAM INTEGRATION]: Replace with [Authorize(Roles = "Admin")] once role claims are set up.
+
+        [Authorize(Roles = "Admin")]
         [HttpPut("subscriptions/{id}/manage")]
         public async Task<IActionResult> ManageSubscription(int id)
         {

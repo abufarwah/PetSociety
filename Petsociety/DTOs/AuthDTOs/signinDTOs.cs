@@ -1,8 +1,8 @@
-﻿namespace EduTrack.DTOs.AuthDTOs
+﻿namespace Petsociety.DTOs.AuthDTOs
 {
     public class SigninDTOs
     {
-        public required string Name { get; set; }
+        public required string FullName { get; set; }
         public required string Phone { get; set; }
         public required string Email { get; set; }
         public required string Password { get; set; }

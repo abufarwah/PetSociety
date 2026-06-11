@@ -19,31 +19,7 @@ namespace Petsociety.Controllers
             _dbContext = dbContext;
         }
 
-        //[HttpGet("GetAll")]
-        //public IActionResult GetAll([FromQuery] FilterChannelsDto filterDto)
-        //{
-        //    try
-        //    {
-        //        var data = from ch in _dbContext.CommunityChannels
-        //                   where (filterDto.Name == null || ch.Name.ToUpper().Contains(filterDto.Name.ToUpper()))
-        //                   select new ChannelDto
-        //                   {
-        //                       Id = ch.Id,
-        //                       Name = ch.Name,
-        //                       Description = ch.Description,
-        //                       Icon = ch.Icon,
-        //                       MembersCount = ch.MembersCount,
-        //                       CreatedAt = ch.CreatedAt,
-        //                       MessagesCount = _dbContext.CommunityMessages.Count(m => m.ChannelId == ch.Id)
-        //                   };
-
-        //        return Ok(data.OrderByDescending(x => x.CreatedAt));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+        
         [HttpGet("GetAll")]
         public IActionResult GetAll([FromQuery] FilterChannelsDto filterDto)
         {
@@ -93,6 +69,9 @@ namespace Petsociety.Controllers
                     })
                     .FirstOrDefault(x => x.Id == Id);
 
+                if (item == null)
+                    return NotFound();
+
                 return Ok(item);
             }
             catch (Exception ex)
@@ -101,6 +80,7 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add")]
         public IActionResult Add([FromBody] SaveChannelDto dto)
         {
@@ -128,6 +108,7 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("Update")]
         public IActionResult Update([FromBody] SaveChannelDto dto)
         {
@@ -135,7 +116,7 @@ namespace Petsociety.Controllers
             {
                 var ch = _dbContext.CommunityChannels.FirstOrDefault(x => x.Id == dto.Id);
                 if (ch == null)
-                    return BadRequest("Channel Does Not Exist");
+                    return NotFound("Channel Does Not Exist");
 
                 ch.Name = dto.Name;
                 ch.Description = dto.Description;
@@ -150,6 +131,7 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("Delete")]
         public IActionResult Delete([FromQuery] long Id)
         {
@@ -157,7 +139,7 @@ namespace Petsociety.Controllers
             {
                 var ch = _dbContext.CommunityChannels.FirstOrDefault(x => x.Id == Id);
                 if (ch == null)
-                    return BadRequest("Channel Does Not Exist");
+                    return NotFound("Channel Does Not Exist");
 
                 _dbContext.CommunityChannels.Remove(ch);
                 _dbContext.SaveChanges();

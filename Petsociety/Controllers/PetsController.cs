@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Petsociety.DTOs.Pets;
 using Petsociety.Model;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace Petsociety.Controllers
 {
-    //[Authorize]
+
     [Route("api/[controller]")]
     [ApiController]
     public class PetsController : ControllerBase
@@ -67,7 +68,7 @@ namespace Petsociety.Controllers
                 var petEntity = _dbContext.Pets.FirstOrDefault(x => x.Id == Id);
 
                 if (petEntity == null)
-                    return Ok(null);
+                    return NotFound();
 
                 var pet = new PetDto
                 {
@@ -94,6 +95,7 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("Add")]
         public IActionResult Add([FromForm] SavePetDto petDto)
         {
@@ -104,6 +106,8 @@ namespace Petsociety.Controllers
 
                 if (petDto.Image == null)
                     return BadRequest("Image is required");
+                var userId = int.Parse(
+    User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
                 var pet = new Pet
                 {
@@ -145,6 +149,7 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("Update")]
         public IActionResult Update([FromForm] SavePetDto petDto)
         {
@@ -152,8 +157,17 @@ namespace Petsociety.Controllers
             {
                 var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == petDto.Id);
 
+                var currentUserId = int.Parse(
+    User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+                if (pet.UserId != currentUserId &&
+                    !User.IsInRole("Admin"))
+                {
+                    return Forbid();
+                }
+
                 if (pet == null)
-                    return BadRequest("Pet Does Not Exist");
+                    return NotFound("Pet Does Not Exist");
 
                 if (string.IsNullOrWhiteSpace(petDto.Breed))
                     return BadRequest("Breed is required");
@@ -196,15 +210,26 @@ namespace Petsociety.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("Delete")]
         public IActionResult Delete([FromQuery] long Id)
         {
             try
             {
                 var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == Id);
+
+                var currentUserId = int.Parse(
+    User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+                if (pet.UserId != currentUserId &&
+                    !User.IsInRole("Admin"))
+                {
+                    return Forbid();
+                }
+
                 if (pet == null)
                 {
-                    return BadRequest("Pet Does Not Exist");
+                    return NotFound("Pet Does Not Exist");
                 }
                 _dbContext.Pets.Remove(pet);
                 _dbContext.SaveChanges();
@@ -219,20 +244,20 @@ namespace Petsociety.Controllers
         }
 
 
+        //[Authorize(Roles = "Admin")]
+        //[HttpPut("Adopt")]
+        //public IActionResult AdoptPet(int id)
+        //{
+        //    var pet = _dbContext.Pets.Find(id);
 
-        [HttpPut("Adopt")]
-        public IActionResult AdoptPet(int id)
-        {
-            var pet = _dbContext.Pets.Find(id);
+        //    if (pet == null)
+        //        return NotFound();
 
-            if (pet == null)
-                return NotFound();
+        //    pet.Status = "Adopted";
 
-            pet.Status = "Adopted";
+        //    _dbContext.SaveChanges();
 
-            _dbContext.SaveChanges();
-
-            return Ok(pet);
-        }
+        //    return Ok(pet);
+        //}
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Petsociety.Model;
@@ -13,6 +14,8 @@ namespace Petsociety.Controllers
     ///   Add-Migration AddMessageModerationV2
     ///   Update-Database
     /// </summary>
+
+    [Authorize(Roles = "Admin")]
     [Route("api/moderation")]
     [ApiController]
     public class ModerationController : ControllerBase
