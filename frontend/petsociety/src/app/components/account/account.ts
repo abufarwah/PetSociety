@@ -43,20 +43,47 @@ export class Account implements OnInit {
     this.error = '';
 
     const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : sessionStorage.getItem('token');
+    const storedName = (typeof localStorage !== 'undefined' ? localStorage.getItem('fullName') : null)
+      || (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('fullName') : null)
+      || 'Pet Parent';
+    const storedEmail = (typeof localStorage !== 'undefined' ? localStorage.getItem('userEmail') : null)
+      || (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('userEmail') : null)
+      || '';
+
+    this.dashboard = {
+      ...this.dashboard,
+      user: {
+        name: storedName,
+        email: storedEmail,
+        memberSince: this.dashboard.user.memberSince || 'Member since recently',
+        avatarInitial: storedName ? storedName.trim().charAt(0).toUpperCase() : 'U',
+      },
+    };
+
     if (!token) {
       this.loading = false;
       this.error = 'Please sign in to view your account.';
       return;
     }
 
+    this.loading = false;
+
     this.accountService.getDashboard().subscribe({
       next: (dashboard) => {
-        this.dashboard = dashboard;
-        this.loading = false;
+        this.dashboard = {
+          ...dashboard,
+          user: {
+            ...dashboard.user,
+            name: dashboard.user?.name || storedName,
+            email: dashboard.user?.email || storedEmail,
+            avatarInitial: dashboard.user?.name
+              ? dashboard.user.name.trim().charAt(0).toUpperCase()
+              : (storedName ? storedName.trim().charAt(0).toUpperCase() : 'U'),
+          },
+        };
       },
       error: () => {
         this.error = 'Unable to load your account information right now.';
-        this.loading = false;
       },
     });
   }

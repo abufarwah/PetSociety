@@ -7,7 +7,7 @@ import { DashboardDto } from '../models/account.models';
   providedIn: 'root',
 })
 export class AccountService {
-  private readonly apiUrl = 'http://localhost:5290/api/account';
+  private readonly apiUrl = 'https://localhost:44371/api/account';
 
   constructor(private http: HttpClient) {}
 

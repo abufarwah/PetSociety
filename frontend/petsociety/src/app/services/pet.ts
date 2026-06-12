@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,14 @@ export class PetService {
   private baseUrl = 'https://localhost:44371/api/Pets';
 
   constructor(private http: HttpClient) {}
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    return new HttpHeaders({
+      Authorization: token ? `Bearer ${token}` : '',
+    });
+  }
 
   getPets(filters?: any) {
     let params = new HttpParams();
@@ -30,22 +38,31 @@ export class PetService {
   }
 
   addPet(formData: FormData) {
-    return this.http.post(`${this.baseUrl}/Add`, formData);
+    return this.http.post(`${this.baseUrl}/Add`, formData, {
+      headers: this.getAuthHeaders(),
+    });
   }
 
   updatePet(formData: FormData) {
-    return this.http.put(`${this.baseUrl}/Update`, formData);
+    return this.http.put(`${this.baseUrl}/Update`, formData, {
+      headers: this.getAuthHeaders(),
+    });
   }
 
   deletePet(id: number) {
     const params = new HttpParams().set('Id', id.toString());
-    return this.http.delete(`${this.baseUrl}/Delete`, { params });
+    return this.http.delete(`${this.baseUrl}/Delete`, {
+      headers: this.getAuthHeaders(),
+      params,
+    });
   }
 
   updatePetStatus(id: number, status: string) {
   return this.http.put(`${this.baseUrl}/UpdateStatus`, {
     id,
     status
+  }, {
+    headers: this.getAuthHeaders(),
   });
 }
 
