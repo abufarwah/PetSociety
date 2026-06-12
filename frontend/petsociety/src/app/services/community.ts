@@ -10,20 +10,19 @@ export class CommunityService {
 
   constructor(private http: HttpClient) {}
 
-  // ======================
-  // GET CHANNELS
-  // ======================
-  // أضفنا متغير searchName عشان يستقبل نص البحث من الـ Component
-  getChannels(searchName: string = '') {
-    let params = new HttpParams();
-    
-    if (searchName) {
-      params = params.set('Name', searchName);
-    }
-
-    // شلنا الـ getAuthHeaders() لأن الـ Interceptor بيقوم بالواجب تلقائياً
-    return this.http.get(`${this.apiUrl}/CommunityChannels/GetAll`, { params });
+  // // ======================
+// GET CHANNELS
+// ======================
+getChannels(searchName: string = '') {
+  let params = new HttpParams();
+  
+  // التعديل المهم: فقط إذا كان النص يحتوي على حروف فعلياً نقوم بإرساله
+  if (searchName && searchName.trim() !== '') {
+    params = params.set('Name', searchName.trim());
   }
+
+  return this.http.get(`${this.apiUrl}/CommunityChannels/GetAll`, { params });
+}
 
   // ======================
   // GET MESSAGES

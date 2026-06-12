@@ -46,19 +46,19 @@ export class Community implements OnInit, AfterViewChecked {
   // LOAD CHANNELS
   // ======================
   loadChannels() {
-    // تم تمرير نص فارغ للبحث ليتوافق مع الـ filter بالباك إند
-    this.communityService.getChannels('').subscribe({
-      next: (res: any) => {
-        this.channels = res || [];
+  // استدعاء نظيف بدون تمرير أي شيء لضمان جلب كل القنوات
+  this.communityService.getChannels().subscribe({
+    next: (res: any) => {
+      this.channels = res || [];
 
-        if (this.channels.length > 0) {
-          this.activeChannel = this.channels[0];
-          this.loadMessages(this.activeChannel.id);
-        }
-      },
-      error: err => console.log('Channels error:', err)
-    });
-  }
+      if (this.channels.length > 0) {
+        this.activeChannel = this.channels[0];
+        this.loadMessages(this.activeChannel.id);
+      }
+    },
+    error: err => console.log('Channels error:', err)
+  });
+}
 
   // ======================
   // LOAD MESSAGES
