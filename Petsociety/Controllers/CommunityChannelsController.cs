@@ -50,6 +50,8 @@ namespace Petsociety.Controllers
 
         //    return Ok(data.OrderByDescending(x => x.CreatedAt));
         //}
+
+        [AllowAnonymous]
         [HttpGet("GetAll")]
         public IActionResult GetAll([FromQuery] FilterChannelsDto filterDto)
         {
@@ -77,7 +79,7 @@ namespace Petsociety.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [AllowAnonymous]
         [HttpGet("GetById")]
         public IActionResult GetById([FromQuery] long Id)
         {
