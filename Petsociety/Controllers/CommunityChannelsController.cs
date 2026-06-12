@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Petsociety.DTOs.Community;
@@ -19,36 +19,63 @@ namespace Petsociety.Controllers
             _dbContext = dbContext;
         }
 
-        
+
+        //[HttpGet("GetAll")]
+        //public IActionResult GetAll([FromQuery] FilterChannelsDto filterDto)
+        //{
+        //    var messageCounts = _dbContext.CommunityMessages
+        //        .GroupBy(m => m.ChannelId)
+        //        .Select(g => new
+        //        {
+        //            ChannelId = g.Key,
+        //            Count = g.Count()
+        //        });
+
+        //    var data = from ch in _dbContext.CommunityChannels
+        //               join msg in messageCounts
+        //               on ch.Id equals msg.ChannelId into msgGroup
+        //               from msg in msgGroup.DefaultIfEmpty()
+        //               where (filterDto.Name == null ||
+        //                      EF.Functions.Like(ch.Name, $"%{filterDto.Name}%"))
+        //               select new ChannelDto
+        //               {
+        //                   Id = ch.Id,
+        //                   Name = ch.Name,
+        //                   Description = ch.Description,
+        //                   Icon = ch.Icon,
+        //                   MembersCount = ch.MembersCount,
+        //                   CreatedAt = ch.CreatedAt,
+        //                   MessagesCount = msg != null ? msg.Count : 0
+        //               };
+
+        //    return Ok(data.OrderByDescending(x => x.CreatedAt));
+        //}
         [HttpGet("GetAll")]
         public IActionResult GetAll([FromQuery] FilterChannelsDto filterDto)
         {
-            var messageCounts = _dbContext.CommunityMessages
-                .GroupBy(m => m.ChannelId)
-                .Select(g => new
-                {
-                    ChannelId = g.Key,
-                    Count = g.Count()
-                });
+            try
+            {
+                // استعلام مباشر ونظيف بدون Join معقد يسبب مشاكل مع التشانيلز الفارغة
+                var query = _dbContext.CommunityChannels
+                    .Where(ch => filterDto.Name == null || EF.Functions.Like(ch.Name, $"%{filterDto.Name}%"))
+                    .Select(ch => new ChannelDto
+                    {
+                        Id = ch.Id,
+                        Name = ch.Name,
+                        Description = ch.Description,
+                        Icon = ch.Icon,
+                        MembersCount = ch.MembersCount,
+                        CreatedAt = ch.CreatedAt,
+                        // حساب عدد المسجات مباشرة وبأمان لكل تشانيل (حتى لو كانت 0)
+                        MessagesCount = _dbContext.CommunityMessages.Count(m => m.ChannelId == ch.Id)
+                    });
 
-            var data = from ch in _dbContext.CommunityChannels
-                       join msg in messageCounts
-                       on ch.Id equals msg.ChannelId into msgGroup
-                       from msg in msgGroup.DefaultIfEmpty()
-                       where (filterDto.Name == null ||
-                              EF.Functions.Like(ch.Name, $"%{filterDto.Name}%"))
-                       select new ChannelDto
-                       {
-                           Id = ch.Id,
-                           Name = ch.Name,
-                           Description = ch.Description,
-                           Icon = ch.Icon,
-                           MembersCount = ch.MembersCount,
-                           CreatedAt = ch.CreatedAt,
-                           MessagesCount = msg != null ? msg.Count : 0
-                       };
-
-            return Ok(data.OrderByDescending(x => x.CreatedAt));
+                return Ok(query.OrderByDescending(x => x.CreatedAt).ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("GetById")]

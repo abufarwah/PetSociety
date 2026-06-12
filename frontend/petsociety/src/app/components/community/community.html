@@ -5,18 +5,29 @@
     <input type="text" class="search-input" placeholder="Search channels..." />
 
     <div class="channel-list">
+
       <div
         class="channel"
         *ngFor="let channel of channels"
-        [class.active]="channel.id === activeChannel.id"
+        [class.active]="activeChannel?.id === channel.id"
         (click)="selectChannel(channel)">
-        <div class="channel-icon">{{ channel.icon }}</div>
+
+        <div class="channel-icon">
+          {{ channel.icon || '💬' }}
+        </div>
+
         <div class="channel-info">
           <h6>{{ channel.name }}</h6>
-          <p>{{ channel.desc }}</p>
-          <span>{{ channel.members }} members</span>
+          <p>{{ channel.description }}</p>
+
+          <span>
+            {{ channel.membersCount }} members •
+            {{ channel.messagesCount }} messages
+          </span>
         </div>
+
       </div>
+
     </div>
   </aside>
 
@@ -24,51 +35,58 @@
   <section class="community-chat">
 
     <!-- Header -->
-    <div class="chat-header">
+    <div class="chat-header" *ngIf="activeChannel">
       <h5>{{ activeChannel.name }}</h5>
-      <p>{{ activeChannel.desc }} • {{ activeChannel.members }} members</p>
+      <p>
+        {{ activeChannel.description }} •
+        {{ activeChannel.membersCount }} members
+      </p>
     </div>
 
     <!-- Messages -->
-    <div class="chat-messages">
+    <div class="chat-messages" #scrollContainer>
 
-      <div *ngIf="messages.length === 0" class="empty-chat">
-        🐾 Start the conversation<br />
-        <small>Be the first to share something</small>
-      </div>
+  <div *ngIf="messages.length === 0" class="empty-chat">
+    🐾 Start the conversation<br />
+    <small>Be the first to share something</small>
+  </div>
 
-      <div
-        class="message"
-        *ngFor="let msg of messages"
-        [class.you]="msg.user === 'You'">
+  <div
+    class="message"
+    *ngFor="let msg of messages"
+    [class.you]="msg.userId === currentUserId">
 
-        <!-- AVATAR + ONLINE STATUS -->
-        <div class="avatar">
-          <img [src]="msg.avatar" />
-          <span class="online"></span>
-        </div>
-
-        <div class="message-bubble">
-          <div class="message-header">
-            <strong>{{ msg.user }}</strong>
-            <span class="time">{{ msg.time }}</span>
-          </div>
-          <p>{{ msg.text }}</p>
-        </div>
-
+    <div class="avatar">
+      <div class="avatar-circle">
+        {{ msg.userName?.charAt(0) || '?' }}
       </div>
     </div>
 
-    
+    <div class="message-bubble">
+      <div class="message-header">
+        <strong>{{ msg.userName }}</strong>
+        <span class="time">
+          {{ msg.sentAt | date:'short' }}
+        </span>
+      </div>
 
+      <p>{{ msg.messageText }}</p>
+    </div>
+
+  </div>
+
+</div>
     <!-- Input -->
     <div class="chat-input">
+
       <input
         type="text"
         placeholder="Type your message..."
         [(ngModel)]="newMessage"
         (keyup.enter)="sendMessage()" />
+
       <button (click)="sendMessage()">Send</button>
+
     </div>
 
   </section>
