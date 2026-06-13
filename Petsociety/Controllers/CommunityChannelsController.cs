@@ -19,57 +19,70 @@ namespace Petsociety.Controllers
             _dbContext = dbContext;
         }
 
-
+        //[AllowAnonymous]
         //[HttpGet("GetAll")]
         //public IActionResult GetAll([FromQuery] FilterChannelsDto filterDto)
         //{
-        //    var messageCounts = _dbContext.CommunityMessages
-        //        .GroupBy(m => m.ChannelId)
-        //        .Select(g => new
-        //        {
-        //            ChannelId = g.Key,
-        //            Count = g.Count()
-        //        });
+        //    try
+        //    {
+        //        var query = _dbContext.CommunityChannels
+        //            .Where(ch => filterDto.Name == null || EF.Functions.Like(ch.Name, $"%{filterDto.Name}%"))
+        //            .Select(ch => new ChannelDto
+        //            {
+        //                Id = ch.Id,
+        //                Name = ch.Name,
+        //                Description = ch.Description,
+        //                Icon = ch.Icon,
+        //                MembersCount = ch.MembersCount,
+        //                CreatedAt = ch.CreatedAt,
+        //                MessagesCount = _dbContext.CommunityMessages.Count(m => m.ChannelId == ch.Id)
+        //            });
 
-        //    var data = from ch in _dbContext.CommunityChannels
-        //               join msg in messageCounts
-        //               on ch.Id equals msg.ChannelId into msgGroup
-        //               from msg in msgGroup.DefaultIfEmpty()
-        //               where (filterDto.Name == null ||
-        //                      EF.Functions.Like(ch.Name, $"%{filterDto.Name}%"))
-        //               select new ChannelDto
-        //               {
-        //                   Id = ch.Id,
-        //                   Name = ch.Name,
-        //                   Description = ch.Description,
-        //                   Icon = ch.Icon,
-        //                   MembersCount = ch.MembersCount,
-        //                   CreatedAt = ch.CreatedAt,
-        //                   MessagesCount = msg != null ? msg.Count : 0
-        //               };
-
-        //    return Ok(data.OrderByDescending(x => x.CreatedAt));
+        //        return Ok(query.OrderByDescending(x => x.CreatedAt).ToList());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
         //}
-
         [AllowAnonymous]
         [HttpGet("GetAll")]
         public IActionResult GetAll([FromQuery] FilterChannelsDto filterDto)
         {
             try
             {
-                // استعلام مباشر ونظيف بدون Join معقد يسبب مشاكل مع التشانيلز الفارغة
+                int userId = 0;
+
+                if (User.Identity?.IsAuthenticated == true)
+                {
+                    var claim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+                    if (claim != null)
+                        userId = int.Parse(claim.Value);
+                }
+
                 var query = _dbContext.CommunityChannels
-                    .Where(ch => filterDto.Name == null || EF.Functions.Like(ch.Name, $"%{filterDto.Name}%"))
+                    .Where(ch => filterDto.Name == null ||
+                                 EF.Functions.Like(ch.Name, $"%{filterDto.Name}%"))
                     .Select(ch => new ChannelDto
                     {
                         Id = ch.Id,
                         Name = ch.Name,
                         Description = ch.Description,
                         Icon = ch.Icon,
-                        MembersCount = ch.MembersCount,
+
+                        MembersCount = _dbContext.CommunityMembers
+                            .Count(x => x.ChannelId == ch.Id),
+
+                        MessagesCount = _dbContext.CommunityMessages
+                            .Count(m => m.ChannelId == ch.Id),
+
                         CreatedAt = ch.CreatedAt,
-                        // حساب عدد المسجات مباشرة وبأمان لكل تشانيل (حتى لو كانت 0)
-                        MessagesCount = _dbContext.CommunityMessages.Count(m => m.ChannelId == ch.Id)
+
+                        IsJoined = userId != 0 &&
+                            _dbContext.CommunityMembers.Any(x =>
+                                x.ChannelId == ch.Id &&
+                                x.UserId == userId)
                     });
 
                 return Ok(query.OrderByDescending(x => x.CreatedAt).ToList());
@@ -178,6 +191,33 @@ namespace Petsociety.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [Authorize]
+        [HttpPost("Join")]
+        public IActionResult Join(long channelId)
+        {
+            var userId = int.Parse(
+                User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value
+            );
+
+            var exists = _dbContext.CommunityMembers.Any(x =>
+                x.ChannelId == channelId &&
+                x.UserId == userId);
+
+            if (exists)
+                return Ok();
+
+            _dbContext.CommunityMembers.Add(
+                new CommunityMember
+                {
+                    ChannelId = channelId,
+                    UserId = userId
+                });
+
+            _dbContext.SaveChanges();
+
+            return Ok();
         }
     }
 }

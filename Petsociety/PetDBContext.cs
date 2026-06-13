@@ -23,6 +23,7 @@ namespace Petsociety.Model
         // ── Community feature ─────────────────────────────────────────────────
         public DbSet<CommunityChannel> CommunityChannels { get; set; } = null!;
         public DbSet<CommunityMessage> CommunityMessages { get; set; } = null!;
+        public DbSet<CommunityMember> CommunityMembers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,6 +62,15 @@ namespace Petsociety.Model
         IsDeleted = false
     }
 );
+            modelBuilder.Entity<CommunityMember>()
+    .HasOne(x => x.Channel)
+    .WithMany()
+    .HasForeignKey(x => x.ChannelId);
+
+            modelBuilder.Entity<CommunityMember>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
         }
 
     }
