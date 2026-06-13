@@ -291,7 +291,7 @@ hr {
   z-index: 99999 !important; /* يضمن الظهور فوق شريط التنقل والأزرار */
 }
 
-.modal-backdrop-custom {
+/* .modal-backdrop-custom {
   position: absolute;
   top: 0;
   left: 0;
@@ -310,7 +310,7 @@ hr {
   text-align: center;
   max-width: 450px;
   width: 90%;
-}
+} */
 
 /* Responsive */
 /* @media (max-width: 991px) {
