@@ -181,12 +181,8 @@ export class SubscriptionService {
    * جلب حالة اشتراك المستخدم الحالي
    */
   getMyStatus(): Observable<SubscriptionStatusResponse> {
-    try {
-      const headers = this.getAuthHeaders();
-
-      return this.http.get<SubscriptionStatusResponse>(`${this.apiUrl}/my-status`, { headers });
-    } catch (error) {
-      return throwError(() => error);
-    }
+    return this.http.get<SubscriptionStatusResponse>(
+      `${this.apiUrl}/my-status`
+    );
   }
 }
