@@ -11,5 +11,6 @@ namespace Petsociety.DTOs.Community
         public int MembersCount { get; set; }
         public DateTime CreatedAt { get; set; }
         public int MessagesCount { get; set; }
+        public bool IsJoined { get; set; }
     }
 }

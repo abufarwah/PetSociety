@@ -1,127 +1,125 @@
+<!-- ============================================================
+     HOME PAGE – Pet Society
+     SECTIONS:
+       1. Hero          (PRESERVED – do not modify)
+       2. Our Services  (REVAMPED)
+       3. About Us      (PRESERVED – do not modify)
+       4. Trusted Partners & Clinics  (NEW)
+       5. Pet Care Tips / Mini Blog   (NEW)
+       6. Virtual Sponsoring / CSR    (NEW – Future Work)
+   ============================================================ -->
+
+<!-- ① HERO ─────────────────────────────────────────────────── -->
 <div class="home-page">
-<div class="hero-section">
-  
- <img src="header.jpg" class="hero-img" />
-
-  <div class="hero-text">
-   <h1>
-    <span class="hero-line-white">Where Technology</span>
-    <span class="hero-line-gold">Meets Compassion</span>
-  </h1>
-
-    <p>A platform that brings together pet lovers and adopters</p>
-  </div>
-</div></div>
-
-
-<section class="services container py-5">
-  <h2 class="text-center fw-bold mb-2">Our Service</h2>
-  <p class="text-center mb-5">Everything your pet needs, all in one place</p>
-
-  <div class="row g-4">
-
-    
-   
-<div class="col-lg-3 col-md-6">
-  <div class="service-card">
-    <div class="icon-circle">
-  <i class="bi bi-heart-pulse"></i>
-</div>
-
-    <h4>Adoption</h4>
-    <p>
-      Find your perfect companion. Browse lovely pets waiting for a forever home.
-    </p>
-   <button
-  class="btn btn-outline-dark rounded-pill px-4"
-  routerLink="/Adoption">
-  Explore
-</button>
+  <div class="hero-section">
+    <img src="header.jpg" class="hero-img" />
+    <div class="hero-text">
+      <h1>
+        <span class="hero-line-white">Where Technology</span>
+        <span class="hero-line-gold">Meets Compassion</span>
+      </h1>
+      <p>A platform that brings together pet lovers and adopters</p>
+    </div>
   </div>
 </div>
 
 
-   
-    <div class="col-lg-3 col-md-6">
-      <div class="service-card">
-        <div class="icon-circle">
-  <i class="fa-solid fa-bone"></i>
-</div>
+<!-- ② OUR SERVICES ─────────────────────────────────────────── -->
+<section class="services-section" id="services">
+  <div class="services-inner">
 
-        <h4 class="mt-2">Pet Society +</h4>
-        <p>Professional grooming,and monthly wellness packages.</p>
-        <button
-  class="btn btn-outline-dark rounded-pill px-4 mt-3"
-  routerLink="/PetSocietyPlus">
-  Explore
-</button>
-      </div>
+    <!-- Section header -->
+    <div class="section-header">
+      <span class="section-label">What We Offer</span>
+      <h2 class="section-title">Our Services</h2>
+      <p class="section-subtitle">Everything your pet needs, all in one place</p>
     </div>
 
-   
-    <div class="col-lg-3 col-md-6">
-      <div class="service-card">
-        <div class="icon-circle">
-  <i class="bi bi-people"></i>
-</div>
+    <!-- Cards grid -->
+    <div class="services-grid">
 
-        <h4 class="mt-2">Community</h4>
-        <p>Connect with pet lovers, share stories, and join pet clubs.</p>
-         <button
-  class="btn btn-outline-dark rounded-pill px-4 mt-3"
-  routerLink="/community">
-  Explore
-</button>
+      <!-- Adoption -->
+      <div class="svc-card" tabindex="0">
+        <div class="svc-card__icon-wrap">
+          <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+        <h4 class="svc-card__title">Adoption</h4>
+        <p class="svc-card__desc">
+          Find your perfect companion. Browse lovely pets waiting for a forever home.
+        </p>
+        <a routerLink="/Adoption" class="svc-card__btn">
+          Explore
+        </a>
       </div>
-    </div>
 
-    
-    <div class="col-lg-3 col-md-6">
-      <div class="service-card">
-        <div class="icon-circle">
-  <i class="bi bi-search-heart"></i>
-</div>
-
-        <h4 class="mt-2">Lost & Found</h4>
-        <p>Help reunite missing pets with their families through smart matching.</p>
-         <button
-  class="btn btn-outline-dark rounded-pill px-4 mt-3"
-  routerLink="/lost-found">
-  Explore
-</button>
+      <!-- Pet Society + -->
+      <div class="svc-card" tabindex="0">
+        <div class="svc-card__icon-wrap">
+          <i class="fa-solid fa-bone"></i>
+        </div>
+        <h4 class="svc-card__title">Pet Society +</h4>
+        <p class="svc-card__desc">
+          Professional grooming and monthly wellness packages tailored for your pet.
+        </p>
+        <a routerLink="/PetSocietyPlus" class="svc-card__btn">
+          Explore
+        </a>
       </div>
-    </div>
 
+      <!-- Community -->
+      <div class="svc-card" tabindex="0">
+        <div class="svc-card__icon-wrap">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <h4 class="svc-card__title">Community</h4>
+        <p class="svc-card__desc">
+          Connect with pet lovers, share stories, and join vibrant pet clubs.
+        </p>
+        <a routerLink="/community" class="svc-card__btn">
+          Explore
+        </a>
+      </div>
+
+      <!-- Lost & Found -->
+      <div class="svc-card" tabindex="0">
+        <div class="svc-card__icon-wrap">
+          <i class="bi bi-search-heart-fill"></i>
+        </div>
+        <h4 class="svc-card__title">Lost &amp; Found</h4>
+        <p class="svc-card__desc">
+          Help reunite missing pets with their families through smart AI matching.
+        </p>
+        <a routerLink="/lost-found" class="svc-card__btn">
+          Explore
+        </a>
+      </div>
+
+    </div><!-- /services-grid -->
   </div>
 </section>
 
 
+<!-- ③ ABOUT US ──────────────────────────────────────────────── (PRESERVED) -->
 <section class="about container py-5">
   <div class="row align-items-center">
 
-    
     <div class="col-lg-6">
       <div class="about-image-wrapper">
         <img src="Abourt.jpg" class="about-img" />
       </div>
     </div>
 
-    
     <div class="col-lg-6 ps-lg-5 mt-4 mt-lg-0">
       <h3 class="text-gold mb-4 fw-bold">About Us</h3>
-
       <h4 class="fw-bold">Making pet parenting easy for everyone</h4>
-
       <p class="mt-3">
         Pet Society was founded to create a platform bringing together everything pet
-        lovers need—from adoption to monthly care packages. We’re here every step of the journey.
+        lovers need—from adoption to monthly care packages. We're here every step of the journey.
       </p>
-
       <p class="mt-3">
         Our passionate community is dedicated to sharing knowledge, providing support,
         and celebrating the joy pets bring to our lives.
       </p>
-
       <div class="stats mt-4 d-flex gap-5 flex-wrap">
         <div><span class="stat-num">10,000+</span><br />Happy Adoptions</div>
         <div><span class="stat-num">5,000+</span><br />Active Members</div>
@@ -129,5 +127,154 @@
       </div>
     </div>
 
+  </div>
+</section>
+
+
+<!-- ④ TRUSTED PARTNERS & CLINICS ───────────────────────────── (NEW) -->
+<section class="partners-section" id="partners">
+  <div class="partners-inner">
+
+    <div class="section-header">
+      <span class="section-label">We Collaborate With</span>
+      <h2 class="section-title">Trusted Partners &amp; Clinics</h2>
+      <p class="section-subtitle">Partnering with the best brands, shelters, and veterinary clinics</p>
+    </div>
+
+    <!-- Marquee Partner Cards Layout -->
+    <div class="partners-marquee-container">
+      <div class="partners-track">
+        <div class="partner-logo-card"><img src="synchrony.png" alt="Synchrony"></div>
+        <div class="partner-logo-card"><img src="petsmart.png" alt="PetSmart"></div>
+        <div class="partner-logo-card"><img src="vetcare.png" alt="VetCare"></div>
+        <div class="partner-logo-card"><img src="zoetis.png" alt="Zoetis"></div>
+        <div class="partner-logo-card"><img src="petco.png" alt="Petco"></div>
+        <div class="partner-logo-card"><img src="Acana.png" alt="Acana"></div>
+        <div class="partner-logo-card"><img src="merck.png" alt="Merck"></div>
+        <div class="partner-logo-card"><img src="anaya.png" alt="Anaya"></div>
+        <!-- Duplicated for seamless loop -->
+        <div class="partner-logo-card"><img src="synchrony.png" alt="Synchrony"></div>
+        <div class="partner-logo-card"><img src="petsmart.png" alt="PetSmart"></div>
+        <div class="partner-logo-card"><img src="vetcare.png" alt="VetCare"></div>
+        <div class="partner-logo-card"><img src="zoetis.png" alt="Zoetis"></div>
+        <div class="partner-logo-card"><img src="petco.png" alt="Petco"></div>
+        <div class="partner-logo-card"><img src="Acana.png" alt="Acana"></div>
+        <div class="partner-logo-card"><img src="merck.png" alt="Merck"></div>
+        <div class="partner-logo-card"><img src="anaya.png" alt="Anaya"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ⑤ PET CARE TIPS / MINI BLOG ────────────────────────────── (NEW) -->
+<section class="blog-section" id="blog">
+  <div class="blog-inner">
+    <div class="section-header">
+      <span class="section-label" style="background:#e0f7fa; color:#006064;">Learn &amp; Grow</span>
+      <h2 class="section-title">Pet Care Tips</h2>
+      <p class="section-subtitle">Expert advice to help you become the best pet parent you can be</p>
+    </div>
+
+    <div class="blog-grid-modern">
+      <!-- Article 1 -->
+      <article class="blog-card-modern">
+        <div class="blog-card-modern__img">
+          <img src="caretips.jpg" alt="Tip 1">
+        </div>
+        <div class="blog-card-modern__content">
+          <span class="blog-badge badge-teal">Adoption Tips</span>
+          <h5 class="blog-title">First Week with a New Dog</h5>
+          <p class="blog-desc">Must-do steps to help your dog settle in safely and happily. Essential advice for new pet parents.</p>
+          <a href="javascript:void(0)" class="blog-btn">Read More <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </article>
+
+      <!-- Article 2 -->
+      <article class="blog-card-modern">
+        <div class="blog-card-modern__img">
+          <img src="catvec.jpg" alt="Tip 2">
+        </div>
+        <div class="blog-card-modern__content">
+          <span class="blog-badge badge-orange">Health</span>
+          <h5 class="blog-title">Cat Vaccination Schedule</h5>
+          <p class="blog-desc">Keep your feline friend protected with a vet-approved timeline. Preventative care is key.</p>
+          <a href="javascript:void(0)" class="blog-btn">Read More <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </article>
+
+      <!-- Article 3 -->
+      <article class="blog-card-modern">
+        <div class="blog-card-modern__img">
+          <img src="feeding.jpg" alt="Tip 3">
+        </div>
+        <div class="blog-card-modern__content">
+          <span class="blog-badge badge-pink">Nutrition</span>
+          <h5 class="blog-title">Feeding Your Pet Right</h5>
+          <p class="blog-desc">Learn how to read labels and choose the best diet for your pet's long-term health and vitality.</p>
+          <a href="javascript:void(0)" class="blog-btn">Read More <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- ⑥ VIRTUAL SPONSORING / CSR ─────────────────────────────── (NEW – Future Work) -->
+<section class="sponsor-section-light" id="sponsor">
+  <div class="sponsor-inner">
+    <!-- Future Work Badge -->
+    <div class="fw-badge-wrap">
+      <span class="fw-badge-light">
+        <i class="bi bi-stars"></i>
+        Coming Soon — Phase 2
+      </span>
+    </div>
+
+    <!-- Illustration / Icon area -->
+    <div class="sponsor-icon-wrap-light">
+      <div class="sponsor-icon-ring-light">
+        <i class="bi bi-heart-fill sponsor-heart-light"></i>
+        <i class="fa-solid fa-paw sponsor-paw-light"></i>
+      </div>
+    </div>
+
+    <!-- Copy -->
+    <div class="sponsor-copy-light">
+      <h2 class="sponsor-title-light">
+        Virtual Sponsoring
+        <span class="sponsor-title-accent-light">&amp; CSR</span>
+      </h2>
+      <p class="sponsor-subtitle-light">
+        Can't adopt right now? You can still make a life-changing difference.<br />
+        Virtually sponsor a shelter pet — cover their food, medical care, and daily needs
+        while they wait for their forever home.
+      </p>
+
+      <div class="sponsor-features-light">
+        <div class="sponsor-feature-light">
+          <i class="bi bi-shield-heart-fill"></i>
+          <span>Medical Coverage</span>
+        </div>
+        <div class="sponsor-feature-light">
+          <i class="bi bi-basket3-fill"></i>
+          <span>Food &amp; Supplies</span>
+        </div>
+        <div class="sponsor-feature-light">
+          <i class="bi bi-award-fill"></i>
+          <span>Sponsor Certificate</span>
+        </div>
+        <div class="sponsor-feature-light">
+          <i class="bi bi-camera-fill"></i>
+          <span>Monthly Updates</span>
+        </div>
+      </div>
+
+      <button class="sponsor-cta-light" type="button" disabled>
+        <i class="bi bi-heart-pulse-fill"></i>
+        Sponsor a Pet — Launching Soon
+      </button>
+    </div>
   </div>
 </section>
