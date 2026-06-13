@@ -36,10 +36,35 @@ getChannels(searchName: string = '') {
   // SEND MESSAGE
   // ======================
   sendMessage(channelId: number, messageText: string) {
-    // شلنا الـ getAuthHeaders()
-    return this.http.post(`${this.apiUrl}/CommunityMessages/Add`, {
+
+  const token = localStorage.getItem('token');
+
+  return this.http.post(
+    `${this.apiUrl}/CommunityMessages/Add`,
+    {
       channelId,
       messageText
-    });
-  }
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+}
+
+joinChannel(channelId: number) {
+
+  const token = localStorage.getItem('token');
+
+  return this.http.post(
+    `${this.apiUrl}/CommunityChannels/Join?channelId=${channelId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+}
 }

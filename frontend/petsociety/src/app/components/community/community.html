@@ -44,7 +44,7 @@
     </div>
 
     <!-- Messages -->
-    <div class="chat-messages" #scrollContainer>
+ <div class="chat-messages" #scrollContainer>
 
   <div *ngIf="messages.length === 0" class="empty-chat">
     🐾 Start the conversation<br />
@@ -74,6 +74,37 @@
     </div>
 
   </div>
+
+  <div
+  *ngIf="activeChannel && !activeChannel.isJoined"
+  class="join-overlay">
+
+  <div class="join-card">
+
+    <div class="join-icon">
+      {{ activeChannel.icon || '💬' }}
+    </div>
+
+    <h2>{{ activeChannel.name }}</h2>
+
+    <p>
+      {{ activeChannel.description }}
+    </p>
+
+    <div class="join-stats">
+      👥 {{ activeChannel.membersCount }} Members
+    </div>
+
+    <button
+      class="join-btn"
+      (click)="joinChannel()">
+
+      Join Channel
+    </button>
+
+  </div>
+
+</div>
 
 </div>
     <!-- Input -->
