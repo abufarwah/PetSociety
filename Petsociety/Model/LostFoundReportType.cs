@@ -61,19 +61,12 @@ namespace Petsociety.Model
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        public DateTime? ReunitedAt { get; set; }
-
-        // Legacy string fields kept for controller backwards-compatibility.
-        [MaxLength(20)]
-        public string? Title { get; set; }
-
-        [MaxLength(50)]
-        public string? Species { get; set; }
+        
+    
 
         [MaxLength(30)]
         public string? DateText { get; set; }
 
-        [MaxLength(20)]
-        public string? Phone { get; set; }
+        
     }
 }
