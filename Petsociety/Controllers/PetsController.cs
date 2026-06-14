@@ -111,6 +111,7 @@ namespace Petsociety.Controllers
 
                 var pet = new Pet
                 {
+                    UserId = userId,
                     Breed = petDto.Breed,
                     Type = petDto.Type,
                     AgeCategory = petDto.AgeCategory,

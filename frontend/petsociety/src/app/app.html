@@ -40,47 +40,102 @@
 <div class="main-content">
 <router-outlet></router-outlet>
 </div>
-<footer class="bg-light py-5 mt-5">
-  <div class="container">
-    <div class="row g-4">
-      <div class="col-md-4">
-        <h5 class="mb-3">About Pet Society</h5>
-        <p class="text-muted">
-          Your all-in-one pet platform connecting pet lovers, facilitating adoptions, and providing essential pet care services.
+<!-- ══════════════════════════════════════════════════════
+     GLOBAL FOOTER — Pet Society (Light Theme)
+     ══════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     GLOBAL FOOTER — Pet Society (Cool Light Theme)
+     ══════════════════════════════════════════════════════ -->
+<footer class="site-footer-light">
+  <!-- Top wave divider -->
+  <div class="footer-wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,30 C360,60 1080,0 1440,30 L1440,0 L0,0 Z" fill="#fff"/>
+    </svg>
+  </div>
+
+  <div class="footer-body">
+    <div class="footer-grid">
+
+      <!-- Brand column -->
+      <div class="footer-col footer-brand-col">
+        <div class="footer-brand">
+          <i class="fa-solid fa-paw footer-brand-icon"></i>
+          <span>Pet Society</span>
+        </div>
+        <p class="footer-brand-desc">
+          Your all-in-one pet platform connecting pet lovers, facilitating adoptions,
+          and providing essential pet care services across Jordan.
         </p>
+        <!-- Social icons -->
+        <div class="footer-socials">
+          <a href="#" class="footer-social" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="footer-social" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="footer-social" aria-label="Twitter/X"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="footer-social" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+        </div>
       </div>
-      <div class="col-md-4">
-        <h5 class="mb-3">Quick Links</h5>
-        <ul class="list-unstyled">
-          <li><a href="#" class="footer-link">Adoption Process</a></li>
-          <li><a href="#" class="footer-link">Service Packages</a></li>
-          <li><a href="#" class="footer-link">Community Guidelines</a></li>
-          <li><a href="#" class="footer-link">Privacy Policy</a></li>
+
+      <!-- Quick Links column -->
+      <div class="footer-col">
+        <h6 class="footer-col-title">Explore</h6>
+        <ul class="footer-links">
+          <li><a routerLink="/Adoption"><i class="bi bi-chevron-right"></i> Adoption</a></li>
+          <li><a routerLink="/PetSocietyPlus"><i class="bi bi-chevron-right"></i> Pet Society+</a></li>
+          <li><a routerLink="/community"><i class="bi bi-chevron-right"></i> Community</a></li>
+          <li><a routerLink="/lost-found"><i class="bi bi-chevron-right"></i> Lost &amp; Found</a></li>
+          <li><a href="#blog"><i class="bi bi-chevron-right"></i> Pet Care Tips</a></li>
         </ul>
       </div>
-      <div class="col-md-4">
-        <h5 class="mb-3">Contact Us</h5>
-        <ul class="list-unstyled">
+
+      <!-- Support column -->
+      <div class="footer-col">
+        <h6 class="footer-col-title">Support</h6>
+        <ul class="footer-links">
+          <li><a href="#"><i class="bi bi-chevron-right"></i> Adoption Process</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i> Service Packages</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i> Community Guidelines</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i> Privacy Policy</a></li>
+          <li><a href="#"><i class="bi bi-chevron-right"></i> Terms of Service</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter & Contact column -->
+      <div class="footer-col">
+        <h6 class="footer-col-title">Newsletter &amp; Contact</h6>
+        <div class="footer-newsletter">
+          <p>Subscribe to our newsletter for pet care tips and platform updates.</p>
+          <form class="newsletter-form" (submit)="$event.preventDefault()">
+            <input type="email" placeholder="Your email address" required aria-label="Email Address" />
+            <button type="submit" aria-label="Subscribe"><i class="bi bi-send-fill"></i></button>
+          </form>
+        </div>
+        <ul class="footer-contact mt-4">
           <li>
-            <i class="bi bi-envelope me-2"></i>
-            petsociety@gmail.com
+            <span class="footer-contact-icon"><i class="bi bi-envelope-fill"></i></span>
+            <a href="mailto:petsociety@gmail.com">petsociety&#64;gmail.com</a>
           </li>
           <li>
-            <i class="bi bi-telephone me-2"></i>
-            +(962) 7 1234 5678
-          </li>
-          <li>
-            <i class="bi bi-geo-alt me-2"></i>
-           Amman, Jordan
+            <span class="footer-contact-icon"><i class="bi bi-telephone-fill"></i></span>
+            <a href="tel:+96271234567">+(962) 7 1234 5678</a>
           </li>
         </ul>
       </div>
-    </div>
-    <hr>
-    <div class="text-center text-muted pt-2">
-      © 2025 Pet Society. All rights reserved. Made with <span style="color:#EB2F6A;">♥</span> for pets.
+
+    </div><!-- /footer-grid -->
+  </div><!-- /footer-body -->
+
+  <!-- Bottom bar -->
+  <div class="footer-bottom">
+    <p class="footer-copy">
+      © 2025 Pet Society. All rights reserved. Made with <span class="footer-heart">♥</span> for pets.
+    </p>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy</a>
+      <span class="footer-dot">·</span>
+      <a href="#">Terms</a>
+      <span class="footer-dot">·</span>
+      <a href="#">Cookies</a>
     </div>
   </div>
 </footer>
-
-

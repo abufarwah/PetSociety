@@ -468,6 +468,7 @@ addPet(pet: any) {
         this.showConfirm = true;
         this.successType = pet.id ? 'edit' : 'add';
         this.editingPet = null;
+        this.optionsMenuOpenId = null;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -508,6 +509,8 @@ addPet(pet: any) {
         console.log('Pet deleted successfully:', petId);
         this.pets = this.pets.filter((p) => this.getPetId(p) !== petId);
         this.optionsMenuOpenId = null;
+        this.cdr.detectChanges();
+        this.loadPets();
       },
       error: (err) => {
         console.error('Delete pet failed:', err);

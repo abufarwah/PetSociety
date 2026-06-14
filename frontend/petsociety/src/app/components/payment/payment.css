@@ -279,6 +279,38 @@ hr {
     transform: translate(-50%, -50%);
   }
 }
+.modal-wrapper-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999 !important; /* يضمن الظهور فوق شريط التنقل والأزرار */
+}
+
+/* .modal-backdrop-custom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.success-modal-box {
+  position: relative;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  z-index: 100000;
+  text-align: center;
+  max-width: 450px;
+  width: 90%;
+} */
 
 /* Responsive */
 /* @media (max-width: 991px) {
