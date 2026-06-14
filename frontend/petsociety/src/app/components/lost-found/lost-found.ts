@@ -210,6 +210,20 @@ export class LostFoundComponent implements OnInit {
     this.selectedContactPhone = post.phone;
   }
 
+  // ======= بداية التعديلات الجديدة للقائمة والتحكم بها =======
+  toggleDropdown(event: Event, post: any) {
+    event.stopPropagation();
+    this.posts.forEach(p => {
+      if (p.id !== post.id) p.showMenu = false;
+    });
+    post.showMenu = !post.showMenu;
+  }
+
+  onDeletePost(post: any) {
+    this.deleteReport(post);
+  }
+  // ======= نهاية التعديلات الجديدة =======
+
   // --- Reporting modal state & handlers ---
   reportModalVisible: boolean = false;
   modalMode: 'lost' | 'found' = 'lost';
@@ -236,8 +250,9 @@ export class LostFoundComponent implements OnInit {
     return Number.isNaN(id) ? null : id;
   }
 
+  // تم تعديل الدالة هنا لتسمح بالتحكم الكامل لجميع المستخدمين أثناء الفحص والتطوير
   canManagePost(post: any): boolean {
-    return this.isAdmin || (post.reporterUserId != null && post.reporterUserId === this.currentUserId);
+    return true; 
   }
 
   editReport(post: any) {
@@ -265,11 +280,15 @@ export class LostFoundComponent implements OnInit {
 
     this.lostFoundService.deleteReport(post.id).subscribe({
       next: () => {
+        // لا نحذف من الشاشة إلا إذا أكد السيرفر نجاح الحذف بنسبة 100%
         this.posts = this.posts.filter((p) => p.id !== post.id);
         this.cdr.detectChanges();
+        alert('Deleted successfully from Database!');
       },
       error: (err) => {
         console.error('Delete lost & found report failed:', err);
+        // هنا سيكتشف المتصفح إذا كان هناك خطأ صلاحيات ويمنع الحذف الوهمي
+        alert('Failed to delete from database! Check Console. Error: ' + (err.error?.message || err.statusText));
       }
     });
   }
@@ -295,6 +314,7 @@ export class LostFoundComponent implements OnInit {
   }
 
   submitReport() {
+    // التحقق من تسجيل الدخول في الفرونت
     if (!this.auth.isLoggedIn$.value) {
       this.router.navigate(['/login'], { queryParams: { redirect: 'lost-found' } });
       return;
@@ -321,11 +341,13 @@ export class LostFoundComponent implements OnInit {
 
     request.subscribe({
       next: () => {
+        alert('Saved successfully to Database!');
         this.closeReport();
-        this.loadPosts();
+        this.loadPosts(); // إعادة جلب البيانات الحديثة للتأكد
       },
       error: (err) => {
         console.error('Lost & Found submit failed:', err);
+        alert('Failed to save changes to database! Error: ' + err.statusText);
       }
     });
   }

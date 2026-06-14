@@ -734,18 +734,29 @@
 /* ================= MODAL CHIPS ================= */
 
 .report-modal .chip {
-  border: 1px solid var(--primary);
-  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  padding: 8px 18px;
   border-radius: 999px;
-  background: white;
-  color: var(--dark);
+  background: #ffffff;
+  color: #3d3d3d;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.report-modal .chip-active {
-  background: var(--primary);
+/* تأثير عند تمرير الماوس فوق الـ Chip غير المحددة */
+.report-modal .chip:hover {
+  background: #f8f2e8;
   border-color: var(--primary);
-  color: #000;
+  transform: translateY(-1px);
+}
+
+/* التنسيق الجديد عند اختيار الـ Chip وضغطها */
+.report-modal .chip-active {
+  background: linear-gradient(135deg, #e2c08f 0%, #cfa46d 100%) !important;
+  border-color: #cfa46d !important;
+  color: white !important;
+  box-shadow: 0 6px 14px rgba(207, 164, 109, 0.25);
 }
 
 /* ================= UPLOAD DASHED ================= */
@@ -987,4 +998,80 @@
     height: 220px;
   }
 
+}
+
+/* ================= CARD OPTIONS DROPDOWN ================= */
+
+.card-options-dropdown {
+  z-index: 10;
+}
+
+.options-btn {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.options-btn:hover {
+  background: #ffffff;
+  transform: scale(1.05);
+}
+
+.options-menu {
+  position: absolute;
+  right: 0;
+  top: 42px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  padding: 6px;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.options-menu .dropdown-item {
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.options-menu .edit-opt {
+  color: #4b5563;
+}
+.options-menu .edit-opt:hover {
+  background: #f3f4f6;
+}
+
+.options-menu .delete-opt {
+  color: #dc2626;
+}
+.options-menu .delete-opt:hover {
+  background: #fef2f2;
 }
