@@ -1002,76 +1002,100 @@
 
 /* ================= CARD OPTIONS DROPDOWN ================= */
 
+/* ================= CARD OPTIONS DROPDOWN (PREMIUM GLASS STYLE) ================= */
+
 .card-options-dropdown {
+  position: absolute;
+  top: 15px;
+  right: 15px;
   z-index: 10;
 }
 
+/* زر الثلاث نقاط الدائري المضبب */
 .options-btn {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(4px);
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  width: 38px;
+  height: 38px;
+  border-radius: 50% !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #1e293b !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease-in-out !important;
 }
 
 .options-btn:hover {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.95) !important;
   transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12) !important;
 }
 
+/* قائمة الخيارات الزجاجية المبتكرة */
 .options-menu {
   position: absolute;
   right: 0;
-  top: 42px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  padding: 6px;
-  min-width: 120px;
+  top: 46px;
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 18px !important;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.02) !important;
+  padding: 8px !important;
+  min-width: 170px !important;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  animation: fadeIn 0.2s ease;
+  gap: 4px !important;
+  transform-origin: top right;
+  animation: glassFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes glassFadeIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+/* تنسيق العناصر الداخلية (تعديل وحذف) */
 .options-menu .dropdown-item {
-  background: transparent;
-  border: none;
+  background: transparent !important;
+  border: none !important;
   width: 100%;
   text-align: left;
-  padding: 8px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 8px;
+  padding: 10px 16px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
   cursor: pointer;
   display: flex;
   align-items: center;
-  transition: background 0.2s;
+  gap: 10px !important;
+  transition: all 0.2s ease !important;
 }
 
+/* خيار التعديل الاحترافي */
 .options-menu .edit-opt {
-  color: #4b5563;
+  color: #334155 !important;
 }
 .options-menu .edit-opt:hover {
-  background: #f3f4f6;
+  background: rgba(51, 65, 85, 0.08) !important;
 }
 
+/* خيار الحذف الاحترافي */
 .options-menu .delete-opt {
-  color: #dc2626;
+  color: #991b1b !important;
 }
 .options-menu .delete-opt:hover {
-  background: #fef2f2;
+  background: rgba(239, 68, 68, 0.12) !important;
+}
+
+/* أيقونات الخيارات */
+.options-menu .dropdown-item i {
+  font-size: 16px !important;
 }

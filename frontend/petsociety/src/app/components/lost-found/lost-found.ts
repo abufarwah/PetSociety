@@ -200,15 +200,23 @@ export class LostFoundComponent implements OnInit {
   setViewFilter(mode: 'all' | 'lost' | 'found') { this.viewFilter = mode; }
   setAnimalFilter(name: string) { this.animalFilter = name; }
 
-  contactOwner(post: any) {
-    this.selectedContactPostId = post.id;
-    this.selectedContactPhone = post.phone;
-  }
+ contactOwner(post: any) {
+  this.selectedContactPostId = post.id;
+  
+  // لطباعة محتويات المنشور بالكامل في الـ Console لمعرفة اسم الحقل الصحيح
+  console.log('بيانات المنشور الفردي:', post);
 
-  contactFinder(post: any) {
-    this.selectedContactPostId = post.id;
-    this.selectedContactPhone = post.phone;
-  }
+  // التحقق من كل المسميات الممكنة التي قد ترسلها قاعدة البيانات
+  this.selectedContactPhone = post.ReporterPhone || post.reporterPhone || post.phone || post.phoneNumber || 'لا يوجد رقم';
+}
+
+contactFinder(post: any) {
+  this.selectedContactPostId = post.id;
+  
+  console.log('بيانات المنشور الفردي:', post);
+
+  this.selectedContactPhone = post.ReporterPhone || post.reporterPhone || post.phone || post.phoneNumber || 'لا يوجد رقم';
+}
 
   // ======= بداية التعديلات الجديدة للقائمة والتحكم بها =======
   toggleDropdown(event: Event, post: any) {
