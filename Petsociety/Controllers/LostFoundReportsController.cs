@@ -79,7 +79,8 @@ namespace Petsociety.Controllers
                             : r.Description,
                         ImageUrl = r.ImageUrl,
                         ReporterName = r.ReporterName,
-                        ReporterPhone = null,
+                        ReporterUserId = r.ReporterUserId,
+                        ReporterPhone = r.ReporterPhone,
                         Status = r.Status.ToString(),
                         CreatedAt = r.CreatedAt
                     })

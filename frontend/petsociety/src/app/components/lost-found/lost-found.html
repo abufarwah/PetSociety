@@ -344,6 +344,15 @@
 
               </button>
 
+              <div *ngIf="canManagePost(post)" class="manage-report-actions mt-3">
+                <button class="btn btn-sm btn-outline-primary me-2" type="button" (click)="editReport(post)">
+                  Edit
+                </button>
+                <button class="btn btn-sm btn-outline-danger" type="button" (click)="deleteReport(post)">
+                  Delete
+                </button>
+              </div>
+
               <div *ngIf="selectedContactPostId===post.id" class="contact-phone mt-3">
                 <i class="bi bi-telephone-fill me-2"></i>
                 {{ selectedContactPhone }}

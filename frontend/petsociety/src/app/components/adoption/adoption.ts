@@ -32,6 +32,7 @@ export class Adoption implements OnInit {
   adoptionError: string = '';
   isLoggedIn = false;
   isAdmin = false;
+  currentUserId: number | null = null;
   optionsMenuOpenId: number | null = null;
 
   constructor(
@@ -483,6 +484,16 @@ addPet(pet: any) {
     return parsedId != null && !Number.isNaN(parsedId) ? parsedId : null;
   }
 
+  getCurrentUserId(): number | null {
+    const raw = localStorage.getItem('userId') || sessionStorage.getItem('userId');
+    const id = raw ? Number(raw) : NaN;
+    return Number.isNaN(id) ? null : id;
+  }
+
+  canManagePet(pet: any) {
+    return this.isAdmin || (pet.userId != null && pet.userId === this.currentUserId);
+  }
+
   editPet(pet: any) {
     this.closeOptionsMenu();
     this.editingPet = { ...pet };
@@ -537,8 +548,13 @@ addPet(pet: any) {
 
   handleAdoption(pet: any) {
     if (!this.isLoggedIn) {
-      // Redirect unauthenticated users to login
-      (this as any).router?.navigate(['/login'], { queryParams: { redirect: 'Adoption' } });
+      this.router.navigate(['/login'], { queryParams: { redirect: 'Adoption' } });
+      return;
+    }
+
+    if (pet.userId != null && pet.userId === this.currentUserId && !this.isAdmin) {
+      this.adoptionError = 'You cannot request adoption for your own pet.';
+      this.openPet(pet);
       return;
     }
 
@@ -552,11 +568,13 @@ addPet(pet: any) {
 
     this.auth.isLoggedIn$.subscribe((v: boolean) => {
       this.isLoggedIn = v;
+      this.currentUserId = this.getCurrentUserId();
     });
     this.auth.isAdmin$.subscribe((v: boolean) => {
       this.isAdmin = v;
     });
 
+    this.currentUserId = this.getCurrentUserId();
     this.loadPets();
   }
 
@@ -575,6 +593,8 @@ addPet(pet: any) {
             return {
               ...pet,
               id: this.getPetId(pet) ?? pet.id ?? pet.Id,
+              userId: pet.userId ?? pet.UserId ?? null,
+              status: pet.status || pet.Status || 'Available',
               image,
               age: pet.age || pet.ageCategory || pet.AgeCategory,
               tags: pet.tags || pet.Tags || [],

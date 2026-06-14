@@ -90,7 +90,7 @@
     <div class="pets-grid">
 
         <div class="pet-card" *ngFor="let pet of filteredPets">
-<div class="post-actions" *ngIf="isLoggedIn">
+<div class="post-actions" *ngIf="isLoggedIn && canManagePet(pet)">
             <div class="menu-wrapper">
                 <button class="menu-toggle" type="button" title="Manage pet"
                         (click)="toggleOptionsMenu(pet.id, $event)">
