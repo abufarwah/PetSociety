@@ -38,12 +38,14 @@ namespace Petsociety.Controllers
                     .Select(pet => new PetDto
                     {
                         Id = pet.Id,
+                        UserId = pet.UserId,
                         Breed = pet.Breed,
                         Type = pet.Type,
                         AgeCategory = pet.AgeCategory,
                         AgeYears = pet.AgeYears,
                         Gender = pet.Gender,
                         ImageUrl = pet.ImageUrl,
+                        Status = pet.Status,
                         Tags = pet.Tags == null
                             ? new System.Collections.Generic.List<string>()
                             : pet.Tags.Split(',').Select(t => t.Trim()).Where(t => t != string.Empty).ToList(),
@@ -73,12 +75,14 @@ namespace Petsociety.Controllers
                 var pet = new PetDto
                 {
                     Id = petEntity.Id,
+                    UserId = petEntity.UserId,
                     Breed = petEntity.Breed,
                     Type = petEntity.Type,
                     AgeCategory = petEntity.AgeCategory,
                     AgeYears = petEntity.AgeYears,
                     Gender = petEntity.Gender,
                     ImageUrl = petEntity.ImageUrl,
+                    Status = petEntity.Status,
                     Tags = petEntity.Tags == null
                         ? new System.Collections.Generic.List<string>()
                         : petEntity.Tags.Split(',').Select(t => t.Trim()).Where(t => t != string.Empty).ToList(),

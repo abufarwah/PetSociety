@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core'; // 1. أضفنا ChangeDetectorRef
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { LostFoundService } from '../../services/lostfound.service';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-lost-found',
@@ -24,10 +27,28 @@ export class LostFoundComponent implements OnInit {
 
   @ViewChild('queryInput') queryInputVariable!: ElementRef;
 
+  currentUserId: number | null = null;
+  isAdmin = false;
+  reportImageFile: File | null = null;
+  editingReport: any = null;
+
   // 2. يجب إضافة constructor لاستخدام كاشف التغييرات
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private lostFoundService: LostFoundService,
+    private auth: Auth
+  ) {}
 
   ngOnInit() {
+    this.currentUserId = this.getCurrentUserId();
+    this.auth.isAdmin$.subscribe((v) => {
+      this.isAdmin = v;
+    });
+    this.auth.isLoggedIn$.subscribe(() => {
+      this.currentUserId = this.getCurrentUserId();
+    });
+
     // تشغيل العدادات
     this.startCounter('lostCount', 120);
     this.startCounter('foundCount', 85);
@@ -122,28 +143,40 @@ export class LostFoundComponent implements OnInit {
 
   // --- Real DB Posts Loading ---
   loadPosts() {
-    fetch('https://localhost:4200/api/Ai/posts')
-      .then(response => {
-        if (!response.ok) throw new Error('Could not fetch posts');
-        return response.json();
-      })
-      .then(data => {
-        this.posts = data.map((p: any) => ({
-          id: p.id,
-          type: p.type,
-          title: p.title,
-          species: p.species,
-          excerpt: p.description,
-          location: p.location,
-          dateText: p.dateText,
-          image: p.imageUrl,
-          phone: p.phone
-        }));
+    this.lostFoundService.getReports().subscribe({
+      next: (data) => {
+        const backendBase = 'https://localhost:44371';
+        this.posts = (data.items || []).map((p: any) => {
+          const imageUrl = p.imageUrl || p.ImageUrl || '';
+          const image = imageUrl.startsWith('/') ? backendBase + imageUrl : imageUrl;
+
+          return {
+            id: p.id,
+            type: p.type,
+            title: p.breed ? `${p.breed} (${p.petType})` : p.petType,
+            species: p.petType,
+            excerpt: p.excerpt || p.description || '',
+            location: p.location,
+            dateText: p.dateLastSeen ? new Date(p.dateLastSeen).toLocaleDateString() : new Date(p.createdAt).toLocaleDateString(),
+            image,
+            phone: p.reporterPhone,
+            reporterUserId: p.reporterUserId,
+            status: p.status,
+            reporterName: p.reporterName,
+            breed: p.breed,
+            color: p.colorMarkings,
+            description: p.description,
+            petType: p.petType,
+            dateLastSeen: p.dateLastSeen,
+            createdAt: p.createdAt
+          };
+        });
         this.cdr.detectChanges();
-      })
-      .catch(error => {
-        console.error('Error loading posts:', error);
-      });
+      },
+      error: (err) => {
+        console.error('Error loading lost & found reports:', err);
+      }
+    });
   }
 
   // Community Reports data and helpers
@@ -167,15 +200,37 @@ export class LostFoundComponent implements OnInit {
   setViewFilter(mode: 'all' | 'lost' | 'found') { this.viewFilter = mode; }
   setAnimalFilter(name: string) { this.animalFilter = name; }
 
-  contactOwner(post: any) {
-    this.selectedContactPostId = post.id;
-    this.selectedContactPhone = post.phone;
+ contactOwner(post: any) {
+  this.selectedContactPostId = post.id;
+  
+  // لطباعة محتويات المنشور بالكامل في الـ Console لمعرفة اسم الحقل الصحيح
+  console.log('بيانات المنشور الفردي:', post);
+
+  // التحقق من كل المسميات الممكنة التي قد ترسلها قاعدة البيانات
+  this.selectedContactPhone = post.ReporterPhone || post.reporterPhone || post.phone || post.phoneNumber || 'لا يوجد رقم';
+}
+
+contactFinder(post: any) {
+  this.selectedContactPostId = post.id;
+  
+  console.log('بيانات المنشور الفردي:', post);
+
+  this.selectedContactPhone = post.ReporterPhone || post.reporterPhone || post.phone || post.phoneNumber || 'لا يوجد رقم';
+}
+
+  // ======= بداية التعديلات الجديدة للقائمة والتحكم بها =======
+  toggleDropdown(event: Event, post: any) {
+    event.stopPropagation();
+    this.posts.forEach(p => {
+      if (p.id !== post.id) p.showMenu = false;
+    });
+    post.showMenu = !post.showMenu;
   }
 
-  contactFinder(post: any) {
-    this.selectedContactPostId = post.id;
-    this.selectedContactPhone = post.phone;
+  onDeletePost(post: any) {
+    this.deleteReport(post);
   }
+  // ======= نهاية التعديلات الجديدة =======
 
   // --- Reporting modal state & handlers ---
   reportModalVisible: boolean = false;
@@ -197,6 +252,55 @@ export class LostFoundComponent implements OnInit {
     };
   }
 
+  getCurrentUserId(): number | null {
+    const raw = localStorage.getItem('userId') || sessionStorage.getItem('userId');
+    const id = raw ? Number(raw) : NaN;
+    return Number.isNaN(id) ? null : id;
+  }
+
+  // تم تعديل الدالة هنا لتسمح بالتحكم الكامل لجميع المستخدمين أثناء الفحص والتطوير
+  canManagePost(post: any): boolean {
+    return true; 
+  }
+
+  editReport(post: any) {
+    this.editingReport = post;
+    this.modalMode = post.type || 'lost';
+    this.reportForm = {
+      petType: post.petType || 'Dog',
+      breed: post.breed || '',
+      color: post.color || '',
+      dateLastSeen: post.dateLastSeen ? new Date(post.dateLastSeen).toISOString().substring(0, 10) : '',
+      location: post.location || '',
+      description: post.description || '',
+      photoName: post.image ? 'Current image' : null,
+      reporterName: post.reporterName || '',
+      phone: post.phone || ''
+    };
+    this.reportImageFile = null;
+    this.reportModalVisible = true;
+  }
+
+  deleteReport(post: any) {
+    if (!confirm('Are you sure you want to delete this report?')) {
+      return;
+    }
+
+    this.lostFoundService.deleteReport(post.id).subscribe({
+      next: () => {
+        // لا نحذف من الشاشة إلا إذا أكد السيرفر نجاح الحذف بنسبة 100%
+        this.posts = this.posts.filter((p) => p.id !== post.id);
+        this.cdr.detectChanges();
+        alert('Deleted successfully from Database!');
+      },
+      error: (err) => {
+        console.error('Delete lost & found report failed:', err);
+        // هنا سيكتشف المتصفح إذا كان هناك خطأ صلاحيات ويمنع الحذف الوهمي
+        alert('Failed to delete from database! Check Console. Error: ' + (err.error?.message || err.statusText));
+      }
+    });
+  }
+
   openReport(mode: 'lost' | 'found') {
     this.modalMode = mode;
     this.reportForm = this.emptyReport();
@@ -205,46 +309,54 @@ export class LostFoundComponent implements OnInit {
 
   closeReport() {
     this.reportModalVisible = false;
+    this.editingReport = null;
+    this.reportImageFile = null;
   }
 
   onModalPhotoSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.reportForm.photoName = file.name;
+      this.reportImageFile = file;
     }
   }
 
   submitReport() {
-    const formData = new FormData();
-    formData.append('Type', this.modalMode);
-    formData.append('Title', this.reportForm.breed || (this.modalMode === 'lost' ? 'Lost Pet' : 'Found Pet'));
-    formData.append('Species', this.reportForm.petType);
-    formData.append('Description', this.reportForm.description || '');
-    formData.append('Location', this.reportForm.location || '');
-    formData.append('DateText', this.reportForm.dateLastSeen || new Date().toLocaleDateString());
-    formData.append('Phone', this.reportForm.phone || '');
-    
-    // In a real scenario, you'd bind a file input from the modal here
-    // For now we mock it with the main query file if it exists, or fail
-    if (this.queryImageFile) {
-        formData.append('image', this.queryImageFile);
-    } else {
-        alert("Please select a pet image first from the top of the page to add a report.");
-        return;
+    // التحقق من تسجيل الدخول في الفرونت
+    if (!this.auth.isLoggedIn$.value) {
+      this.router.navigate(['/login'], { queryParams: { redirect: 'lost-found' } });
+      return;
     }
 
-    fetch('https://localhost:4200/api/Ai/add-post', {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-       console.log('Post Added:', data);
-       this.closeReport();
-       this.loadPosts(); // refresh from DB
-    })
-    .catch(err => {
-      console.error('Add Post Error:', err);
+    const formData = new FormData();
+    formData.append('Type', this.modalMode);
+    formData.append('PetType', this.reportForm.petType);
+    formData.append('Breed', this.reportForm.breed || '');
+    formData.append('ColorMarkings', this.reportForm.color || '');
+    formData.append('DateLastSeen', this.reportForm.dateLastSeen || new Date().toISOString());
+    formData.append('Location', this.reportForm.location || '');
+    formData.append('Description', this.reportForm.description || '');
+    formData.append('ReporterName', this.reportForm.reporterName || '');
+    formData.append('ReporterPhone', this.reportForm.phone || '');
+
+    if (this.reportImageFile) {
+      formData.append('ImageFile', this.reportImageFile);
+    }
+
+    const request = this.editingReport
+      ? this.lostFoundService.updateReport(this.editingReport.id, formData)
+      : this.lostFoundService.createReport(formData);
+
+    request.subscribe({
+      next: () => {
+        alert('Saved successfully to Database!');
+        this.closeReport();
+        this.loadPosts(); // إعادة جلب البيانات الحديثة للتأكد
+      },
+      error: (err) => {
+        console.error('Lost & Found submit failed:', err);
+        alert('Failed to save changes to database! Error: ' + err.statusText);
+      }
     });
   }
 }

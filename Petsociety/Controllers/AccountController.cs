@@ -199,9 +199,13 @@ namespace Petsociety.Controllers
                     }
                 ).ToList();
 
+                var subscriptionCount = _dbContext.Subscriptions
+                    .AsNoTracking()
+                    .Count(s => s.UserId == user.Id && s.IsActive);
+
                 var stats = new AccountStatsDto
                 {
-                    SubscriptionsCount = 0,
+                    SubscriptionsCount = subscriptionCount,
                     AdoptedCount = adoptedPets.Count
                 };
 

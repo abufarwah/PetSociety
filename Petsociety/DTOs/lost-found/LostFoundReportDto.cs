@@ -14,6 +14,7 @@ namespace Petsociety.DTOs.LostFound
         public string Excerpt { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
         public string ReporterName { get; set; } = null!;
+        public int? ReporterUserId { get; set; }
         public string? ReporterPhone { get; set; } = null;
         public string Status { get; set; } = "Open";
         public DateTime CreatedAt { get; set; }
