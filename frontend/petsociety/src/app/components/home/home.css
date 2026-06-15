@@ -575,10 +575,10 @@ body {
    ═══════════════════════════════════════════════════════════ */
 .sponsor-section-light {
   padding: 120px 0;
-  background: linear-gradient(135deg, #fef9f1 0%, #ffffff 50%, #fdfbf7 100%);
+  background: linear-gradient(to bottom, #fef9f2 0%, #ffffff 100%);
   position: relative;
   overflow: hidden;
-  border-top: 1px solid #f2eadf;
+  border-top: 4px solid #c8a978;
 }
 
 /* Background Decorative Shapes */
@@ -643,12 +643,18 @@ body {
   font-weight: 800;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #0277bd;
-  background: #e1f5fe;
-  border: 1px solid #b3e5fc;
+  color: #fff;
+  background: linear-gradient(135deg, #c8a978, #a8825a);
+  border: none;
   padding: 8px 24px;
   border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(2, 119, 189, 0.1);
+  box-shadow: 0 4px 16px rgba(200, 169, 120, 0.4);
+  animation: pulse-glow 2s infinite alternate;
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 4px 16px rgba(200, 169, 120, 0.4); }
+  100% { box-shadow: 0 4px 24px rgba(200, 169, 120, 0.8); }
 }
 
 .sponsor-title-light {
@@ -660,7 +666,12 @@ body {
   line-height: 1.1;
 }
 
-.sponsor-title-accent-light { color: #00bcd4; }
+.sponsor-title-accent-light { 
+  color: #f0f4f8; /* Footer background color */
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15); /* Keep it readable */
+  font-weight: 800;
+  -webkit-text-stroke: 1px #aab8c2;
+}
 
 .sponsor-subtitle-light {
   font-size: 17px;
@@ -679,19 +690,25 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #fff;
-  border: 1px solid #f0f0f0;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 50px;
   padding: 10px 20px;
   color: #333;
   font-size: 15px;
   font-weight: 600;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-.sponsor-feature-light:hover { transform: translateY(-3px); border-color: #00bcd4; }
-.sponsor-feature-light i { color: #00bcd4; font-size: 18px; }
+.sponsor-feature-light:hover { 
+  transform: translateY(-4px) scale(1.02); 
+  border-color: #c8a978; 
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(200, 169, 120, 0.15);
+}
+.sponsor-feature-light i { color: #c8a978; font-size: 18px; }
 
 .sponsor-cta-light {
   display: inline-flex;
@@ -725,11 +742,42 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 20px 50px rgba(200, 169, 120, 0.25);
-  border: 8px solid #fcf8f2;
+  box-shadow: 0 20px 50px rgba(200, 169, 120, 0.5), 0 0 0 10px rgba(200, 169, 120, 0.1);
+  border: 6px solid #fff;
   position: relative;
   animation: float 6s ease-in-out infinite;
   z-index: 2;
+}
+
+/* Background animated rings for Hero Circle */
+.sponsor-main-circle::before,
+.sponsor-main-circle::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  border-radius: 50%;
+  border: 2px dashed rgba(200, 169, 120, 0.4);
+  animation: spin-ring 15s linear infinite;
+  z-index: -1;
+}
+
+.sponsor-main-circle::before {
+  width: 330px; height: 330px;
+  margin-top: -165px; margin-left: -165px;
+}
+
+.sponsor-main-circle::after {
+  width: 380px; height: 380px;
+  margin-top: -190px; margin-left: -190px;
+  border-style: solid;
+  border-color: rgba(200, 169, 120, 0.15);
+  animation-direction: reverse;
+  animation-duration: 25s;
+}
+
+@keyframes spin-ring {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .sponsor-heart-hero { font-size: 120px; color: #ff4081; }
