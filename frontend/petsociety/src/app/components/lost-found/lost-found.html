@@ -1,3 +1,4 @@
+
 <div class="container my-5">
 
   <div class="text-center hero-bg mb-5">
@@ -120,7 +121,7 @@
           Community Reports
         </h2>
         <small class="text-muted">
-          {{ posts.length }} posts found
+          {{ filteredPosts.length }} posts found
         </small>
       </div>
 
@@ -184,7 +185,7 @@
               {{ post.type | uppercase }}
             </span>
 
-            <div class="card-options-dropdown position-absolute end-0 top-0 mt-3 me-3">
+            <div class="card-options-dropdown position-absolute end-0 top-0 mt-3 me-3" *ngIf="isLoggedIn && canManagePost(post)">
               <button class="options-btn" type="button" (click)="toggleDropdown($event, post)">
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
@@ -320,6 +321,9 @@
                 <small class="text-muted">JPG, PNG up to 10MB</small>
               </div>
             </div>
+            <div *ngIf="reportForm.photoName" class="mt-2 text-success small">
+              <i class="bi bi-file-earmark-image me-1"></i> Selected: {{ reportForm.photoName }}
+            </div>
           </div>
 
           <div class="col-md-6">
@@ -337,4 +341,13 @@
           <button type="button" class="btn btn-light" (click)="closeReport()">Cancel</button>
           <button type="submit" class="report-submit-btn">
             <i class="bi" [ngClass]="{'bi-exclamation-triangle-fill me-2': modalMode==='lost', 'bi-check-circle-fill me-2': modalMode==='found'}"></i>
-            Post {{ modal
+            Post {{ modalMode === 'lost' ? 'Lost' : 'Found' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+```

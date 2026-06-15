@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core'; // 1. أضفنا ChangeDetectorRef
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,7 +14,6 @@ import { Auth } from '../../services/auth';
 })
 export class LostFoundComponent implements OnInit {
 
-
   queryImageName: string | null = null;
   queryImagePreview: string | ArrayBuffer | null = null;
   queryImageFile: File | null = null;
@@ -28,11 +27,11 @@ export class LostFoundComponent implements OnInit {
   @ViewChild('queryInput') queryInputVariable!: ElementRef;
 
   currentUserId: number | null = null;
+  isLoggedIn = false; // أضفنا متغير حالة تسجيل الدخول
   isAdmin = false;
   reportImageFile: File | null = null;
   editingReport: any = null;
 
-  // 2. يجب إضافة constructor لاستخدام كاشف التغييرات
   constructor(
     private cdr: ChangeDetectorRef,
     private router: Router,
@@ -41,12 +40,21 @@ export class LostFoundComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // إعداد القيم الأولية فوراً عند تحميل الصفحة
+    this.isLoggedIn = this.auth.isLoggedIn$.value;
+    this.isAdmin = this.auth.isAdmin$.value;
     this.currentUserId = this.getCurrentUserId();
+
+    // الاشتراك في حالة الصلاحيات وتحديثها ديناميكياً
     this.auth.isAdmin$.subscribe((v) => {
       this.isAdmin = v;
+      this.cdr.detectChanges();
     });
-    this.auth.isLoggedIn$.subscribe(() => {
+
+    this.auth.isLoggedIn$.subscribe((v) => {
+      this.isLoggedIn = v;
       this.currentUserId = this.getCurrentUserId();
+      this.cdr.detectChanges();
     });
 
     // تشغيل العدادات
@@ -54,16 +62,16 @@ export class LostFoundComponent implements OnInit {
     this.startCounter('foundCount', 85);
     this.startCounter('reunitedCount', 50);
 
-    // Call loadPosts
+    // جلب المنشورات من قاعدة البيانات
     this.loadPosts();
   }
 
   startCounter(prop: 'lostCount' | 'foundCount' | 'reunitedCount', target: number) {
     let current = 0;
-    const duration = 2000; // المدة بالمللي ثانية (ثانيتين)
-    const steps = 50; // عدد الخطوات
-    const increment = target / steps; // مقدار الزيادة
-    const stepTime = duration / steps; // الوقت بين كل خطوة
+    const duration = 2000; 
+    const steps = 50; 
+    const increment = target / steps; 
+    const stepTime = duration / steps; 
 
     const timer = setInterval(() => {
       current += increment;
@@ -75,21 +83,14 @@ export class LostFoundComponent implements OnInit {
         this[prop] = Math.floor(current);
       }
       
-      // 3. هذا هو السطر السحري: "يا أنجولار، حدث الشاشة الآن!"
       this.cdr.detectChanges(); 
-
     }, stepTime);
   }
 
-  // دوال الصور (كما هي)
   onFileSelected(event: any) {
-
     const file = event.target.files[0];
-
     if (file) {
-
       const reader = new FileReader();
-
       reader.onload = () => {
         this.queryImageName = file.name;
         this.queryImagePreview = reader.result;
@@ -97,7 +98,6 @@ export class LostFoundComponent implements OnInit {
         this.searchResultMessage = null;
         this.cdr.detectChanges();
       };
-
       reader.readAsDataURL(file);
     }
   }
@@ -160,7 +160,8 @@ export class LostFoundComponent implements OnInit {
             dateText: p.dateLastSeen ? new Date(p.dateLastSeen).toLocaleDateString() : new Date(p.createdAt).toLocaleDateString(),
             image,
             phone: p.reporterPhone,
-            reporterUserId: p.reporterUserId,
+            // التأكد من جلب معرّف صاحب المنشور بكل الصيغ الممكنة من الـ API لربطه بالـ HTML
+            reporterUserId: p.reporterUserId ?? p.ReporterUserId ?? p.userId ?? p.UserId ?? null,
             status: p.status,
             reporterName: p.reporterName,
             breed: p.breed,
@@ -168,7 +169,8 @@ export class LostFoundComponent implements OnInit {
             description: p.description,
             petType: p.petType,
             dateLastSeen: p.dateLastSeen,
-            createdAt: p.createdAt
+            createdAt: p.createdAt,
+            showMenu: false // تعيين حالة القائمة المنسدلة الافتراضية لكل منشور
           };
         });
         this.cdr.detectChanges();
@@ -179,7 +181,6 @@ export class LostFoundComponent implements OnInit {
     });
   }
 
-  // Community Reports data and helpers
   viewFilter: 'all' | 'lost' | 'found' = 'all';
   animalFilter: string = 'All Animals';
   animals: string[] = ['All Animals', 'Dog', 'Cat', 'Rabbit', 'Hamster', 'Bird', 'Turtle'];
@@ -200,25 +201,18 @@ export class LostFoundComponent implements OnInit {
   setViewFilter(mode: 'all' | 'lost' | 'found') { this.viewFilter = mode; }
   setAnimalFilter(name: string) { this.animalFilter = name; }
 
- contactOwner(post: any) {
-  this.selectedContactPostId = post.id;
-  
-  // لطباعة محتويات المنشور بالكامل في الـ Console لمعرفة اسم الحقل الصحيح
-  console.log('بيانات المنشور الفردي:', post);
+  contactOwner(post: any) {
+    this.selectedContactPostId = post.id;
+    console.log('بيانات المنشور الفردي:', post);
+    this.selectedContactPhone = post.ReporterPhone || post.reporterPhone || post.phone || post.phoneNumber || 'لا يوجد رقم';
+  }
 
-  // التحقق من كل المسميات الممكنة التي قد ترسلها قاعدة البيانات
-  this.selectedContactPhone = post.ReporterPhone || post.reporterPhone || post.phone || post.phoneNumber || 'لا يوجد رقم';
-}
+  contactFinder(post: any) {
+    this.selectedContactPostId = post.id;
+    console.log('بيانات المنشور الفردي:', post);
+    this.selectedContactPhone = post.ReporterPhone || post.reporterPhone || post.phone || post.phoneNumber || 'لا يوجد رقم';
+  }
 
-contactFinder(post: any) {
-  this.selectedContactPostId = post.id;
-  
-  console.log('بيانات المنشور الفردي:', post);
-
-  this.selectedContactPhone = post.ReporterPhone || post.reporterPhone || post.phone || post.phoneNumber || 'لا يوجد رقم';
-}
-
-  // ======= بداية التعديلات الجديدة للقائمة والتحكم بها =======
   toggleDropdown(event: Event, post: any) {
     event.stopPropagation();
     this.posts.forEach(p => {
@@ -230,12 +224,9 @@ contactFinder(post: any) {
   onDeletePost(post: any) {
     this.deleteReport(post);
   }
-  // ======= نهاية التعديلات الجديدة =======
 
-  // --- Reporting modal state & handlers ---
   reportModalVisible: boolean = false;
   modalMode: 'lost' | 'found' = 'lost';
-
   reportForm: any = this.emptyReport();
 
   emptyReport() {
@@ -258,9 +249,9 @@ contactFinder(post: any) {
     return Number.isNaN(id) ? null : id;
   }
 
-  // تم تعديل الدالة هنا لتسمح بالتحكم الكامل لجميع المستخدمين أثناء الفحص والتطوير
+  // تطبيق الصلاحية الحقيقية: المالك الفعلي للمنشور أو الـ Admin فقط من يملك الصلاحية
   canManagePost(post: any): boolean {
-    return true; 
+    return this.isAdmin || (post.reporterUserId != null && post.reporterUserId === this.currentUserId);
   }
 
   editReport(post: any) {
@@ -288,14 +279,12 @@ contactFinder(post: any) {
 
     this.lostFoundService.deleteReport(post.id).subscribe({
       next: () => {
-        // لا نحذف من الشاشة إلا إذا أكد السيرفر نجاح الحذف بنسبة 100%
         this.posts = this.posts.filter((p) => p.id !== post.id);
         this.cdr.detectChanges();
         alert('Deleted successfully from Database!');
       },
       error: (err) => {
         console.error('Delete lost & found report failed:', err);
-        // هنا سيكتشف المتصفح إذا كان هناك خطأ صلاحيات ويمنع الحذف الوهمي
         alert('Failed to delete from database! Check Console. Error: ' + (err.error?.message || err.statusText));
       }
     });
@@ -322,7 +311,6 @@ contactFinder(post: any) {
   }
 
   submitReport() {
-    // التحقق من تسجيل الدخول في الفرونت
     if (!this.auth.isLoggedIn$.value) {
       this.router.navigate(['/login'], { queryParams: { redirect: 'lost-found' } });
       return;
@@ -351,7 +339,7 @@ contactFinder(post: any) {
       next: () => {
         alert('Saved successfully to Database!');
         this.closeReport();
-        this.loadPosts(); // إعادة جلب البيانات الحديثة للتأكد
+        this.loadPosts(); 
       },
       error: (err) => {
         console.error('Lost & Found submit failed:', err);
