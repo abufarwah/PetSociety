@@ -26,21 +26,12 @@ export class Community implements OnInit, AfterViewChecked {
     private cdr: ChangeDetectorRef
   ) {}
 
-  // ======================
-  // DATA
-  // ======================
   newMessage: string = '';
-
   channels: any[] = [];
   messages: any[] = [];
-
   activeChannel: any = null;
+  currentUserId: any = this.getUserIdFromToken();
 
-  currentUserId: number = this.getUserIdFromToken();
-
-  // ======================
-  // INIT
-  // ======================
   ngOnInit(): void {
     this.loadChannels();
   }
@@ -49,94 +40,67 @@ export class Community implements OnInit, AfterViewChecked {
     this.scrollToBottom();
   }
 
-  // ======================
-  // LOAD CHANNELS
-  // ======================
   loadChannels() {
-  this.communityService.getChannels().subscribe({
-    next: (res: any) => {
+    this.communityService.getChannels().subscribe({
+      next: (res: any) => {
+        this.channels = res?.data ?? res ?? [];
 
-      this.channels = res?.data ?? res ?? [];
+        if (!Array.isArray(this.channels)) {
+          console.error('Channels is not array', this.channels);
+          this.channels = [];
+          return;
+        }
 
-      if (!Array.isArray(this.channels)) {
-        console.error('Channels is not array', this.channels);
-        this.channels = [];
-        return;
-      }
+        if (this.channels.length === 0) return;
 
-      if (this.channels.length === 0) return;
+        const savedId = localStorage.getItem('activeChannelId');
+        const channel = this.channels.find(c => c.id == savedId) || this.channels[0];
 
-      const savedId = localStorage.getItem('activeChannelId');
+        this.setActiveChannel(channel);
+        this.moveChannelToTop(channel.id);
 
-      const channel =
-        this.channels.find(c => c.id == savedId) ||
-        this.channels[0];
-
-      this.setActiveChannel(channel);
-
-      setTimeout(() => {
-        this.cdr.detectChanges();
-      });
-
-    },
-    error: err => console.log(err)
-  });
-}
-
-  // ======================
-  // CORE FUNCTION (FIXED)
-  // ======================
- setActiveChannel(channel: any) {
-  if (!channel?.id) return;
-
-  this.activeChannel = channel;
-
-  localStorage.setItem('activeChannelId', channel.id);
-
-  // 🔥 مهم جداً: reset قبل الطلب
-  this.messages = [];
-
-  // 🔥 تأخير صغير لضمان Angular يلحق يحدّث state
-  setTimeout(() => {
-    this.loadMessages(channel.id);
-  }, 0);
-}
-
-  // ======================
-  // LOAD MESSAGES (FIXED)
-  // ======================
-  loadMessages(channelId: number) {
-
-  if (!channelId) {
-    console.warn('NO CHANNEL ID');
-    return;
+        setTimeout(() => {
+          this.cdr.detectChanges();
+        });
+      },
+      error: err => console.log(err)
+    });
   }
 
-  this.messages = [];
+  setActiveChannel(channel: any) {
+    if (!channel?.id) return;
 
-  console.log('LOADING MESSAGES FOR:', channelId);
+    this.activeChannel = channel;
+    localStorage.setItem('activeChannelId', channel.id);
+    this.messages = [];
 
-  this.communityService.getMessages(channelId).subscribe({
-    next: (res: any) => {
+    setTimeout(() => {
+      this.loadMessages(channel.id);
+    }, 0);
+  }
 
-      console.log('MESSAGES RESPONSE:', res);
-
-      // 🔥 أهم سطر
-      this.messages = Array.isArray(res) ? res : (res?.data ?? []);
-
-      this.cdr.detectChanges();
-    },
-    error: err => {
-      console.log('MESSAGES ERROR:', err);
+  loadMessages(channelId: number) {
+    if (!channelId) {
+      console.warn('NO CHANNEL ID');
+      return;
     }
-  });
-}
 
-  // ======================
-  // CLICK CHANNEL
-  // ======================
+    this.messages = [];
+    console.log('LOADING MESSAGES FOR:', channelId);
+
+    this.communityService.getMessages(channelId).subscribe({
+      next: (res: any) => {
+        console.log('MESSAGES RESPONSE:', res);
+        this.messages = Array.isArray(res) ? res : (res?.data ?? []);
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        console.log('MESSAGES ERROR:', err);
+      }
+    });
+  }
+
   selectChannel(channel: any) {
-
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -144,7 +108,8 @@ export class Community implements OnInit, AfterViewChecked {
       return;
     }
 
-    // إذا نفس القناة
+    this.moveChannelToTop(channel.id);
+
     if (this.activeChannel?.id === channel.id) {
       this.loadMessages(channel.id);
       return;
@@ -153,93 +118,72 @@ export class Community implements OnInit, AfterViewChecked {
     this.setActiveChannel(channel);
   }
 
-  // ======================
-  // SEND MESSAGE
-  // ======================
   sendMessage() {
-
-  if (!this.activeChannel?.isJoined) {
-    alert('Please join the channel first');
-    return;
-  }
-
-  const text = this.newMessage.trim();
-
-  if (!text) return;
-
-  // 🔥 مهم: نظف input فوراً
-  this.newMessage = '';
-
-  // 🔥 أضف الرسالة محلياً فوراً (Optimistic UI)
-  const tempMsg = {
-    messageText: text,
-    userId: this.currentUserId,
-    userName: 'You',
-    sentAt: new Date()
-  };
-
-  this.messages = [...this.messages, tempMsg];
-
-  this.scrollToBottom();
-
-  // request
-  this.communityService.sendMessage(
-  this.activeChannel.id,
-  text
-).subscribe({
-  next: (res: any) => {
-    // نضمن أن الرسالة القادمة من السيرفر تحتوي على الـ userId الصحيح الخاص بكِ
-    if (res && !res.userId) {
-      res.userId = this.currentUserId;
+    if (!this.activeChannel?.isJoined) {
+      alert('Please join the channel first');
+      return;
     }
 
-    this.messages = this.messages.map(m =>
-      m === tempMsg ? res : m
-    );
-    this.cdr.detectChanges();
-  },
-  error: err => {
-    console.log(err);
-    this.messages = this.messages.filter(m => m !== tempMsg);
-  }
-});
-}
-  // ======================
-  // JOIN CHANNEL
-  // ======================
-  joinChannel() {
+    const text = this.newMessage.trim();
+    if (!text) return;
 
+    this.newMessage = '';
+
+    const tempMsg = {
+      messageText: text,
+      userId: this.currentUserId,
+      userName: 'You',
+      sentAt: new Date()
+    };
+
+    this.messages = [...this.messages, tempMsg];
+    this.scrollToBottom();
+    
+    this.moveChannelToTop(this.activeChannel.id);
+
+    this.communityService.sendMessage(this.activeChannel.id, text).subscribe({
+      next: (res: any) => {
+        if (res && !res.userId) {
+          res.userId = this.currentUserId;
+        }
+
+        this.messages = this.messages.map(m =>
+          m === tempMsg ? res : m
+        );
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        console.log(err);
+        this.messages = this.messages.filter(m => m !== tempMsg);
+      }
+    });
+  }
+
+  joinChannel() {
     if (!this.activeChannel) return;
 
-    this.communityService.joinChannel(this.activeChannel.id)
-      .subscribe({
-        next: () => {
-
-          this.activeChannel.isJoined = true;
-          this.activeChannel.membersCount++;
-
-          this.cdr.detectChanges();
-        },
-        error: err => console.log(err)
-      });
+    this.communityService.joinChannel(this.activeChannel.id).subscribe({
+      next: () => {
+        this.activeChannel.isJoined = true;
+        this.activeChannel.membersCount++;
+        this.moveChannelToTop(this.activeChannel.id);
+        this.cdr.detectChanges();
+      },
+      error: err => console.log(err)
+    });
   }
 
-  // ======================
-  // HELPERS
-  // ======================
-getUserIdFromToken(): number {
-  const token = localStorage.getItem('token');
-  if (!token) return 0;
+  getUserIdFromToken(): any {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
 
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    // التحقق من كافة المسميات الشائعة للـ ID داخل الـ JWT Token
-    const rawId = payload.nameid || payload.sub || payload.Id || payload.id || payload.userId;
-    return rawId ? parseInt(rawId, 10) : 0;
-  } catch {
-    return 0;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.nameid || payload.sub || payload.Id || payload.id || payload.userId || null;
+    } catch {
+      return null;
+    }
   }
-}
 
   private scrollToBottom(): void {
     try {
@@ -248,26 +192,33 @@ getUserIdFromToken(): number {
     } catch {}
   }
 
+  isMine(msg: any): boolean {
+    if (!msg || !this.currentUserId) return false;
+    
+    const msgUserId = msg.userId || msg.userIdHex || msg.user?.id || msg.id;
+    if (!msgUserId) return false;
 
-isMine(msg: any): boolean {
-  if (!msg || !this.currentUserId) return false;
+    return String(msgUserId).trim().toLowerCase() === String(this.currentUserId).trim().toLowerCase();
+  }
 
-  // السيرفر ممكن يرجع الـ ID بأكثر من مسمى، نأخذ أي واحد متاح
-  const msgUserId = msg.userId || msg.userIdHex || msg.user?.id || msg.id;
-  
-  // تحويل القيمتين لنصوص ومقارنتهم لمنع مشاكل الـ string والـ number
-  return String(msgUserId).trim() === String(this.currentUserId).trim();
-}
+  getAvatar(msg: any): string {
+    const name = this.isMine(msg) ? 'You' : msg.userName;
+    if (!name) return '?';
 
-getAvatar(msg: any): string {
-  const name = this.isMine(msg) ? 'You' : msg.userName;
+    return name
+      .split(' ')
+      .map((n: string) => n[0])
+      .join('')
+      .toUpperCase();
+  }
 
-  if (!name) return '?';
-
-  return name
-    .split(' ')
-    .map((n: string) => n[0])
-    .join('')
-    .toUpperCase();
-}
+  private moveChannelToTop(channelId: number) {
+    if (!this.channels || this.channels.length <= 1) return;
+    
+    const targetIndex = this.channels.findIndex(c => c.id === channelId);
+    if (targetIndex > 0) {
+      const [targetChannel] = this.channels.splice(targetIndex, 1);
+      this.channels = [targetChannel, ...this.channels];
+    }
+  }
 }

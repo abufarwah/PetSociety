@@ -81,10 +81,12 @@
 <div class="container tabs-container" *ngIf="isLoggedIn && !isLoading">
     <div class="tabs-wrapper">
         <button class="tab-btn-nav" [class.active]="activeTab === 'all'" (click)="activeTab = 'all'">
-            🐾 Explore Pets
+            <i class="fa-solid fa-compass"></i>
+            Explore Pets
         </button>
         <button class="tab-btn-nav" [class.active]="activeTab === 'my-posts'" (click)="activeTab = 'my-posts'">
-            📋 My Listings 
+            <i class="fa-solid fa-table-list"></i>
+            My Listings 
             <span class="tab-badge" *ngIf="pets.length">{{ getMyListingsCount() }}</span>
         </button>
     </div>

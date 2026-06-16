@@ -28,9 +28,8 @@ export class Adoption implements OnInit {
   selectedGender: string = 'All';
   selectedTag: string = 'All';
   
-  // حقول الطلب
   adopterPhone: string = '';
-  adopterGovernorate: string = ''; // ✨ تعريف متغير المحافظة الجديد هنا
+  adopterGovernorate: string = ''; 
   adopterDeliveryMethod: 'Delivery' | 'Clinic Pickup' = 'Delivery';
   
   adoptionError: string = '';
@@ -102,11 +101,18 @@ export class Adoption implements OnInit {
       return matchType && matchAge && matchGender && matchTag;
     });
 
+    let result: any[] = [];
     if (this.activeTab === 'my-posts') {
-      return filtered.filter(pet => this.isOwner(pet));
+      result = filtered.filter(pet => this.isOwner(pet));
     } else {
-      return filtered.filter(pet => !this.isOwner(pet));
+      result = filtered.filter(pet => !this.isOwner(pet));
     }
+
+    return result.sort((a, b) => {
+      const aHasRequest = a.currentUserRequest ? 1 : 0;
+      const bHasRequest = b.currentUserRequest ? 1 : 0;
+      return bHasRequest - aHasRequest;
+    });
   }
 
   openPostModal() {
@@ -127,7 +133,7 @@ export class Adoption implements OnInit {
     this.showAdoptionDetails = false;
     this.adoptionError = '';
     this.adopterPhone = '';
-    this.adopterGovernorate = ''; // 👈 تصفير المحافظة عند فتح الكرت
+    this.adopterGovernorate = ''; 
     this.adopterDeliveryMethod = 'Delivery';
   }
 
@@ -140,7 +146,7 @@ export class Adoption implements OnInit {
   openAdoptionRequest() {
     this.adoptionError = '';
     this.adopterPhone = '';
-    this.adopterGovernorate = ''; // 👈 تصفير المحافظة عند فتح فورم الطلب
+    this.adopterGovernorate = ''; 
     this.adopterDeliveryMethod = 'Delivery';
     this.showAdoptionDetails = true;
   }
@@ -165,7 +171,6 @@ export class Adoption implements OnInit {
       return;
     }
 
-    // ✨ التحقق من قيام المستخدم باختيار المحافظة من القائمة
     if (!governorate) {
       this.adoptionError = 'Please select your governorate.';
       return;
@@ -178,11 +183,10 @@ export class Adoption implements OnInit {
 
     const userEmail = localStorage.getItem('userEmail') || '';
 
-    // إرسال البيانات المحدثة بالكامل شاملة الـ governorate إلى الـ API
     this.adoptionService.requestAdoption({
       petId: this.selectedPet.id,
       phoneNumber: phone,
-      governorate: governorate, // ✨ تمرير المحافظة هنا ليرسلها السيرفس للباك إند
+      governorate: governorate, 
       deliveryMethod: this.adopterDeliveryMethod,
       userEmail
     }).subscribe({
@@ -218,7 +222,7 @@ export class Adoption implements OnInit {
     this.selectedPet = null;
     this.showAdoptionDetails = false;
     this.adopterPhone = '';
-    this.adopterGovernorate = ''; // 👈 تصفير عند إغلاق واجهة النجاح
+    this.adopterGovernorate = ''; 
     this.adopterDeliveryMethod = 'Delivery';
     this.adoptionError = '';
   }
