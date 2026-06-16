@@ -15,7 +15,6 @@ with responsible adopters in a safe and trusted environment.
     </div>
 
     <div class="embedded-actions-zone">
-      <!-- تم ربط حدث النقر هنا وتشغيل دالة فتح المودال -->
       <button class="post-btn" (click)="handlePostPet()">+ Post Pet for Adoption</button>
     </div>
     </div>
@@ -125,10 +124,6 @@ with responsible adopters in a safe and trusted environment.
                 <div class="pet-overlay">
                     <h4>{{ pet.breed }}</h4>
                     <p>{{ formatAge(pet.ageYears) }} • {{ pet.type }} • {{ pet.gender }}</p>
-
-                    <div class="overlay-tags">
-                        <span *ngFor="let tag of pet.tags">{{ tag }}</span>
-                    </div>
 
                     <span class="view-details">View Details</span>
                 </div>
