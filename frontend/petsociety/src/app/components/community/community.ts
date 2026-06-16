@@ -26,6 +26,7 @@ export class Community implements OnInit, AfterViewChecked {
     private cdr: ChangeDetectorRef
   ) {}
 
+  searchQuery: string = '';
   newMessage: string = '';
   channels: any[] = [];
   messages: any[] = [];
@@ -38,6 +39,16 @@ export class Community implements OnInit, AfterViewChecked {
 
   ngAfterViewChecked() {
     this.scrollToBottom();
+  }
+
+  get filteredChannels() {
+    if (!this.searchQuery.trim()) {
+      return this.channels;
+    }
+    return this.channels.filter(channel => 
+      channel.name?.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+      channel.description?.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
   }
 
   loadChannels() {
@@ -171,6 +182,28 @@ export class Community implements OnInit, AfterViewChecked {
       },
       error: err => console.log(err)
     });
+  }
+
+  leaveChannel() {
+    if (!this.activeChannel) return;
+    
+    if (confirm(`Are you sure you want to leave ${this.activeChannel.name}?`)) {
+      this.communityService.leaveChannel(this.activeChannel.id).subscribe({
+        next: () => {
+          this.activeChannel.isJoined = false;
+          if (this.activeChannel.membersCount > 0) {
+            this.activeChannel.membersCount--;
+          }
+          this.cdr.detectChanges();
+        },
+        error: err => {
+          console.log('Error leaving channel:', err);
+          this.activeChannel.isJoined = false;
+          if (this.activeChannel.membersCount > 0) this.activeChannel.membersCount--;
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
 
   getUserIdFromToken(): any {

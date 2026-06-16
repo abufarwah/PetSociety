@@ -1,11 +1,15 @@
 <div class="community-page">
   <aside class="community-sidebar">
-    <input type="text" class="search-input" placeholder="Search channels..." />
+    <input 
+      type="text" 
+      class="search-input" 
+      placeholder="Search channels..." 
+      [(ngModel)]="searchQuery" />
 
     <div class="channel-list">
       <div
         class="channel"
-        *ngFor="let channel of channels"
+        *ngFor="let channel of filteredChannels"
         [class.active]="activeChannel?.id === channel.id"
         (click)="selectChannel(channel)">
         
@@ -24,8 +28,21 @@
 
   <section class="community-chat">
     <div class="chat-header" *ngIf="activeChannel">
-      <h5>{{ activeChannel.name }}</h5>
-      <p>{{ activeChannel.description }} • {{ activeChannel.membersCount }} members</p>
+      <div class="chat-header-main">
+        <div>
+          <h5>{{ activeChannel.name }}</h5>
+          <p>{{ activeChannel.description }} • {{ activeChannel.membersCount }} members</p>
+        </div>
+        
+        <button *ngIf="activeChannel.isJoined" class="leave-btn" (click)="leaveChannel()" title="Leave Channel">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Leave
+        </button>
+      </div>
     </div>
 
     <div class="chat-messages" #scrollContainer>

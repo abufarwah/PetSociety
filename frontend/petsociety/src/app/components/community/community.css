@@ -113,6 +113,34 @@
   color: #7c756e;
 }
 
+.chat-header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.leave-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid #f2ece2;
+  color: #a89480;
+  padding: 8px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.leave-btn:hover {
+  background: #fff5f5;
+  border-color: #fcdede;
+  color: #e06666;
+}
+
 .chat-messages {
   flex: 1;
   padding: 24px 30px;
