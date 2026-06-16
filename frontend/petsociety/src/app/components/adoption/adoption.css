@@ -262,34 +262,43 @@ select:focus {
 }
 
 .tabs-container {
-  margin-top: 10px;
-  margin-bottom: 30px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 40px auto 20px auto;
+  box-sizing: border-box;
 }
 
 .tabs-wrapper {
-  display: flex;
-  background-color: #f5eee6;
-  padding: 4px;
-  border-radius: 14px;
-  gap: 4px;
+  background: #f3ede4;
+  padding: 6px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: inset 0 2px 4px rgba(46, 37, 26, 0.04);
 }
-
 .tab-btn-nav {
-  background: none;
   border: none;
-  outline: none;
+  background: transparent;
   padding: 10px 24px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #6e6255;
+  font-size: 14px;
+  font-weight: 700;
+  color: #7a6e61;
+  border-radius: 50px;
   cursor: pointer;
-  border-radius: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-btn-nav i {
+  font-size: 14px;
+  color: #9c8e7e;
+  transition: color 0.25s ease;
 }
 
 .tab-btn-nav:hover {
@@ -297,25 +306,28 @@ select:focus {
 }
 
 .tab-btn-nav.active {
-  background-color: #ffffff;
+  background: #ffffff;
   color: #2e251a;
-  box-shadow: 0 4px 12px rgba(212, 195, 168, 0.2);
+  box-shadow: 0 4px 12px rgba(46, 37, 26, 0.08);
+}
+
+.tab-btn-nav.active i {
+  color: #b59473;
 }
 
 .tab-badge {
-  background-color: #eaddcd;
-  color: #2e251a;
-  font-size: 0.75rem;
+  background: #2e251a;
+  color: #ffffff;
+  font-size: 11px;
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 20px;
+  margin-left: 2px;
 }
 
 .tab-btn-nav.active .tab-badge {
-  background-color: #2e251a;
-  color: #ffffff;
+  background: #b59473;
 }
-
 .pets-section { margin-top: 10px; }
 .pets-grid {
   display: grid;

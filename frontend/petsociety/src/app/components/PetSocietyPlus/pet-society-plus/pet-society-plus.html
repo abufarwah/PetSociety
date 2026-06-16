@@ -82,6 +82,18 @@
 
     </div>
   </div>
+
+  <!-- Trust Banner -->
+  <div class="trust-banner-container container mt-5">
+    <div class="trust-banner">
+      <div class="trust-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="trust-content">
+        <h4 class="trust-title">14-Day Money-Back Guarantee</h4>
+        <p class="trust-desc">Not fully satisfied? Get a full refund within 14 days. Flexible cancellation at any time with just one click.</p>
+      </div>
+      <div class="trust-badge"><i class="fa-solid fa-lock"></i> Secure Checkout</div>
+    </div>
+  </div>
 </section>
 
 <div class="services-container">
@@ -122,6 +134,48 @@
 
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════
+     GIVE-BACK INITIATIVE BANNER
+     ═══════════════════════════════════════════ -->
+<div class="container give-back-container">
+  <div class="give-back-reminder">
+    <div class="give-back-reminder-icon">
+      <i class="fa-solid fa-hand-holding-heart"></i>
+    </div>
+    <div class="give-back-reminder-content">
+      <h3 class="give-back-reminder-title">Together We Make a Difference</h3>
+      <p class="give-back-reminder-desc">
+        A gentle reminder: <strong>20% of your Pet Society+ subscription</strong> goes directly toward funding adoption fees and supporting new pet parents. Thank you for giving back! 🐾
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ Accordion Section -->
+<div class="faq-container container">
+  <h2 class="section-title text-center">Frequently Asked Questions</h2>
+  <p class="section-description text-center mb-5">
+    Everything you need to know about our Pet Society+ subscription plans.
+  </p>
+
+  <div class="faq-accordion">
+    <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.active]="faq.isOpen">
+      <button class="faq-question" (click)="toggleFaq(i)">
+        <span>{{ faq.question }}</span>
+        <div class="faq-icon-wrapper">
+          <i class="fa-solid" [ngClass]="faq.isOpen ? 'fa-minus' : 'fa-plus'"></i>
+        </div>
+      </button>
+      <div class="faq-answer-wrapper" [style.maxHeight]="faq.isOpen ? '500px' : '0'">
+        <div class="faq-answer">
+          <p>{{ faq.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Login Required Modal -->
 <div class="modal-backdrop" *ngIf="showLoginModal" (click)="closeLoginModal()"></div>
 <div class="login-modal" *ngIf="showLoginModal">
