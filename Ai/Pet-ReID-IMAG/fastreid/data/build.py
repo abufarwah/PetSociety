@@ -8,9 +8,9 @@ import logging
 import os
 
 import torch
-from torch._six import string_classes
-from collections import Mapping
-
+# from torch._six import string_classes
+from collections.abc import Mapping
+from pet_id.config import add_retri_config
 from fastreid.config import configurable
 from fastreid.utils import comm
 from . import samplers
@@ -183,5 +183,5 @@ def fast_batch_collator(batched_inputs):
         return torch.tensor(batched_inputs, dtype=torch.float64)
     elif isinstance(elem, int):
         return torch.tensor(batched_inputs)
-    elif isinstance(elem, string_classes):
-        return batched_inputs
+    # elif isinstance(elem, string_classes):
+    #     return batched_inputs
