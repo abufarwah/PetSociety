@@ -41,6 +41,36 @@ export class CommunityService {
     );
   }
 
+  editMessage(messageId: number, newMessageText: string) {
+    const token = localStorage.getItem('token');
+
+    return this.http.put(
+      `${this.apiUrl}/CommunityMessages/Update`,
+      {
+        id: messageId,
+        messageText: newMessageText
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+  }
+
+  deleteMessage(messageId: number) {
+    const token = localStorage.getItem('token');
+
+    return this.http.delete(
+      `${this.apiUrl}/CommunityMessages/Delete?id=${messageId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+  }
+
   joinChannel(channelId: number) {
     const token = localStorage.getItem('token');
 

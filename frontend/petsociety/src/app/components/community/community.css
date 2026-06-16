@@ -1,8 +1,10 @@
 .community-page {
   display: flex;
-  height: calc(100vh - 110px);
+  /* تم تعديل الارتفاع لمنع التداخل والنزول تحت الهيدر الرئيسي للموقع */
+  height: calc(100vh - 80px); 
   background: #fdfdfd;
   overflow: hidden; 
+  position: relative;
 }
 
 .community-sidebar {
@@ -92,12 +94,14 @@
   flex-direction: column;
   background: #fcfbf9;
   position: relative;
+  height: 100%;
 }
 
 .chat-header {
   padding: 20px 30px;
   background: #ffffff;
   border-bottom: 1px solid #f6f3ed;
+  z-index: 2;
 }
 
 .chat-header h5 {
@@ -165,7 +169,21 @@
   width: 100%;
 }
 
+/* محاذاة رسائلكِ لليمين مع الحفاظ على مسافة جانبية متناسقة */
 .message.you {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+.message-bubble-wrapper {
+  position: relative;
+  max-width: 65%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.message.you .message-bubble-wrapper {
   flex-direction: row-reverse;
 }
 
@@ -173,8 +191,9 @@
   background: #ffffff;
   padding: 14px 20px;
   border-radius: 20px;
-  max-width: 65%;
+  width: 100%;
   border: 1px solid #f3eee6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .message.you .message-bubble {
@@ -187,6 +206,10 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 6px;
+}
+
+.message.you .message-header {
+  flex-direction: row-reverse;
 }
 
 .message-header strong {
@@ -206,6 +229,98 @@
   color: #332e2a;
   line-height: 1.5;
   word-break: break-word;
+  text-align: initial;
+}
+
+.message-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.message-bubble-wrapper:hover .message-actions {
+  opacity: 1;
+}
+
+.action-btn {
+  background: #ffffff;
+  border: 1px solid #efeae0;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #a39b92;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  color: #2c2724;
+  background: #faf8f5;
+  border-color: #d6cbb7;
+}
+
+.action-btn.delete:hover {
+  color: #e06666;
+  background: #fff5f5;
+  border-color: #fcdede;
+}
+
+.inline-edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+  min-width: 240px;
+}
+
+.inline-edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d6cbb7;
+  border-radius: 12px;
+  font-size: 14px;
+  outline: none;
+  background: #ffffff;
+}
+
+.inline-edit-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.edit-save-btn {
+  background: #d6b48c;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-save-btn:hover {
+  background: #c9a377;
+}
+
+.edit-cancel-btn {
+  background: transparent;
+  border: 1px solid #efeae0;
+  color: #7c756e;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.edit-cancel-btn:hover {
+  background: #faf8f5;
 }
 
 .chat-input-wrapper {

@@ -62,13 +62,36 @@
           </div>
         </div>
 
-        <div class="message-bubble">
-          <div class="message-header">
-            <strong>{{ (isMine(msg) || msg.userName === 'Batool Alsarairah' || msg.userName === 'You') ? 'You' : msg.userName }}</strong>
-            <span class="time">{{ msg.sentAt | date:'shortTime' }}</span>
+        <div class="message-bubble-wrapper">
+          <div class="message-bubble">
+            <div class="message-header">
+              <strong>{{ (isMine(msg) || msg.userName === 'Batool Alsarairah' || msg.userName === 'You') ? 'You' : msg.userName }}</strong>
+              <span class="time">{{ msg.sentAt | date:'shortTime' }}</span>
+            </div>
+            
+            <div *ngIf="editingMessageId !== msg.id">
+              <p>{{ msg.messageText }}</p>
+            </div>
+
+            <div *ngIf="editingMessageId === msg.id" class="inline-edit-container">
+              <input type="text" [(ngModel)]="editingText" (keyup.enter)="saveEdit(msg)" class="inline-edit-input" />
+              <div class="inline-edit-actions">
+                <button (click)="saveEdit(msg)" class="edit-save-btn">Save</button>
+                <button (click)="cancelEdit()" class="edit-cancel-btn">Cancel</button>
+              </div>
+            </div>
           </div>
-          <p>{{ msg.messageText }}</p>
+
+          <div *ngIf="(isMine(msg) || msg.userName === 'Batool Alsarairah' || msg.userName === 'You') && editingMessageId !== msg.id" class="message-actions">
+            <button (click)="startEdit(msg)" class="action-btn" title="Edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"></path></svg>
+            </button>
+            <button (click)="deleteMessage(msg.id)" class="action-btn delete" title="Delete">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            </button>
+          </div>
         </div>
+
       </div>
     </div>
 

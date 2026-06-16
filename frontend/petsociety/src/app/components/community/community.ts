@@ -33,6 +33,9 @@ export class Community implements OnInit, AfterViewChecked {
   activeChannel: any = null;
   currentUserId: any = this.getUserIdFromToken();
 
+  editingMessageId: number | null = null;
+  editingText: string = '';
+
   ngOnInit(): void {
     this.loadChannels();
   }
@@ -97,11 +100,9 @@ export class Community implements OnInit, AfterViewChecked {
     }
 
     this.messages = [];
-    console.log('LOADING MESSAGES FOR:', channelId);
 
     this.communityService.getMessages(channelId).subscribe({
       next: (res: any) => {
-        console.log('MESSAGES RESPONSE:', res);
         this.messages = Array.isArray(res) ? res : (res?.data ?? []);
         this.cdr.detectChanges();
       },
@@ -168,6 +169,52 @@ export class Community implements OnInit, AfterViewChecked {
         this.messages = this.messages.filter(m => m !== tempMsg);
       }
     });
+  }
+
+  startEdit(msg: any) {
+    this.editingMessageId = msg.id;
+    this.editingText = msg.messageText;
+  }
+
+  cancelEdit() {
+    this.editingMessageId = null;
+    this.editingText = '';
+  }
+
+  saveEdit(msg: any) {
+    const trimmed = this.editingText.trim();
+    if (!trimmed || trimmed === msg.messageText) {
+      this.cancelEdit();
+      return;
+    }
+
+    this.communityService.editMessage(msg.id, trimmed).subscribe({
+      next: () => {
+        msg.messageText = trimmed;
+        this.cancelEdit();
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        console.log(err);
+        msg.messageText = trimmed; 
+        this.cancelEdit();
+      }
+    });
+  }
+
+  deleteMessage(msgId: number) {
+    if (confirm('Are you sure you want to delete this message?')) {
+      this.communityService.deleteMessage(msgId).subscribe({
+        next: () => {
+          this.messages = this.messages.filter(m => m.id !== msgId);
+          this.cdr.detectChanges();
+        },
+        error: err => {
+          console.log(err);
+          this.messages = this.messages.filter(m => m.id !== msgId);
+        }
+      });
+    }
   }
 
   joinChannel() {
