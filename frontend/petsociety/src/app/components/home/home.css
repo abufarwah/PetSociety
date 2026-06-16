@@ -142,6 +142,278 @@ body {
 }
 
 
+
+
+/* ═══════════════════════════════════════════════════════════
+   PET SOCIETY+ PROMO BANNER (Home Page - New Design)
+   ═══════════════════════════════════════════════════════════ */
+.plus-promo-banner {
+  background: linear-gradient(135deg, #fef9f2 0%, #faecd6 50%, #f4dcb8 100%);
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.plus-promo-bg-elements {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.promo-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(200, 169, 120, 0.25);
+  filter: blur(50px);
+}
+.promo-circle-1 {
+  width: 400px; height: 400px;
+  top: -100px; left: -100px;
+}
+.promo-circle-2 {
+  width: 600px; height: 600px;
+  bottom: -200px; right: -100px;
+  background: rgba(195, 155, 110, 0.3);
+}
+
+.plus-promo-bg-elements span {
+  position: absolute;
+  font-size: 80px;
+  opacity: 0.15;
+  color: #c8a978;
+  animation: float-paw 8s ease-in-out infinite alternate;
+}
+.plus-promo-bg-elements span:nth-child(3) { top: 10%; left: 15%; animation-delay: 0s; font-size: 60px; }
+.plus-promo-bg-elements span:nth-child(4) { bottom: 20%; right: 40%; animation-delay: 2s; font-size: 90px; }
+.plus-promo-bg-elements span:nth-child(5) { top: 40%; right: 10%; animation-delay: 4s; font-size: 50px; }
+
+@keyframes float-paw {
+  0% { transform: translateY(0) rotate(-10deg); }
+  100% { transform: translateY(-20px) rotate(10deg); }
+}
+
+.plus-promo-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.plus-promo-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  flex: 1;
+}
+
+/* Donation badge */
+.plus-promo-discount-badge {
+  flex-shrink: 0;
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c39b6e, #e8b87d);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 6px rgba(195, 155, 110, 0.3), 0 0 0 14px rgba(195, 155, 110, 0.15);
+  animation: badge-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 6px rgba(195, 155, 110, 0.3), 0 0 0 14px rgba(195, 155, 110, 0.15); }
+  50% { box-shadow: 0 0 0 10px rgba(195, 155, 110, 0.4), 0 0 0 22px rgba(195, 155, 110, 0.2); }
+}
+
+.plus-promo-percent {
+  font-size: 34px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+}
+
+.plus-promo-percent sup {
+  font-size: 16px;
+  vertical-align: super;
+}
+
+.plus-promo-off {
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.plus-promo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.plus-promo-eyebrow {
+  font-size: 15px;
+  font-weight: 700;
+  color: #a67c52;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.plus-promo-title {
+  font-size: clamp(26px, 3.5vw, 38px);
+  font-weight: 800;
+  color: #222;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.plus-promo-title em {
+  font-style: normal;
+  background: linear-gradient(120deg, #c39b6e, #a67c52);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.plus-promo-subtitle {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 480px;
+}
+
+.plus-promo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #c39b6e, #e8b87d);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(195, 155, 110, 0.4);
+  transition: all 0.35s ease;
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+.plus-promo-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(195, 155, 110, 0.6);
+  color: #fff;
+}
+
+.plus-promo-btn .bi-arrow-right-short {
+  font-size: 22px;
+  transition: transform 0.3s ease;
+}
+
+.plus-promo-btn:hover .bi-arrow-right-short {
+  transform: translateX(4px);
+}
+
+/* Right: Stacked Images */
+.plus-promo-right {
+  flex-shrink: 0;
+}
+
+.plus-promo-img-stack {
+  position: relative;
+  width: 440px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.promo-img {
+  position: absolute;
+  width: 240px;
+  height: 290px;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  /* Organic, snappy ease out back */
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+  border: 4px solid #fff;
+  cursor: pointer;
+  transform-origin: bottom center; /* Fanning from the bottom */
+}
+
+/* Default state: slightly tucked in, looking like a hand of cards */
+.promo-img-1 {
+  transform: translateX(-55px) translateY(15px) rotate(-8deg);
+  z-index: 1;
+}
+
+.promo-img-3 {
+  transform: translateX(55px) translateY(15px) rotate(8deg);
+  z-index: 2;
+}
+
+.promo-img-2 {
+  transform: translateX(0) translateY(0) rotate(0deg);
+  z-index: 5; /* Main prominent center */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Hovering the stack spreads them beautifully */
+.plus-promo-img-stack:hover .promo-img-1 {
+  transform: translateX(-140px) translateY(20px) rotate(-16deg);
+}
+
+.plus-promo-img-stack:hover .promo-img-3 {
+  transform: translateX(140px) translateY(20px) rotate(16deg);
+}
+
+.plus-promo-img-stack:hover .promo-img-2 {
+  transform: translateY(-20px) scale(1.05) rotate(0deg);
+}
+
+/* Hovering a specific image */
+.plus-promo-img-stack .promo-img-1:hover {
+  transform: translateX(-140px) translateY(-50px) scale(1.15) rotate(0deg) !important;
+  z-index: 20 !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  border-color: #fdfbf8;
+}
+
+.plus-promo-img-stack .promo-img-2:hover {
+  transform: translateX(0) translateY(-50px) scale(1.15) rotate(0deg) !important;
+  z-index: 20 !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  border-color: #fdfbf8;
+}
+
+.plus-promo-img-stack .promo-img-3:hover {
+  transform: translateX(140px) translateY(-50px) scale(1.15) rotate(0deg) !important;
+  z-index: 20 !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  border-color: #fdfbf8;
+}
+
+/* Dim non-hovered cards to add depth and focus to the hovered one */
+.plus-promo-img-stack:hover .promo-img:not(:hover) {
+  opacity: 0.6;
+  filter: blur(1px);
+}
+
+@media (max-width: 768px) {
+  .plus-promo-inner { flex-direction: column; }
+  .plus-promo-right { display: none; }
+  .plus-promo-left { flex-direction: column; align-items: center; text-align: center; }
+  .plus-promo-btn { align-self: center; }
+  .plus-promo-subtitle { max-width: 100%; }
+}
+
 /* ═══════════════════════════════════════════════════════════
    SHARED SECTION HELPERS
    ═══════════════════════════════════════════════════════════ */
@@ -575,10 +847,10 @@ body {
    ═══════════════════════════════════════════════════════════ */
 .sponsor-section-light {
   padding: 120px 0;
-  background: linear-gradient(to bottom, #fef9f2 0%, #ffffff 100%);
+  background: linear-gradient(to right, #fdf6ec 0%, #ffffff 50%, #fdf6ec 100%);
   position: relative;
   overflow: hidden;
-  border-top: 4px solid #c8a978;
+  border-top: none;
 }
 
 /* Background Decorative Shapes */
@@ -667,10 +939,16 @@ body {
 }
 
 .sponsor-title-accent-light { 
-  color: #f0f4f8; /* Footer background color */
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.15); /* Keep it readable */
+  background: linear-gradient(135deg, #00bcd4 0%, #009688 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: 'Outfit', sans-serif;
   font-weight: 800;
-  -webkit-text-stroke: 1px #aab8c2;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  display: inline-block;
+  padding-right: 5px; /* Prevent clipping of italic/bold edges */
 }
 
 .sponsor-subtitle-light {
