@@ -55,201 +55,11 @@ export class Adoption implements OnInit {
     'Trained',
   ];
 
-  // pets = [
-  //   {
-  //     breed: 'Toy Poodle',
-  //     type: 'Dog',
-  //     age: 'Adult',
-  //     ageYears: 3,
-  //     gender: 'Female',
-  //     image: 'd3.jpg',
-  //     tags: ['Calm', 'Friendly'],
-  //   },
-  //   {
-  //     breed: 'Australian Shepherd',
-  //     type: 'Dog',
-  //     age: 'Baby',
-  //     ageYears: 0.8,
-  //     gender: 'Male',
-  //     image: 'd2.jpg',
-  //     tags: ['Smart', 'Active'],
-  //   },
-  //   {
-  //     breed: 'Domestic Shorthair',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 0.7,
-  //     gender: 'Female',
-  //     image: 'c2.jpg',
-  //     tags: ['Playful', 'Curious'],
-  //   },
-  //   {
-  //     breed: 'Boston Terrier',
-  //     type: 'Dog',
-  //     age: 'Baby',
-  //     ageYears: 1,
-  //     gender: 'Male',
-  //     image: 'd1.jpg',
-  //     tags: ['Friendly', 'Playful', 'Security'],
-  //   },
-  //   {
-  //     breed: 'Domestic Shorthair',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 0.5,
-  //     gender: 'Female',
-  //     image: 'c1.jpg',
-  //     tags: ['Cute', 'Calm'],
-  //   },
-  //   {
-  //     breed: 'Scottish Fold',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 1,
-  //     gender: 'Female',
-  //     image: 'cat1.jpeg',
-  //     tags: ['Quiet', 'Sweet'],
-  //   },
-  //   {
-  //     breed: 'Golden Retriever',
-  //     type: 'Dog',
-  //     age: 'Baby',
-  //     ageYears: 0.9,
-  //     gender: 'Male',
-  //     image: 'dog1.jpeg',
-  //     tags: ['Friendly', 'Loyal'],
-  //   },
-  //   {
-  //     breed: 'Syrian Hamster',
-  //     type: 'Hamster',
-  //     age: 'Baby',
-  //     ageYears: 0.4,
-  //     gender: 'Female',
-  //     image: 'ham1.jpeg',
-  //     tags: ['Small', 'Cute'],
-  //   },
-  //   {
-  //     breed: 'Budgerigar',
-  //     type: 'Bird',
-  //     age: 'Young',
-  //     ageYears: 2,
-  //     gender: 'Male',
-  //     image: 'bird1.jpeg',
-  //     tags: ['Colorful', 'Friendly', 'Security'],
-  //   },
-  //   {
-  //     breed: 'Scottish Fold',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 0.8,
-  //     gender: 'Female',
-  //     image: 'cat2.jpeg',
-  //     tags: ['Playful', 'Cute'],
-  //   },
-  //   {
-  //     breed: 'Domestic Rabbit',
-  //     type: 'Rabbit',
-  //     age: 'Adult',
-  //     ageYears: 4,
-  //     gender: 'Female',
-  //     image: 'rabbit2.jpeg',
-  //     tags: ['Calm', 'Soft'],
-  //   },
-  //   {
-  //     breed: 'Goldfish',
-  //     type: 'Fish',
-  //     age: 'Adult',
-  //     ageYears: 1,
-  //     gender: 'Male',
-  //     image: 'fish.jpeg',
-  //     tags: ['Quiet', 'Easy Care'],
-  //   },
-  //   {
-  //     breed: 'Golden Retriever',
-  //     type: 'Dog',
-  //     age: 'Baby',
-  //     ageYears: 0.8,
-  //     gender: 'Female',
-  //     image: 'dog2.jpeg',
-  //     tags: ['Playful', 'Friendly'],
-  //   },
-  //   {
-  //     breed: 'Red-Eared Slider',
-  //     type: 'Turtle',
-  //     age: 'Baby',
-  //     ageYears: 0.7,
-  //     gender: 'Male',
-  //     image: 'turt1.jpeg',
-  //     tags: ['Quiet', 'Unique'],
-  //   },
-  //   {
-  //     breed: 'Scottish Fold',
-  //     type: 'Cat',
-  //     age: 'Adult',
-  //     ageYears: 3,
-  //     gender: 'Male',
-  //     image: 'cat4.jpeg',
-  //     tags: ['Cute', 'Lazy'],
-  //   },
-  //   {
-  //     breed: 'Budgerigar', 
-  //     type: 'Bird',
-  //     age: 'Adult',
-  //     ageYears: 2,
-  //     gender: 'Female',
-  //     image: 'bird2.jpeg',
-  //     tags: ['Talkative', 'Cute'],
-  //   },
-  //   {
-  //     breed: 'Wild Rabbit',
-  //     type: 'Rabbit',
-  //     age: 'Adult',
-  //     ageYears: 2,
-  //     gender: 'Male',
-  //     image: 'r4.jpg',
-  //     tags: ['Fast', 'Alert'],
-  //   },
-  //   {
-  //     breed: 'European Hamster',
-  //     type: 'Hamster',
-  //     age: 'Adult',
-  //     ageYears: 1.5,
-  //     gender: 'Female',
-  //     image: 'h1.jpg',
-  //     tags: ['Rare', 'Cute'],
-  //   },
-  //   {
-  //     breed: 'British Shorthair',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 0.9,
-  //     gender: 'Female',
-  //     image: 'c5.jpg',
-  //     tags: ['Fluffy', 'Calm'],
-  //   },
-  //   {
-  //     breed: 'British Shorthair',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 1,
-  //     gender: 'Male',
-  //     image: 'cat5.jpeg',
-  //     tags: ['Cute', 'Quiet'],
-  //   },
-  //   {
-  //     breed: 'Mixed Hamster',
-  //     type: 'Hamster',
-  //     age: 'Baby',
-  //     ageYears: 0.5,
-  //     gender: 'Male',
-  //     image: 'ham3.jpeg',
-  //     tags: ['Small', 'Cute', 'Active'],
-  //   },
-  // ];
 
   pets: any[] = [];
   filteredPetsList: any[] = [];
-
+adoptionRequests: any[] = [];
+isLoading = true;
 
   onTypeChange(event: Event) {
     const select = event.target as HTMLSelectElement;
@@ -279,8 +89,45 @@ export class Adoption implements OnInit {
     this.selectedGender = select.value;
   }
 
+  // get filteredPets() {
+  //   return this.pets.filter((pet) => {
+  //     const matchType = this.selectedType === 'All' || pet.type === this.selectedType;
+  //     const matchAge = this.selectedAge === 'All' || pet.age === this.selectedAge;
+  //     const matchGender = this.selectedGender === 'All' || pet.gender === this.selectedGender;
+  //     const matchTag = this.selectedTag === 'All' || pet.tags.includes(this.selectedTag);
+
+  //     return matchType && matchAge && matchGender && matchTag;
+  //   });
+  // }
+
+  // get filteredPets() {
+  //   // 1. أولاً: نقوم بتصفية الحيوانات بناءً على الفلاتر المختارة كما هي مسبقاً
+  //   const filtered = this.pets.filter((pet) => {
+  //     const matchType = this.selectedType === 'All' || pet.type === this.selectedType;
+  //     const matchAge = this.selectedAge === 'All' || pet.age === this.selectedAge;
+  //     const matchGender = this.selectedGender === 'All' || pet.gender === this.selectedGender;
+  //     const matchTag = this.selectedTag === 'All' || pet.tags.includes(this.selectedTag);
+
+  //     return matchType && matchAge && matchGender && matchTag;
+  //   });
+
+  //   // 2. ثانياً: نقوم بترتيب النتيجة بحيث تظهر حيوانات المستخدم الحالي في البداية أولاً
+  //   return filtered.sort((a, b) => {
+  //     const aIsOwner = this.isOwner(a);
+  //     const bIsOwner = this.isOwner(b);
+
+  //     if (aIsOwner && !bIsOwner) return -1; // إذا كان (a) ملكي، يرتفع للأعلى
+  //     if (!aIsOwner && bIsOwner) return 1;  // إذا كان (b) ملكي، يرتفع للأعلى
+  //     return 0;                             // إذا كانا متساويين، يبقيان كما هما
+  //   });
+  // }
+
+  // متغير جديد لتحديد التبويب المفتوح (الافتراضي هو كل الحيوانات)
+  activeTab: 'all' | 'my-posts' = 'all';
+
   get filteredPets() {
-    return this.pets.filter((pet) => {
+    // 1. أولاً: التصفية العادية بناءً على الفلاتر (النوع، العمر، الجنس، التاجز)
+    const filtered = this.pets.filter((pet) => {
       const matchType = this.selectedType === 'All' || pet.type === this.selectedType;
       const matchAge = this.selectedAge === 'All' || pet.age === this.selectedAge;
       const matchGender = this.selectedGender === 'All' || pet.gender === this.selectedGender;
@@ -288,7 +135,18 @@ export class Adoption implements OnInit {
 
       return matchType && matchAge && matchGender && matchTag;
     });
+
+    // 2. ثانياً: الفصل الكامل بناءً على التبويب المختار (الجهة)
+    if (this.activeTab === 'my-posts') {
+      // إذا كان واقفاً على تبويب منشوراتي -> اظهر فقط الحيوانات التي أملكها
+      return filtered.filter(pet => this.isOwner(pet));
+    } else {
+      // إذا كان واقفاً على كل الحيوانات -> اظهر حيوانات الآخرين فقط لعدم اللخبطة
+      return filtered.filter(pet => !this.isOwner(pet));
+    }
   }
+
+
 
   openPostModal() {
     this.editingPet = null;
@@ -300,13 +158,25 @@ export class Adoption implements OnInit {
     this.editingPet = null;
   }
 
+  // openPet(pet: any) {
+  //   this.selectedPet = pet;
+  //   this.showAdoptionDetails = false;
+  //   this.adoptionError = '';
+  //   this.adopterPhone = '';
+  //   this.adopterDeliveryMethod = 'Delivery';
+  // }
   openPet(pet: any) {
-    this.selectedPet = pet;
-    this.showAdoptionDetails = false;
-    this.adoptionError = '';
-    this.adopterPhone = '';
-    this.adopterDeliveryMethod = 'Delivery';
+  if (this.hasExistingRequest(pet)) {
+    // نمنع فتح الكرت نهائياً لحماية النظام والـ UI من العجقة والتكرار
+    return; 
   }
+  this.selectedPet = pet;
+  this.showAdoptionDetails = false;
+  this.adoptionError = '';
+  this.adopterPhone = '';
+  this.adopterDeliveryMethod = 'Delivery';
+}
+
 
   closePet() {
     this.selectedPet = null;
@@ -326,7 +196,46 @@ export class Adoption implements OnInit {
     return this.jordanPhonePattern.test(normalized);
   }
 
-  submitAdoptionRequest() {
+  // submitAdoptionRequest() {
+  //   this.adoptionError = '';
+  //   const phone = this.adopterPhone.trim();
+
+  //   if (!phone) {
+  //     this.adoptionError = 'Please provide your phone number to continue.';
+  //     return;
+  //   }
+
+  //   if (!this.validatePhoneNumber(phone)) {
+  //     this.adoptionError = 'Enter a valid Jordanian phone number: 077, 078, 079 or +9627 followed by 7 digits.';
+  //     return;
+  //   }
+
+  //   if (!this.selectedPet) {
+  //     this.adoptionError = 'Unable to submit request. Please reopen the pet details and try again.';
+  //     return;
+  //   }
+
+  //   const userEmail = localStorage.getItem('userEmail') || '';
+
+  //   this.adoptionService.requestAdoption({
+  //     petId: this.selectedPet.id,
+  //     phoneNumber: phone,
+  //     deliveryMethod: this.adopterDeliveryMethod,
+  //     userEmail
+  //   }).subscribe({
+  //     next: () => {
+  //       this.showConfirm = true;
+  //       this.successType = 'adopt';
+  //       this.showAdoptionDetails = false;
+  //       this.selectedPet = null;
+  //     },
+  //     error: (err) => {
+  //       console.error('Adoption request failed:', err);
+  //       this.adoptionError = 'Something went wrong while sending your request.';
+  //     }
+  //   });
+  // }
+submitAdoptionRequest() {
     this.adoptionError = '';
     const phone = this.adopterPhone.trim();
 
@@ -357,7 +266,9 @@ export class Adoption implements OnInit {
         this.showConfirm = true;
         this.successType = 'adopt';
         this.showAdoptionDetails = false;
-        this.selectedPet = null;
+        
+        // تحديث مصفوفة الطلبات محلياً فوراً لمنع ظهور زر Adopt Now مجدداً دون الحاجة لريفرش كامل
+        this.loadAdoptionRequests(); 
       },
       error: (err) => {
         console.error('Adoption request failed:', err);
@@ -365,7 +276,6 @@ export class Adoption implements OnInit {
       }
     });
   }
-
   startAdoption() {
   this.showAdoptionDetails = true;
 }
@@ -561,6 +471,24 @@ addPet(pet: any) {
     this.openPet(pet);
   }
 
+  // ngOnInit() {
+  //   // Initialize auth state immediately and subscribe to changes.
+  //   this.isLoggedIn = this.auth.isLoggedIn$.value;
+  //   this.isAdmin = this.auth.isAdmin$.value;
+
+  //   this.auth.isLoggedIn$.subscribe((v: boolean) => {
+  //     this.isLoggedIn = v;
+  //     this.currentUserId = this.getCurrentUserId();
+  //   });
+  //   this.auth.isAdmin$.subscribe((v: boolean) => {
+  //     this.isAdmin = v;
+  //   });
+
+  //   this.currentUserId = this.getCurrentUserId();
+  //   this.loadPets();
+
+  //    this.loadAdoptionRequests();
+  // }
   ngOnInit() {
     // Initialize auth state immediately and subscribe to changes.
     this.isLoggedIn = this.auth.isLoggedIn$.value;
@@ -575,10 +503,122 @@ addPet(pet: any) {
     });
 
     this.currentUserId = this.getCurrentUserId();
-    this.loadPets();
+    
+    // الحل هنا: نقوم أولاً بجلب الطلبات، وحين تكتمل نقوم بجلب الحيوانات لتفادي أي تضارب
+    this.loadAdoptionRequests();
   }
 
-  loadPets() {
+  // loadAdoptionRequests() {
+  //   this.adoptionService.getAll().subscribe({
+  //     next: (res: any) => {
+  //       this.adoptionRequests = res || [];
+        
+  //       // بعد أن نضمن وصول كل الطلبات، نقوم بتحميل الحيوانات
+  //       this.loadPets(); 
+        
+  //       // إجبار أنجولار على تحديث الواجهة فوراً
+  //       this.cdr.detectChanges();
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load adoption requests', err);
+  //       // حتى لو فشل جلب الطلبات، نقوم بتحميل الحيوانات كخيار احتياطي لكي لا تتعطل الصفحة
+  //       this.loadPets();
+
+  //     }
+  //   });
+  // }
+  loadAdoptionRequests() {
+    this.isLoading = true; // تفعيل التحميل عند البدء
+    this.adoptionService.getAll().subscribe({
+      next: (res: any) => {
+        this.adoptionRequests = res || [];
+        // بعد أن نضمن وصول كل الطلبات، نقوم بتحميل الحيوانات
+        this.loadPets(); 
+      },
+      error: (err) => {
+        console.error('Failed to load adoption requests', err);
+        // حتى لو فشل جلب الطلبات، نقوم بتحميل الحيوانات كخيار احتياطي لكي لا تتعطل الصفحة
+        this.loadPets();
+      }
+    });
+  }
+
+  // loadPets() {
+  //   const backendBase = 'https://localhost:44371';
+
+  //   this.petService.getPets().subscribe({
+  //     next: (res) => {
+  //       this.pets = res
+  //         .map((pet: any) => {
+  //           const imageUrl = pet.image || pet.imageUrl || pet.ImageUrl || '';
+  //           const image = imageUrl.startsWith('/images/')
+  //             ? backendBase + imageUrl
+  //             : imageUrl;
+
+  //           return {
+  //             ...pet,
+  //             id: this.getPetId(pet) ?? pet.id ?? pet.Id,
+  //             userId: pet.userId ?? pet.UserId ?? null,
+  //             status: pet.status || pet.Status || 'Available',
+  //             image,
+  //             age: pet.age || pet.ageCategory || pet.AgeCategory,
+  //             tags: pet.tags || pet.Tags || [],
+  //             isAvailable: pet.isAvailable !== false && pet.IsAvailable !== false
+  //           };
+  //         })
+  //         .filter((pet: any) => pet.isAvailable);
+
+  //       this.cdr.detectChanges();
+  //     },
+  //     error: (err) => {
+  //       console.error('Error loading pets:', err);
+  //     }
+  //   });
+  // }
+
+
+// loadPets() {
+//   const backendBase = 'https://localhost:44371';
+
+//   this.petService.getPets().subscribe({
+//     next: (res) => {
+//       this.pets = res
+//         .map((pet: any) => {
+//           const imageUrl = pet.image || pet.imageUrl || pet.ImageUrl || '';
+//           const image = imageUrl.startsWith('/images/') ? backendBase + imageUrl : imageUrl;
+//           const petId = this.getPetId(pet) ?? pet.id ?? pet.Id;
+
+//           // الاحترافية هنا: نربط الطلب والملكية بالحيوان فوراً عند جلب البيانات
+//           const ownRequest = this.adoptionRequests.find(r => r.petId === petId);
+//           const isOwner = pet.userId === this.currentUserId;
+
+//           return {
+//             ...pet,
+//             id: petId,
+//             userId: pet.userId ?? pet.UserId ?? null,
+//             status: pet.status || pet.Status || 'Available',
+//             image,
+//             age: pet.age || pet.ageCategory || pet.AgeCategory,
+//             tags: pet.tags || pet.Tags || [],
+//             isAvailable: pet.isAvailable !== false && pet.IsAvailable !== false,
+            
+//             // متغيرات جديدة تريحنا في الـ HTML
+//             isCurrentUserOwner: isOwner,
+//             currentUserRequest: ownRequest, // يخزن الطلب الخاص بهذا الحيوان إن وجد
+//             ownerMessage: isOwner && ownRequest ? this.getOwnerAdoptionMessage({ id: petId }) : ''
+//           };
+//         })
+//         .filter((pet: any) => pet.isAvailable);
+
+//       this.cdr.detectChanges();
+//     },
+//     error: (err) => {
+//       console.error('Error loading pets:', err);
+//     }
+//   });
+// }
+
+loadPets() {
     const backendBase = 'https://localhost:44371';
 
     this.petService.getPets().subscribe({
@@ -586,30 +626,95 @@ addPet(pet: any) {
         this.pets = res
           .map((pet: any) => {
             const imageUrl = pet.image || pet.imageUrl || pet.ImageUrl || '';
-            const image = imageUrl.startsWith('/images/')
-              ? backendBase + imageUrl
-              : imageUrl;
+            const image = imageUrl.startsWith('/images/') ? backendBase + imageUrl : imageUrl;
+            const petId = this.getPetId(pet) ?? pet.id ?? pet.Id;
+
+            const ownRequest = this.adoptionRequests.find(r => r.petId === petId);
+            const isOwner = pet.userId === this.currentUserId;
 
             return {
               ...pet,
-              id: this.getPetId(pet) ?? pet.id ?? pet.Id,
+              id: petId,
               userId: pet.userId ?? pet.UserId ?? null,
               status: pet.status || pet.Status || 'Available',
               image,
               age: pet.age || pet.ageCategory || pet.AgeCategory,
               tags: pet.tags || pet.Tags || [],
-              isAvailable: pet.isAvailable !== false && pet.IsAvailable !== false
+              isAvailable: pet.isAvailable !== false && pet.IsAvailable !== false,
+              
+              isCurrentUserOwner: isOwner,
+              currentUserRequest: ownRequest, 
+              ownerMessage: isOwner && ownRequest ? this.getOwnerAdoptionMessage({ id: petId }) : ''
             };
           })
           .filter((pet: any) => pet.isAvailable);
 
+        // هنا نقوم بإنهاء حالة التحميل بعد التأكد التام من تحميل كرت الحيوانات والطلبات معاً
+        this.isLoading = false; 
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading pets:', err);
+        this.isLoading = false; // إنهاء التحميل حتى عند الخطأ
+        this.cdr.detectChanges();
       }
     });
   }
+
+
+//   isOwner(pet: any): boolean {
+//   return pet.userId === this.currentUserId;
+// }
+
+isOwner(pet: any): boolean {
+  return pet.isCurrentUserOwner || false;
+}
+
+getAdoptionRequest(pet: any) {
+  return this.adoptionRequests?.find(r => r.petId === pet.id);
+}
+
+getOwnerAdoptionMessage(pet: any): string {
+  const req = this.adoptionRequests.find(r => r.petId === pet.id);
+
+  if (!req) return '';
+
+  switch (req.status) {
+    case 'Pending':
+      return '⏳ Pending';
+    case 'Approved':
+      return '✅ Approved';
+    case 'Rejected':
+      return '❌ Rejected';
+    default:
+      return '';
+  }
+}
+
+// loadAdoptionRequests() {
+//   this.adoptionService.getAll().subscribe({
+//     next: (res: any) => {
+//       this.adoptionRequests = res;
+//     },
+//     error: (err) => {
+//       console.error('Failed to load adoption requests', err);
+//     }
+//   });
+// }
+
+// getMyListingsCount(): number {
+//   // تقوم بحساب عدد الحيوانات التي تملكها الخصائص الحالية للمستخدم
+//   return this.pets.filter(pet => pet.isCurrentUserOwner).length;
+// }
+getMyListingsCount(): number {
+  return this.pets.filter(pet => this.isOwner(pet)).length;
+}
+
+hasExistingRequest(pet: any): boolean {
+  if (!pet || !pet.currentUserRequest) return false;
+  const status = pet.currentUserRequest.status?.toLowerCase();
+  return status === 'pending' || status === 'approved';
+}
 
 }
 
