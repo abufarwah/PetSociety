@@ -1,4 +1,4 @@
-using Petsociety.DTOs.AdoptionRequests;
+﻿using Petsociety.DTOs.AdoptionRequests;
 using Petsociety.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -306,6 +306,51 @@ namespace Petsociety.Controllers
 
             _dbContext.SaveChanges();
             return Ok();
+        }
+
+        [Authorize] // يجب أن يكون المستخدم مسجلاً لمعرفة حالته مع الحيوانات
+        [HttpGet("GetPetsWithUserStatus")]
+        public IActionResult GetPetsWithUserStatus()
+        {
+            try
+            {
+                // 1. جلب الـ UserId الخاص بالمستخدم الحالي من الـ Token
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    return Unauthorized();
+                }
+                long currentUserId = long.Parse(userIdClaim);
+
+                // 2. ربط الحيوانات بجدول طلبات التبني الخاصة بهذا المستخدم فقط
+                var result = (from pet in _dbContext.Pets
+                              join req in _dbContext.AdoptionRequests.Where(r => r.UserId == currentUserId)
+                              on pet.Id equals req.PetId into reqGroup
+                              from userRequest in reqGroup.DefaultIfEmpty()
+                              select new
+                              {
+                                  Id = pet.Id,
+                                  Breed = pet.Breed,
+                                  Type = pet.Type,
+                                  AgeYears = pet.AgeYears,
+                                  Gender = pet.Gender,
+                                  Image = pet.ImageUrl,
+                                  Tags = pet.Tags, // تأكد أن الـ Tags ممتدة كـ List أو Array بناءً على الـ Model عندك
+                                  IsAvailable = pet.IsAvailable,
+                                  UserId = pet.UserId, // افتراضاً أن جدول الـ Pet يحتوي على UserId لصاحب الحيوان
+
+                                  // الشروط الجديدة التي طلبها الفرونت إند
+                                  IsOwner = pet.UserId == currentUserId,
+                                  HasApplied = userRequest != null,
+                                  AdoptionStatus = userRequest != null ? userRequest.Status : "None"
+                              }).ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }
