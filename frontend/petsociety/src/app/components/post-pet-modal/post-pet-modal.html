@@ -4,124 +4,191 @@
 
   <!-- Header -->
   <div class="modal-header">
-    <h3>{{ pet?.id ? 'Edit Pet' : 'Post Pet for Adoption' }}</h3>
+    <div class="header-title-zone">
+      <span class="pulse-dot"></span>
+      <h3>{{ pet?.id ? 'Edit Pet Profile' : 'Post Pet for Adoption' }}</h3>
+    </div>
     <button class="close-btn" (click)="close.emit()">×</button>
   </div>
 
   <!-- Body -->
   <div class="modal-body">
 
-    <div class="form-group">
-  <label>Breed *</label>
-
-  <input
-    type="text"
-    [(ngModel)]="petName"
-    name="petName"
-    #petNameRef="ngModel"
-  />
-
-  <small class="error"
-    *ngIf="(petNameRef.touched || isSubmitted) && !petName">
-    Breed is required
-  </small>
-</div>
-
-
-    <div class="form-row">
-      <div class="form-group">
-  <label>Type *</label>
-
-  <select
-    [(ngModel)]="petType"
-    name="petType"
-    #petTypeRef="ngModel">
-    <option value="">Select type</option>
-    <option>Dog</option>
-    <option>Cat</option>
-    <option>Rabbit</option>
-    <option>Hamster</option>
-    <option>Bird</option>
-    <option>Turtle</option>
-    <option>Fish</option>
-  </select>
-
-  <small class="error"
-    *ngIf="(petTypeRef.touched || isSubmitted) && !petType">
-    Type is required
-  </small>
-</div>
-
+    <!-- SECTION 1: PET PRIMARY INFO -->
+    <div class="form-section-card">
+      <h4 class="section-title">🐾 Pet Information</h4>
       
+      <div class="form-group">
+        <label>Breed / Name *</label>
+        <input
+          type="text"
+          [(ngModel)]="petName"
+          name="petName"
+          placeholder="e.g. Golden Retriever, Cute Cat..."
+          #petNameRef="ngModel"
+        />
+        <small class="error" *ngIf="(petNameRef.touched || isSubmitted) && !petName">
+          Breed or name is required
+        </small>
+      </div>
 
-     <div class="form-group">
-  <label>Exact Age (years) *</label>
+      <div class="form-row grid-three">
+        <div class="form-group">
+          <label>Type *</label>
+          <select [(ngModel)]="petType" name="petType" #petTypeRef="ngModel">
+            <option value="">Select type</option>
+            <option>Dog</option>
+            <option>Cat</option>
+            <option>Rabbit</option>
+            <option>Hamster</option>
+            <option>Bird</option>
+            <option>Turtle</option>
+            <option>Fish</option>
+          </select>
+          <small class="error" *ngIf="(petTypeRef.touched || isSubmitted) && !petType">
+            Required
+          </small>
+        </div>
 
-  <input
-    type="number"
-    min="0"
-    step="0.1"
-    [(ngModel)]="petAgeYears"
-    name="petAgeYears"
-    #petAgeYearsRef="ngModel" />
+        <div class="form-group">
+          <label>Age (years) *</label>
+          <input
+            type="number"
+            min="0"
+            step="0.1"
+            [(ngModel)]="petAgeYears"
+            name="petAgeYears"
+            placeholder="e.g. 1.5"
+            #petAgeYearsRef="ngModel" />
+          <small class="error" *ngIf="(petAgeYearsRef.touched || isSubmitted) && petAgeYears === null">
+            Required
+          </small>
+        </div>
 
-  <small class="error"
-    *ngIf="(petAgeYearsRef.touched || isSubmitted) && petAgeYears === null">
-    Exact age is required
-  </small>
-</div>
+        <div class="form-group">
+          <label>Gender *</label>
+          <select [(ngModel)]="petGender" name="petGender" #petGenderRef="ngModel">
+            <option value="">Select gender</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+          <small class="error" *ngIf="(petGenderRef.touched || isSubmitted) && !petGender">
+            Required
+          </small>
+        </div>
+      </div>
 
       <div class="form-group">
-  <label>Gender *</label>
-
-  <select
-    [(ngModel)]="petGender"
-    name="petGender"
-    #petGenderRef="ngModel">
-    <option value="">Select gender</option>
-    <option>Male</option>
-    <option>Female</option>
-  </select>
-
-  <small class="error"
-    *ngIf="(petGenderRef.touched || isSubmitted) && !petGender">
-    Gender is required
-  </small>
-</div>
-
+        <label>Description & Health Status</label>
+        <textarea 
+          placeholder="Tell us about this pet, personality, and medical history..." 
+          [(ngModel)]="petDescription" 
+          name="petDescription">
+        </textarea>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label>Description (Health Status)</label>
-      <textarea placeholder="Tell us about this pet and their health status..." [(ngModel)]="petDescription" name="petDescription"></textarea>
+    <!-- SECTION 2: MEDIA & TAGS -->
+    <div class="form-section-card">
+      <h4 class="section-title">📸 Media & Features</h4>
+      
+      <div class="form-group">
+        <label>Pet Image *</label>
+        <div class="custom-file-upload">
+          <input
+            type="file"
+            id="pet-file-input"
+            accept="image/*"
+            (change)="onImageSelected($event)" />
+          <label for="pet-file-input" class="upload-dropzone">
+            <span class="upload-icon">🖼️</span>
+            <span class="upload-text">{{ selectedImageFile ? selectedImageFile.name : 'Choose or Drop Pet Image' }}</span>
+          </label>
+        </div>
+
+        <div class="image-preview-container" *ngIf="imagePreview">
+          <img [src]="imagePreview" class="preview-img" alt="Pet preview" />
+        </div>
+
+        <small class="error" *ngIf="isSubmitted && !imagePreview">
+          Please upload an image for the pet
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Select Character Tags</label>
+        <div class="tags-grid-wrapper">
+          <span
+            class="tag-capsule"
+            *ngFor="let tag of availableTags"
+            [class.active]="selectedTags.includes(tag)"
+            (click)="toggleTag(tag)">
+            {{ tag }}
+          </span>
+        </div>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label>Pet Image *</label>
+    <!-- SECTION 3: LOGISTICS & CONTACT (القسم الجديد المضاف ذكياً للآدمين) -->
+    <div class="form-section-card logistics-card">
+      <h4 class="section-title">🚚 Handover & Contact Information</h4>
+      
+      <div class="form-group">
+        <label>Owner Phone Number *</label>
+        <input
+          type="tel"
+          [(ngModel)]="ownerPhone"
+          name="ownerPhone"
+          placeholder="e.g. 07XXXXXXXX"
+          #ownerPhoneRef="ngModel"
+        />
+        <small class="error" *ngIf="(ownerPhoneRef.touched || isSubmitted) && !isValidJordanPhone()">
+          Valid Jordanian phone number is required (07XXXXXXXX)
+        </small>
+      </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        (change)="onImageSelected($event)" />
+      <div class="form-group">
+        <label>How will you transfer the pet to us? *</label>
+        <div class="handover-options-tabs">
+          <button 
+            type="button" 
+            class="handover-tab-btn" 
+            [class.active]="handoverMethod === 'Clinic Pickup'" 
+            (click)="handoverMethod = 'Clinic Pickup'">
+            🏥 Clinic Drop-off
+          </button>
+          <button 
+            type="button" 
+            class="handover-tab-btn" 
+            [class.active]="handoverMethod === 'Delivery'" 
+            (click)="handoverMethod = 'Delivery'">
+            🚚 Request Delivery Pickup
+          </button>
+        </div>
+      </div>
 
-      <img
-        *ngIf="imagePreview"
-        [src]="imagePreview"
-        class="preview-img" />
-
-      <small class="error" *ngIf="isSubmitted && !selectedImageFile && !pet?.id">
-        Please upload an image
-      </small>
-    </div>
-
-    <div class="tags">
-      <span
-        class="tag"
-        *ngFor="let tag of availableTags"
-        [class.active]="selectedTags.includes(tag)"
-        (click)="toggleTag(tag)">
-        {{ tag }}
-      </span>
+      <!-- تظهر قائمة المحافظات وتصبح إجبارية فقط في حال طلب التوصيل من موقع الناشر -->
+      <div class="form-group animate-fade" *ngIf="handoverMethod === 'Delivery'">
+        <label>Your Governorate *</label>
+        <select [(ngModel)]="ownerGovernorate" name="ownerGovernorate">
+          <option value="">Select your Governorate</option>
+          <option>Amman</option>
+          <option>Zarqa</option>
+          <option>Irbid</option>
+          <option>Balqa</option>
+          <option>Madaba</option>
+          <option>Aqaba</option>
+          <option>Mafraq</option>
+          <option>Jerash</option>
+          <option>Ajloun</option>
+          <option>Karak</option>
+          <option>Tafilah</option>
+          <option>Ma'an</option>
+        </select>
+        <small class="error" *ngIf="isSubmitted && handoverMethod === 'Delivery' && !ownerGovernorate">
+          Please select your governorate for shipping setup
+        </small>
+      </div>
     </div>
 
   </div>
@@ -130,9 +197,8 @@
   <div class="modal-footer">
     <button class="cancel-btn" (click)="close.emit()">Cancel</button>
     <button class="submit-btn" (click)="submitPet()">
-      {{ pet?.id ? 'Update Pet' : 'Post Pet' }}
+      {{ pet?.id ? 'Update Listing' : 'Publish for Review' }}
     </button>
   </div>
 
 </div>
-
