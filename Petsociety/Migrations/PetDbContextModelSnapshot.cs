@@ -90,6 +90,32 @@ namespace Petsociety.Migrations
                     b.ToTable("CommunityChannels");
                 });
 
+            modelBuilder.Entity("Petsociety.Model.CommunityMember", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ChannelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChannelId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CommunityMembers");
+                });
+
             modelBuilder.Entity("Petsociety.Model.CommunityMessage", b =>
                 {
                     b.Property<long>("Id")
@@ -189,10 +215,6 @@ namespace Petsociety.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<string>("ReporterName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -204,19 +226,8 @@ namespace Petsociety.Migrations
                     b.Property<int?>("ReporterUserId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ReunitedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Species")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -398,6 +409,39 @@ namespace Petsociety.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "admin@gmail.com",
+                            FullName = "Admin",
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsRestricted = false,
+                            PasswordHash = "$2a$11$mQ4C6CANn5zxz4gqw5ldlu6jnpDBvuTe8i0K0rI2w8owp6UFE46cq",
+                            Phone = "000",
+                            Role = "Admin"
+                        });
+                });
+
+            modelBuilder.Entity("Petsociety.Model.CommunityMember", b =>
+                {
+                    b.HasOne("Petsociety.Model.CommunityChannel", "Channel")
+                        .WithMany()
+                        .HasForeignKey("ChannelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Petsociety.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Channel");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Petsociety.Model.CommunityMessage", b =>

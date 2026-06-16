@@ -1,31 +1,30 @@
-<!-- HERO -->
-<section class="adoption-hero container">
-    <div class="hero-content">
-        <div>
-            <h1>Find Your Perfect Companion</h1>
-            <p>Browse our selection of lovable pets waiting for their forever
-                homes</p>
-            <p class="verification-note">✓ All pets are verified before adoption
-                to ensure safety and well-being</p>
-        </div>
-
-        <!-- <button class="post-btn" (click)="openPostModal()">
-            + Post Pet for Adoption
-        </button> -->
-        <button class="post-btn" (click)="handlePostPet()">
-            + Post Pet for Adoption
-        </button>
+<section class="adoption-hero">
+  <div class="floating-hero-card">
+    
+    <div class="hero-center-content">
+      <div class="verification-note">
+        <span class="pulse-dot"></span>
+        ✓ All pets are verified before adoption to ensure safety and well-being
+      </div>
+      
+      <h1>Find Your Perfect Companion</h1>
+      <p>
+        Browse verified pets looking for loving homes and connect
+        with responsible adopters in a safe and trusted environment.
+      </p>
     </div>
+
+    <div class="embedded-actions-zone">
+      <button class="post-btn" (click)="handlePostPet()">+ Post Pet for Adoption</button>
+    </div>
+  </div>
 </section>
 
-<!-- FILTERS -->
 <section class="filters-bar">
-
     <div class="container filters-content">
         <div class="filters-left">
             <span class="filter-label">Filters:</span>
 
-            <!-- Type -->
             <label>
                 Type:
                 <select (change)="onTypeChange($event)">
@@ -40,7 +39,6 @@
                 </select>
             </label>
 
-            <!-- Age -->
             <label>
                 Age:
                 <select (change)="onAgeChange($event)">
@@ -51,7 +49,6 @@
                 </select>
             </label>
 
-            <!-- Gender -->
             <label>
                 Gender:
                 <select (change)="onGenderChange($event)">
@@ -63,63 +60,72 @@
         </div>
     </div>
 
-    <!-- TAGS -->
     <div class="container tags-filter">
         <span class="filter-label">Tags:</span>
 
-        <button
-            class="tag-btn"
-            [class.active]="selectedTag === 'All'"
-            (click)="selectTag('All')">
+        <button class="tag-btn" [class.active]="selectedTag === 'All'" (click)="selectTag('All')">
             All
         </button>
 
-        <button
-            class="tag-btn"
-            *ngFor="let tag of availableTags"
-            [class.active]="selectedTag === tag"
-            (click)="selectTag(tag)">
+        <button class="tag-btn" *ngFor="let tag of availableTags" [class.active]="selectedTag === tag" (click)="selectTag(tag)">
             {{ tag }}
         </button>
     </div>
-
 </section>
 
-<!-- PETS GRID -->
-<section class="pets-section container">
+<div *ngIf="isLoading" class="spinner-container">
+    <div class="custom-spinner"></div>
+    <p class="loading-text">Loading Sweet Companions...</p>
+</div>
+
+<div class="container tabs-container" *ngIf="isLoggedIn && !isLoading">
+    <div class="tabs-wrapper">
+        <button class="tab-btn-nav" [class.active]="activeTab === 'all'" (click)="activeTab = 'all'">
+            🐾 Explore Pets
+        </button>
+        <button class="tab-btn-nav" [class.active]="activeTab === 'my-posts'" (click)="activeTab = 'my-posts'">
+            📋 My Listings 
+            <span class="tab-badge" *ngIf="pets.length">{{ getMyListingsCount() }}</span>
+        </button>
+    </div>
+</div>
+
+<section *ngIf="!isLoading" class="pets-section container">
     <div class="pets-grid">
 
         <div class="pet-card" *ngFor="let pet of filteredPets">
-<div class="post-actions" *ngIf="isLoggedIn">
-            <div class="menu-wrapper">
-                <button class="menu-toggle" type="button" title="Manage pet"
-                        (click)="toggleOptionsMenu(pet.id, $event)">
+            
+            <div class="post-actions" *ngIf="isLoggedIn && canManagePet(pet)">
+                <div class="menu-wrapper">
+                    <button class="menu-toggle" type="button" title="Manage pet" (click)="toggleOptionsMenu(pet.id, $event)">
                         ⋯
                     </button>
-                    <div class="menu-dropdown"
-                        *ngIf="optionsMenuOpenId === pet.id"
-                        (click)="$event.stopPropagation()">
-                        <button class="menu-item" type="button"
-                            (click)="editPet(pet)">Edit</button>
-                        <button class="menu-item delete" type="button"
-                            (click)="deletePet(pet)">Delete</button>
+                    <div class="menu-dropdown" *ngIf="optionsMenuOpenId === pet.id" (click)="$event.stopPropagation()">
+                        <button class="menu-item" type="button" (click)="editPet(pet)">
+                            <i class="fa-solid fa-pen-to-square" style="font-size: 13px; opacity: 0.8;"></i>
+                            Edit
+                        </button>
+                        
+                        <div class="menu-divider"></div>
+                        
+                        <button class="menu-item delete" type="button" (click)="deletePet(pet)">
+                            <i class="fa-solid fa-trash-can" style="font-size: 13px;"></i>
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div class="pet-img" (click)="openPet(pet)">
-                <img [src]="pet.image" alt />
+                <img [src]="pet.image" alt="Pet Image" />
 
                 <div class="pet-overlay">
                     <h4>{{ pet.breed }}</h4>
-                    <p>{{ formatAge(pet.ageYears) }} • {{ pet.type }} • {{
-                        pet.gender }}</p>
+                    <p>{{ formatAge(pet.ageYears) }} • {{ pet.type }} • {{ pet.gender }}</p>
 
-                    <div class="overlay-tags">
-                        <span *ngFor="let tag of pet.tags">{{ tag }}</span>
-                    </div>
-
-                    <span class="view-details">View Details</span>
+                    <span class="view-details" *ngIf="!pet.isCurrentUserOwner && !pet.currentUserRequest">
+                        View Details
+                    </span>
                 </div>
             </div>
 
@@ -141,141 +147,135 @@
                 </div>
 
                 <div class="pet-card-actions">
-                    <button class="adopt-btn" (click)="handleAdoption(pet)">
-                        Adopt Now
-                    </button>
-                </div>
+                    <div *ngIf="pet.isCurrentUserOwner" class="adopt-status owner-listing">
+                        {{ pet.ownerMessage || 'Listed by You' }}
+                    </div>
 
+                    <ng-container *ngIf="!pet.isCurrentUserOwner">
+                        <button *ngIf="!pet.currentUserRequest" class="adopt-btn" (click)="handleAdoption(pet)">
+                            Adopt Now
+                        </button>
+
+                        <div *ngIf="pet.currentUserRequest" class="adopt-status" [ngClass]="pet.currentUserRequest.status?.toLowerCase()">
+                            Your Request: {{ pet.currentUserRequest.status }}
+                        </div>
+                    </ng-container>
+                </div>
             </div>
 
         </div>
-
     </div>
 </section>
 
-<!-- Backdrop  -->
 <div class="modal-backdrop" *ngIf="selectedPet" (click)="closePet()"></div>
 
-<!-- Modal -->
 <div class="pet-modal" *ngIf="selectedPet">
-    <button class="modal-close" type="button" aria-label="Close"
-        (click)="closePet()">×</button>
-    <!-- <img [src]="selectedPet.image" /> -->
+    <button class="modal-close" type="button" aria-label="Close" (click)="closePet()">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+    
     <div class="image-wrapper">
         <img [src]="selectedPet.image" alt="{{ selectedPet.breed }}">
     </div>
 
-    <div class="modal-content scrollable-content">
-        <h2>{{ selectedPet.breed }}</h2>
+    <div class="modal-content-wrapper">
+        <div class="modal-content scrollable-content">
+            <h2 class="pet-title">{{ selectedPet.breed }}</h2>
 
-        <p class="modal-meta">
-            {{ formatAge(selectedPet.ageYears) }} • {{ selectedPet.type }} • {{
-            selectedPet.gender }}
-        </p>
-
-        <div class="tags">
-            <span *ngFor="let tag of selectedPet.tags">{{ tag }}</span>
-        </div>
-
-        <p class="modal-desc">
-            {{ selectedPet.description || ('This lovely ' +
-            selectedPet.type.toLowerCase() + ' is looking for a forever home')
-            }}
-        </p>
-
-        <div class="small-request-box" *ngIf="showAdoptionDetails">
-            <div class="request-header">
-                <h3>Adoption Request</h3>
-                <p>Enter your phone number and choose pickup or delivery.</p>
+            <div class="modal-meta">
+                <span>{{ formatAge(selectedPet.ageYears) }}</span>
+                <span>•</span>
+                <span>{{ selectedPet.type }}</span>
+                <span>•</span>
+                <span>{{ selectedPet.gender }}</span>
             </div>
 
-            <div class="request-row">
-                <label>Phone Number *</label>
-                <!-- <input
-              type="tel"
-              [(ngModel)]="adopterPhone"
-              placeholder="0775601359 or +962775601359"
-            />
-            <small class="hint-text">Use 077/078/079 or +9627 followed by 8 digits.</small> -->
-                <input
-                    type="tel"
-                    [(ngModel)]="adopterPhone"
-                    placeholder="Enter phone number" />
-                <small class="hint-text">
-                    Example: 07XXXXXXXX or +9627XXXXXXXX
-                </small>
+            <div class="tags">
+                <span *ngFor="let tag of selectedPet.tags">
+                    <i class="fa-solid fa-heart" style="font-size: 10px; margin-right: 4px; color: #b59473;"></i>
+                    {{ tag }}
+                </span>
             </div>
 
-            <div class="request-row">
-                <label>Delivery Option *</label>
-                <div class="delivery-options">
-                    <button
-                        type="button"
-                        [class.active]="adopterDeliveryMethod === 'Delivery'"
-                        (click)="adopterDeliveryMethod = 'Delivery'">
-                        Delivery
+            <div class="modal-section-title">About this pet</div>
+            <p class="modal-desc">
+                {{ selectedPet.description || ('This lovely ' + selectedPet.type.toLowerCase() + ' is looking for a forever home.') }}
+            </p>
+
+            <div class="small-request-box" *ngIf="showAdoptionDetails">
+                <div class="request-header">
+                    <h3>Adoption Request</h3>
+                    <p>Enter your details and choose pickup or delivery.</p>
+                </div>
+
+                <div class="request-row">
+                    <label>Phone Number *</label>
+                    <input type="tel" [(ngModel)]="adopterPhone" placeholder="Enter phone number" />
+                    <small class="hint-text">Example: 07XXXXXXXX or +9627XXXXXXXX</small>
+                </div>
+
+                <div class="request-row">
+                    <label>Delivery Option *</label>
+                    <div class="delivery-options">
+                        <button type="button" [class.active]="adopterDeliveryMethod === 'Delivery'" (click)="adopterDeliveryMethod = 'Delivery'">
+                            Delivery
+                        </button>
+                        <button type="button" [class.active]="adopterDeliveryMethod === 'Clinic Pickup'" (click)="adopterDeliveryMethod = 'Clinic Pickup'">
+                            Clinic Pickup
+                        </button>
+                    </div>
+                </div>
+
+                <div class="request-row dynamic-fade" *ngIf="adopterDeliveryMethod === 'Delivery'">
+                    <label>Governorate *</label>
+                    <select class="modal-select" [(ngModel)]="adopterGovernorate">
+                        <option value="" disabled selected>Select your governorate</option>
+                        <option value="Amman">Amman</option>
+                        <option value="Zarqa">Zarqa</option>
+                        <option value="Irbid">Irbid</option>
+                        <option value="Aqaba">Aqaba</option>
+                        <option value="Salt">Al-Salt</option>
+                        <option value="Madaba">Madaba</option>
+                        <option value="Mafraq">Mafraq</option>
+                        <option value="Jerash">Jerash</option>
+                        <option value="Ajloun">Ajloun</option>
+                        <option value="Karak">Al-Karak</option>
+                        <option value="Tafilah">At-Tafilah</option>
+                        <option value="Ma'an">Ma'an</option>
+                    </select>
+                </div>
+
+                <div class="error-message" *ngIf="adoptionError">
+                    {{ adoptionError }}
+                </div>
+
+                <div class="request-actions">
+                    <button class="primary-btn" (click)="submitAdoptionRequest()">
+                        Submit Request
                     </button>
-                    <button
-                        type="button"
-                        [class.active]="adopterDeliveryMethod === 'Clinic Pickup'"
-                        (click)="adopterDeliveryMethod = 'Clinic Pickup'">
-                        Clinic Pickup
+                    <button class="secondary-btn" (click)="closeAdoptionRequest()">
+                        Close
                     </button>
                 </div>
             </div>
-
-            <div class="error-message" *ngIf="adoptionError">
-                {{ adoptionError }}
-            </div>
-
-            <!-- <div class="request-actions">
-                <button class="adopt-btn" (click)="submitAdoptionRequest()">
-                    Submit Request
-                </button>
-                <button class="close-btn" (click)="closeAdoptionRequest()">
-                    Cancel
-                </button>
-            </div> -->
-            <div class="request-actions">
-                <button class="primary-btn" (click)="submitAdoptionRequest()">
-                    Submit Request
-                </button>
-
-                <button class="secondary-btn" (click)="closeAdoptionRequest()">
-                    Close
-                </button>
-            </div>
         </div>
 
-        <!-- <div class="modal-actions" *ngIf="!showAdoptionDetails">
-            <button class="adopt-btn" (click)="confirmAdoption()">
-                Request Adoption
-            </button>
-
-            <button class="close-btn" (click)="closePet()">
-                Close
-            </button>
-        </div> -->
         <div class="adoption-start" *ngIf="!showAdoptionDetails">
             <button class="req-btn" (click)="startAdoption()">
                 Request Adoption
             </button>
-
         </div>
-
     </div>
 </div>
+
 <div class="confirm-modal" *ngIf="showConfirm">
     <div class="confirm-box">
-
         <h3 *ngIf="successType === 'add'">
             Pet Added Successfully <i class="fa-solid fa-paw"></i>
         </h3>
-
         <h3 *ngIf="successType === 'edit'">
             Pet Updated Successfully <i class="fa-solid fa-paw"></i>
         </h3>
-
         <h3 *ngIf="successType === 'adopt'">
             Request Sent <i class="fa-solid fa-paw"></i>
         </h3>
@@ -283,19 +283,14 @@
         <p *ngIf="successType === 'add'">
             Your pet has been added to the adoption list.
         </p>
-
         <p *ngIf="successType === 'edit'">
             Your pet has been updated successfully.
         </p>
-
         <p *ngIf="successType === 'adopt'">
-            Your adoption request for
-            <strong>{{ selectedPet?.breed }}</strong>
-            has been sent successfully.
+            Your adoption request for <strong>{{ selectedPet?.breed }}</strong> has been sent successfully.
         </p>
 
         <button (click)="closeConfirm()">OK</button>
-
     </div>
 </div>
 

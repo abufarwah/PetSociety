@@ -23,6 +23,7 @@ namespace Petsociety.Model
         // ── Community feature ─────────────────────────────────────────────────
         public DbSet<CommunityChannel> CommunityChannels { get; set; } = null!;
         public DbSet<CommunityMessage> CommunityMessages { get; set; } = null!;
+        public DbSet<CommunityMember> CommunityMembers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +47,31 @@ namespace Petsociety.Model
 
             modelBuilder.Entity<CommunityMessage>()
                 .HasIndex(m => m.ChannelId);
+
+            modelBuilder.Entity<User>().HasData(
+    new User
+    {
+        Id = 1,
+        FullName = "Admin",
+        Email = "admin@gmail.com",
+        Phone = "000",
+        //PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+        PasswordHash = "$2a$11$mQ4C6CANn5zxz4gqw5ldlu6jnpDBvuTe8i0K0rI2w8owp6UFE46cq", // Pre-hashed password for "Admin@123"
+        Role = "Admin",
+        IsActive = true,
+        IsDeleted = false
+    }
+);
+            modelBuilder.Entity<CommunityMember>()
+    .HasOne(x => x.Channel)
+    .WithMany()
+    .HasForeignKey(x => x.ChannelId);
+
+            modelBuilder.Entity<CommunityMember>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
         }
+
     }
 }

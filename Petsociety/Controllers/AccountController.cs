@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Petsociety.DTOs.Account;
 using Petsociety.Model;
 using System.Security.Claims;
@@ -168,7 +169,7 @@ namespace Petsociety.Controllers
             {
                 var userId = GetUserId();
 
-                var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
+                var user = _dbContext.Users.AsNoTracking().FirstOrDefault(u => u.Id == userId);
 
                 if (user == null)
                     return NotFound("User not found");
@@ -184,8 +185,8 @@ namespace Petsociety.Controllers
                 };
 
                 var adoptedPets = (
-                    from req in _dbContext.AdoptionRequests
-                    join pet in _dbContext.Pets
+                    from req in _dbContext.AdoptionRequests.AsNoTracking()
+                    join pet in _dbContext.Pets.AsNoTracking()
                         on req.PetId equals pet.Id
                     where req.UserId == user.Id
                           && req.Status.ToLower() == "approved"
@@ -198,9 +199,13 @@ namespace Petsociety.Controllers
                     }
                 ).ToList();
 
+                var subscriptionCount = _dbContext.Subscriptions
+                    .AsNoTracking()
+                    .Count(s => s.UserId == user.Id && s.IsActive);
+
                 var stats = new AccountStatsDto
                 {
-                    SubscriptionsCount = 0,
+                    SubscriptionsCount = subscriptionCount,
                     AdoptedCount = adoptedPets.Count
                 };
 

@@ -22,6 +22,13 @@ export class PostPetModalComponent implements OnChanges {
   petDescription: string = '';
   isSubmitted = false;
 
+  // الحقول اللوجستية الجديدة المضافة للناشر والآدمين
+  ownerPhone: string = '';
+  handoverMethod: 'Delivery' | 'Clinic Pickup' = 'Clinic Pickup';
+  ownerGovernorate: string = '';
+
+  private readonly jordanPhonePattern = /^(?:\+9627|07)(?:7|8|9)\d{7}$/;
+
   availableTags: string[] = [
     'Vaccinated',
     'Friendly',
@@ -49,6 +56,10 @@ export class PostPetModalComponent implements OnChanges {
     }
   }
 
+  isValidJordanPhone(): boolean {
+    return this.jordanPhonePattern.test(this.ownerPhone);
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['pet']) {
       if (this.pet) {
@@ -68,6 +79,12 @@ export class PostPetModalComponent implements OnChanges {
     this.selectedTags = pet.tags ? [...pet.tags] : [];
     this.selectedImageFile = null;
     this.imagePreview = pet.image || pet.imageUrl || '';
+    
+    // تحميل الحقول المخزنة سابقاً عند التعديل
+    this.ownerPhone = pet.ownerPhone || '';
+    this.handoverMethod = pet.handoverMethod || 'Clinic Pickup';
+    this.ownerGovernorate = pet.ownerGovernorate || '';
+    
     this.isSubmitted = false;
   }
 
@@ -80,6 +97,9 @@ export class PostPetModalComponent implements OnChanges {
     this.selectedTags = [];
     this.selectedImageFile = null;
     this.imagePreview = null;
+    this.ownerPhone = '';
+    this.handoverMethod = 'Clinic Pickup';
+    this.ownerGovernorate = '';
     this.isSubmitted = false;
   }
 
@@ -105,12 +125,15 @@ export class PostPetModalComponent implements OnChanges {
 
     const isEditing = !!this.pet?.id;
 
+    // شروط التحقق الشاملة بما فيها رقم الهاتف، ونوع التسليم والمحافظة الإلزامية في حال التوصيل
     if (
       !this.petName ||
       !this.petType ||
       this.petAgeYears === null ||
       !this.petGender ||
-      (!this.selectedImageFile && !isEditing)
+      (!this.imagePreview && !isEditing) ||
+      !this.isValidJordanPhone() ||
+      (this.handoverMethod === 'Delivery' && !this.ownerGovernorate)
     ) {
       return;
     }
@@ -129,7 +152,12 @@ export class PostPetModalComponent implements OnChanges {
       image: this.imagePreview,
       imageFile: this.selectedImageFile,
       tags: this.selectedTags,
-      isAvailable: true
+      isAvailable: true,
+      
+      // إرسال البيانات المضافة حديثاً للـ Backend والـ Admin
+      ownerPhone: this.ownerPhone,
+      handoverMethod: this.handoverMethod,
+      ownerGovernorate: this.handoverMethod === 'Delivery' ? this.ownerGovernorate : 'Clinic'
     };
 
     this.petCreated.emit(newPet);

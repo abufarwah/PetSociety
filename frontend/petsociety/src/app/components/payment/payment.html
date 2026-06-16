@@ -6,7 +6,6 @@
     <p class="text-center mb-5">Complete your subscription to PetSociety+</p>
 
     <div class="row g-4">
-      <!-- Left: Package Selection -->
       <div class="col-lg-7">
         <div class="payment-section">
           <h3 class="section-title mb-4">1. Select Your Package</h3>
@@ -30,7 +29,6 @@
           </div>
         </div>
 
-        <!-- Payment Form -->
         <div class="payment-section mt-4">
           <h3 class="section-title mb-4">2. Payment Information</h3>
 
@@ -42,7 +40,6 @@
               {{ paymentError }}
             </div>
 
-            <!-- Card Number -->
             <div class="mb-3">
               <label class="form-label">Card Number</label>
               <input
@@ -65,7 +62,6 @@
               </div>
             </div>
 
-            <!-- Cardholder Name -->
             <div class="mb-3">
               <label class="form-label">Cardholder Name</label>
               <input
@@ -87,7 +83,6 @@
               </div>
             </div>
 
-            <!-- Expiry & CVV -->
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label">Expiry Date</label>
@@ -132,7 +127,6 @@
               </div>
             </div>
 
-            <!-- Billing Address -->
             <h4 class="section-subtitle mt-4 mb-3">Billing Address</h4>
 
             <div class="mb-3">
@@ -175,19 +169,17 @@
               </div>
             </div>
 
-            <!-- Submit Button  -->
             <button
               type="submit"
-              class="btn btn-primary w-100 pay-btn d-none d-lg-block"
+              class="btn btn-primary w-100 pay-btn d-none d-lg-block mt-4"
               [disabled]="!selectedPackage || paymentForm.invalid || isSubmitting">
               <i class="fa fa-lock me-2"></i>
-              {{ isSubmitting ? 'Processing...' : 'Pay $' + (selectedPackage?.price || 0) + '/month' }}
+              {{ isSubmitting ? 'Processing...' : 'Pay $' + total + '/month' }}
             </button>
           </form>
         </div>
       </div>
 
-      <!-- Right: Order Summary -->
       <div class="col-lg-5">
         <div class="payment-section summary-card sticky-top">
           <h3 class="section-title mb-4">Order Summary</h3>
@@ -234,10 +226,9 @@
               </p>
             </div>
 
-            <!-- Pay Button -->
             <button
               type="button"
-              class="btn btn-primary w-100 pay-btn d-lg-none mt-3"
+              class="btn btn-primary w-100 pay-btn d-lg-none mt-4"
               [disabled]="!selectedPackage || paymentForm.invalid || isSubmitting"
               (click)="processPayment()">
               <i class="fa fa-lock me-2"></i>
@@ -254,18 +245,18 @@
   </div>
 </div>
 
-<!-- Success Modal -->
-<div class="modal-backdrop" *ngIf="showSuccess" (click)="closeSuccess()"></div>
-<div class="success-modal" *ngIf="showSuccess">
-  <div class="success-content">
-    <div class="success-icon">
-      <i class="fa-solid fa-paw"></i>
+<div *ngIf="showSuccess" class="modal-wrapper-fixed">
+  <div class="modal-backdrop-custom" (click)="closeSuccess()"></div>
+  <div class="success-modal-box">
+    <div class="success-content">
+      <div class="success-icon">
+        <i class="fa-solid fa-paw"></i>
+      </div>
+      <h2>Payment Successful!</h2>
+      <p>
+        Your subscription to <strong>{{ selectedPackage?.name }}</strong> has been activated successfully.
+      </p>
+      <button class="btn btn-success-confirm" (click)="closeSuccess(); resetForm()">OK</button>
     </div>
-    <h2>Payment Successful! </h2>
-    <p>
-      Your subscription to <strong>{{ selectedPackage?.name }}</strong> has been activated successfully.
-    </p>
-    <button class="btn" (click)="closeSuccess(); resetForm()" >OK</button>
   </div>
 </div>
-
