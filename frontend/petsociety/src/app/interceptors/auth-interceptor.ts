@@ -62,18 +62,14 @@
 // }
 
 import { HttpInterceptorFn } from '@angular/common/http';
-
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // 1. جلب التوكن من الـ LocalStorage
   const token = localStorage.getItem('token');
-
   console.log('--- AuthInterceptor triggered! ---');
-
   if (token) {
     // 2. تنظيف التوكن من علامات الاقتباس الزائدة ""
     const cleanToken = token.replace(/^"(.*)"$/, '$1');
     console.log('Injecting clean token into headers...');
-
     // 3. عمل نسخة من الطلب وحقن ترويسة المصادقة
     req = req.clone({
       setHeaders: {
@@ -83,7 +79,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   } else {
     console.warn('No token found in localStorage!');
   }
-
   // 4. تمرير الطلب للباك إيند
   return next(req);
-};
+}; 

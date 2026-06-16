@@ -27,8 +27,12 @@ export class Adoption implements OnInit {
   selectedAge: string = 'All';
   selectedGender: string = 'All';
   selectedTag: string = 'All';
+  
+  // حقول الطلب
   adopterPhone: string = '';
+  adopterGovernorate: string = ''; // ✨ تعريف متغير المحافظة الجديد هنا
   adopterDeliveryMethod: 'Delivery' | 'Clinic Pickup' = 'Delivery';
+  
   adoptionError: string = '';
   isLoggedIn = false;
   isAdmin = false;
@@ -43,7 +47,6 @@ export class Adoption implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-
   availableTags: string[] = [
     'Vaccinated',
     'Friendly',
@@ -55,201 +58,11 @@ export class Adoption implements OnInit {
     'Trained',
   ];
 
-  // pets = [
-  //   {
-  //     breed: 'Toy Poodle',
-  //     type: 'Dog',
-  //     age: 'Adult',
-  //     ageYears: 3,
-  //     gender: 'Female',
-  //     image: 'd3.jpg',
-  //     tags: ['Calm', 'Friendly'],
-  //   },
-  //   {
-  //     breed: 'Australian Shepherd',
-  //     type: 'Dog',
-  //     age: 'Baby',
-  //     ageYears: 0.8,
-  //     gender: 'Male',
-  //     image: 'd2.jpg',
-  //     tags: ['Smart', 'Active'],
-  //   },
-  //   {
-  //     breed: 'Domestic Shorthair',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 0.7,
-  //     gender: 'Female',
-  //     image: 'c2.jpg',
-  //     tags: ['Playful', 'Curious'],
-  //   },
-  //   {
-  //     breed: 'Boston Terrier',
-  //     type: 'Dog',
-  //     age: 'Baby',
-  //     ageYears: 1,
-  //     gender: 'Male',
-  //     image: 'd1.jpg',
-  //     tags: ['Friendly', 'Playful', 'Security'],
-  //   },
-  //   {
-  //     breed: 'Domestic Shorthair',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 0.5,
-  //     gender: 'Female',
-  //     image: 'c1.jpg',
-  //     tags: ['Cute', 'Calm'],
-  //   },
-  //   {
-  //     breed: 'Scottish Fold',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 1,
-  //     gender: 'Female',
-  //     image: 'cat1.jpeg',
-  //     tags: ['Quiet', 'Sweet'],
-  //   },
-  //   {
-  //     breed: 'Golden Retriever',
-  //     type: 'Dog',
-  //     age: 'Baby',
-  //     ageYears: 0.9,
-  //     gender: 'Male',
-  //     image: 'dog1.jpeg',
-  //     tags: ['Friendly', 'Loyal'],
-  //   },
-  //   {
-  //     breed: 'Syrian Hamster',
-  //     type: 'Hamster',
-  //     age: 'Baby',
-  //     ageYears: 0.4,
-  //     gender: 'Female',
-  //     image: 'ham1.jpeg',
-  //     tags: ['Small', 'Cute'],
-  //   },
-  //   {
-  //     breed: 'Budgerigar',
-  //     type: 'Bird',
-  //     age: 'Young',
-  //     ageYears: 2,
-  //     gender: 'Male',
-  //     image: 'bird1.jpeg',
-  //     tags: ['Colorful', 'Friendly', 'Security'],
-  //   },
-  //   {
-  //     breed: 'Scottish Fold',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 0.8,
-  //     gender: 'Female',
-  //     image: 'cat2.jpeg',
-  //     tags: ['Playful', 'Cute'],
-  //   },
-  //   {
-  //     breed: 'Domestic Rabbit',
-  //     type: 'Rabbit',
-  //     age: 'Adult',
-  //     ageYears: 4,
-  //     gender: 'Female',
-  //     image: 'rabbit2.jpeg',
-  //     tags: ['Calm', 'Soft'],
-  //   },
-  //   {
-  //     breed: 'Goldfish',
-  //     type: 'Fish',
-  //     age: 'Adult',
-  //     ageYears: 1,
-  //     gender: 'Male',
-  //     image: 'fish.jpeg',
-  //     tags: ['Quiet', 'Easy Care'],
-  //   },
-  //   {
-  //     breed: 'Golden Retriever',
-  //     type: 'Dog',
-  //     age: 'Baby',
-  //     ageYears: 0.8,
-  //     gender: 'Female',
-  //     image: 'dog2.jpeg',
-  //     tags: ['Playful', 'Friendly'],
-  //   },
-  //   {
-  //     breed: 'Red-Eared Slider',
-  //     type: 'Turtle',
-  //     age: 'Baby',
-  //     ageYears: 0.7,
-  //     gender: 'Male',
-  //     image: 'turt1.jpeg',
-  //     tags: ['Quiet', 'Unique'],
-  //   },
-  //   {
-  //     breed: 'Scottish Fold',
-  //     type: 'Cat',
-  //     age: 'Adult',
-  //     ageYears: 3,
-  //     gender: 'Male',
-  //     image: 'cat4.jpeg',
-  //     tags: ['Cute', 'Lazy'],
-  //   },
-  //   {
-  //     breed: 'Budgerigar', 
-  //     type: 'Bird',
-  //     age: 'Adult',
-  //     ageYears: 2,
-  //     gender: 'Female',
-  //     image: 'bird2.jpeg',
-  //     tags: ['Talkative', 'Cute'],
-  //   },
-  //   {
-  //     breed: 'Wild Rabbit',
-  //     type: 'Rabbit',
-  //     age: 'Adult',
-  //     ageYears: 2,
-  //     gender: 'Male',
-  //     image: 'r4.jpg',
-  //     tags: ['Fast', 'Alert'],
-  //   },
-  //   {
-  //     breed: 'European Hamster',
-  //     type: 'Hamster',
-  //     age: 'Adult',
-  //     ageYears: 1.5,
-  //     gender: 'Female',
-  //     image: 'h1.jpg',
-  //     tags: ['Rare', 'Cute'],
-  //   },
-  //   {
-  //     breed: 'British Shorthair',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 0.9,
-  //     gender: 'Female',
-  //     image: 'c5.jpg',
-  //     tags: ['Fluffy', 'Calm'],
-  //   },
-  //   {
-  //     breed: 'British Shorthair',
-  //     type: 'Cat',
-  //     age: 'Baby',
-  //     ageYears: 1,
-  //     gender: 'Male',
-  //     image: 'cat5.jpeg',
-  //     tags: ['Cute', 'Quiet'],
-  //   },
-  //   {
-  //     breed: 'Mixed Hamster',
-  //     type: 'Hamster',
-  //     age: 'Baby',
-  //     ageYears: 0.5,
-  //     gender: 'Male',
-  //     image: 'ham3.jpeg',
-  //     tags: ['Small', 'Cute', 'Active'],
-  //   },
-  // ];
-
   pets: any[] = [];
   filteredPetsList: any[] = [];
-
+  adoptionRequests: any[] = [];
+  isLoading = true;
+  activeTab: 'all' | 'my-posts' = 'all';
 
   onTypeChange(event: Event) {
     const select = event.target as HTMLSelectElement;
@@ -280,7 +93,7 @@ export class Adoption implements OnInit {
   }
 
   get filteredPets() {
-    return this.pets.filter((pet) => {
+    const filtered = this.pets.filter((pet) => {
       const matchType = this.selectedType === 'All' || pet.type === this.selectedType;
       const matchAge = this.selectedAge === 'All' || pet.age === this.selectedAge;
       const matchGender = this.selectedGender === 'All' || pet.gender === this.selectedGender;
@@ -288,6 +101,12 @@ export class Adoption implements OnInit {
 
       return matchType && matchAge && matchGender && matchTag;
     });
+
+    if (this.activeTab === 'my-posts') {
+      return filtered.filter(pet => this.isOwner(pet));
+    } else {
+      return filtered.filter(pet => !this.isOwner(pet));
+    }
   }
 
   openPostModal() {
@@ -301,10 +120,14 @@ export class Adoption implements OnInit {
   }
 
   openPet(pet: any) {
+    if (this.hasExistingRequest(pet)) {
+      return; 
+    }
     this.selectedPet = pet;
     this.showAdoptionDetails = false;
     this.adoptionError = '';
     this.adopterPhone = '';
+    this.adopterGovernorate = ''; // 👈 تصفير المحافظة عند فتح الكرت
     this.adopterDeliveryMethod = 'Delivery';
   }
 
@@ -317,6 +140,7 @@ export class Adoption implements OnInit {
   openAdoptionRequest() {
     this.adoptionError = '';
     this.adopterPhone = '';
+    this.adopterGovernorate = ''; // 👈 تصفير المحافظة عند فتح فورم الطلب
     this.adopterDeliveryMethod = 'Delivery';
     this.showAdoptionDetails = true;
   }
@@ -329,6 +153,7 @@ export class Adoption implements OnInit {
   submitAdoptionRequest() {
     this.adoptionError = '';
     const phone = this.adopterPhone.trim();
+    const governorate = this.adopterGovernorate;
 
     if (!phone) {
       this.adoptionError = 'Please provide your phone number to continue.';
@@ -340,6 +165,12 @@ export class Adoption implements OnInit {
       return;
     }
 
+    // ✨ التحقق من قيام المستخدم باختيار المحافظة من القائمة
+    if (!governorate) {
+      this.adoptionError = 'Please select your governorate.';
+      return;
+    }
+
     if (!this.selectedPet) {
       this.adoptionError = 'Unable to submit request. Please reopen the pet details and try again.';
       return;
@@ -347,9 +178,11 @@ export class Adoption implements OnInit {
 
     const userEmail = localStorage.getItem('userEmail') || '';
 
+    // إرسال البيانات المحدثة بالكامل شاملة الـ governorate إلى الـ API
     this.adoptionService.requestAdoption({
       petId: this.selectedPet.id,
       phoneNumber: phone,
+      governorate: governorate, // ✨ تمرير المحافظة هنا ليرسلها السيرفس للباك إند
       deliveryMethod: this.adopterDeliveryMethod,
       userEmail
     }).subscribe({
@@ -357,7 +190,7 @@ export class Adoption implements OnInit {
         this.showConfirm = true;
         this.successType = 'adopt';
         this.showAdoptionDetails = false;
-        this.selectedPet = null;
+        this.loadAdoptionRequests(); 
       },
       error: (err) => {
         console.error('Adoption request failed:', err);
@@ -367,8 +200,8 @@ export class Adoption implements OnInit {
   }
 
   startAdoption() {
-  this.showAdoptionDetails = true;
-}
+    this.showAdoptionDetails = true;
+  }
 
   closeAdoptionRequest() {
     this.showAdoptionDetails = false;
@@ -385,24 +218,17 @@ export class Adoption implements OnInit {
     this.selectedPet = null;
     this.showAdoptionDetails = false;
     this.adopterPhone = '';
+    this.adopterGovernorate = ''; // 👈 تصفير عند إغلاق واجهة النجاح
     this.adopterDeliveryMethod = 'Delivery';
     this.adoptionError = '';
   }
 
-
-//   addPet(pet: any) {
-//   this.pets.unshift(pet);
-//   this.showPostModal = false;
-//   this.successType = 'add';
-//   this.showConfirm = true;
-// }
-
-addPet(pet: any) {
+  addPet(pet: any) {
     const formData = new FormData();
 
     formData.append('breed', pet.breed);
     formData.append('type', pet.type);
-    formData.append('ageYears', pet.ageYears.toString()); // ✅ مهم
+    formData.append('ageYears', pet.ageYears.toString()); 
     formData.append('ageCategory', pet.ageCategory || pet.age || 'Adult');
     formData.append('gender', pet.gender);
     formData.append('description', pet.description || '');
@@ -411,20 +237,18 @@ addPet(pet: any) {
       formData.append('image', pet.imageFile);
     }
 
-    // Append tags as indexed fields so ASP.NET model binder maps them to List<string>
     if (pet.tags && pet.tags.length) {
       pet.tags.forEach((t: string, i: number) => {
         formData.append(`Tags[${i}]`, t);
       });
     }
 
-    // Ensure pet is available for adoption by default
     formData.append('isAvailable', (pet.isAvailable !== false).toString());
 
     this.petService.addPet(formData).subscribe({
       next: () => {
-        this.loadPets(); // refresh list
-        this.showPostModal = false; // 👈 مهم
+        this.loadPets(); 
+        this.showPostModal = false; 
         this.showConfirm = true;
         this.successType = 'add';
         this.editingPet = null;
@@ -507,8 +331,6 @@ addPet(pet: any) {
       return;
     }
 
-    console.log('Deleting pet with id:', petId);
-
     this.closeOptionsMenu();
 
     if (!confirm('Are you sure you want to delete this post?')) {
@@ -517,7 +339,6 @@ addPet(pet: any) {
 
     this.petService.deletePet(petId).subscribe({
       next: () => {
-        console.log('Pet deleted successfully:', petId);
         this.pets = this.pets.filter((p) => this.getPetId(p) !== petId);
         this.optionsMenuOpenId = null;
         this.cdr.detectChanges();
@@ -562,7 +383,6 @@ addPet(pet: any) {
   }
 
   ngOnInit() {
-    // Initialize auth state immediately and subscribe to changes.
     this.isLoggedIn = this.auth.isLoggedIn$.value;
     this.isAdmin = this.auth.isAdmin$.value;
 
@@ -575,7 +395,21 @@ addPet(pet: any) {
     });
 
     this.currentUserId = this.getCurrentUserId();
-    this.loadPets();
+    this.loadAdoptionRequests();
+  }
+
+  loadAdoptionRequests() {
+    this.isLoading = true; 
+    this.adoptionService.getAll().subscribe({
+      next: (res: any) => {
+        this.adoptionRequests = res || [];
+        this.loadPets(); 
+      },
+      error: (err) => {
+        console.error('Failed to load adoption requests', err);
+        this.loadPets();
+      }
+    });
   }
 
   loadPets() {
@@ -586,30 +420,72 @@ addPet(pet: any) {
         this.pets = res
           .map((pet: any) => {
             const imageUrl = pet.image || pet.imageUrl || pet.ImageUrl || '';
-            const image = imageUrl.startsWith('/images/')
-              ? backendBase + imageUrl
-              : imageUrl;
+            const image = imageUrl.startsWith('/images/') ? backendBase + imageUrl : imageUrl;
+            const petId = this.getPetId(pet) ?? pet.id ?? pet.Id;
+
+            const ownRequest = this.adoptionRequests.find(r => r.petId === petId);
+            const isOwner = pet.userId === this.currentUserId;
 
             return {
               ...pet,
-              id: this.getPetId(pet) ?? pet.id ?? pet.Id,
+              id: petId,
               userId: pet.userId ?? pet.UserId ?? null,
               status: pet.status || pet.Status || 'Available',
               image,
               age: pet.age || pet.ageCategory || pet.AgeCategory,
               tags: pet.tags || pet.Tags || [],
-              isAvailable: pet.isAvailable !== false && pet.IsAvailable !== false
+              isAvailable: pet.isAvailable !== false && pet.IsAvailable !== false,
+              
+              isCurrentUserOwner: isOwner,
+              currentUserRequest: ownRequest, 
+              ownerMessage: isOwner && ownRequest ? this.getOwnerAdoptionMessage({ id: petId }) : ''
             };
           })
           .filter((pet: any) => pet.isAvailable);
 
+        this.isLoading = false; 
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading pets:', err);
+        this.isLoading = false; 
+        this.cdr.detectChanges();
       }
     });
   }
 
-}
+  isOwner(pet: any): boolean {
+    return pet.isCurrentUserOwner || false;
+  }
 
+  getAdoptionRequest(pet: any) {
+    return this.adoptionRequests?.find(r => r.petId === pet.id);
+  }
+
+  getOwnerAdoptionMessage(pet: any): string {
+    const req = this.adoptionRequests.find(r => r.petId === pet.id);
+
+    if (!req) return '';
+
+    switch (req.status) {
+      case 'Pending':
+        return '⏳ Pending';
+      case 'Approved':
+        return '✅ Approved';
+      case 'Rejected':
+        return '❌ Rejected';
+      default:
+        return '';
+    }
+  }
+
+  getMyListingsCount(): number {
+    return this.pets.filter(pet => this.isOwner(pet)).length;
+  }
+
+  hasExistingRequest(pet: any): boolean {
+    if (!pet || !pet.currentUserRequest) return false;
+    const status = pet.currentUserRequest.status?.toLowerCase();
+    return status === 'pending' || status === 'approved';
+  }
+}
