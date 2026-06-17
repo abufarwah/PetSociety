@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Petsociety.DTOs.LostFound;
@@ -16,11 +16,13 @@ namespace Petsociety.Controllers
     {
         private readonly PetDbContext _db;
         private readonly IImageStorageService _imageStorage;
+        private readonly IAiPetMatchingService _aiMatchingService;
 
-        public LostFoundReportsController(PetDbContext db, IImageStorageService imageStorage)
+        public LostFoundReportsController(PetDbContext db, IImageStorageService imageStorage, IAiPetMatchingService aiMatchingService)
         {
             _db = db;
             _imageStorage = imageStorage;
+            _aiMatchingService = aiMatchingService;
         }
 
         // ───────────────────────────────
@@ -131,6 +133,8 @@ namespace Petsociety.Controllers
                 string? imageUrl = null;
                 string? imageFileName = null;
 
+                string? featureVector = null;
+
                 if (dto.ImageFile != null)
                 {
                     var saved = _imageStorage.SaveLostFoundImageAsync(dto.ImageFile)
@@ -138,6 +142,8 @@ namespace Petsociety.Controllers
 
                     imageUrl = saved.Url;
                     imageFileName = saved.FileName;
+
+                    featureVector = _aiMatchingService.GetFeatureVectorAsync(dto.ImageFile).GetAwaiter().GetResult();
                 }
 
                 var entity = new LostFoundReport
@@ -152,6 +158,7 @@ namespace Petsociety.Controllers
 
                     ImageUrl = imageUrl,
                     ImageFileName = imageFileName,
+                    FeatureVector = featureVector,
 
                     ReporterName = dto.ReporterName,
                     ReporterPhone = dto.ReporterPhone,
@@ -214,6 +221,7 @@ namespace Petsociety.Controllers
                 var saved = _imageStorage.SaveLostFoundImageAsync(dto.ImageFile).GetAwaiter().GetResult();
                 entity.ImageUrl = saved.Url;
                 entity.ImageFileName = saved.FileName;
+                entity.FeatureVector = _aiMatchingService.GetFeatureVectorAsync(dto.ImageFile).GetAwaiter().GetResult();
             }
 
             try
@@ -283,6 +291,32 @@ namespace Petsociety.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { message = "Database rejected deletion.", error = ex.InnerException?.Message ?? ex.Message });
+            }
+        }
+
+        // ───────────────────────────────
+        // COMPARE IMAGES (AI MATCHING)
+        // ───────────────────────────────
+        [HttpPost("compare")]
+        public async Task<IActionResult> CompareImages(IFormFile queryImage)
+        {
+            if (queryImage == null || queryImage.Length == 0)
+            {
+                return BadRequest("No image provided.");
+            }
+
+            try
+            {
+                var matches = await _aiMatchingService.FindSimilarPetsAsync(queryImage);
+                return Ok(new 
+                { 
+                    message = "Image compared dynamically with database.",
+                    matches = matches 
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
     }
