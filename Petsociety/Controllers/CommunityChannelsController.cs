@@ -219,5 +219,55 @@ namespace Petsociety.Controllers
 
             return Ok();
         }
+
+        [Authorize]
+        [HttpPost("Leave")]
+        public IActionResult Leave(long channelId)
+        {
+            var userId = int.Parse(
+                User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value
+            );
+
+            var member = _dbContext.CommunityMembers.FirstOrDefault(x =>
+                x.ChannelId == channelId &&
+                x.UserId == userId);
+
+            if (member == null)
+                return Ok();
+
+            _dbContext.CommunityMembers.Remove(member);
+            _dbContext.SaveChanges();
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetMembers")]
+        public IActionResult GetMembers([FromQuery] long channelId)
+        {
+            try
+            {
+                var memberUserIds = _dbContext.CommunityMembers
+                    .Where(m => m.ChannelId == channelId)
+                    .Select(m => m.UserId)
+                    .ToList();
+
+                var members = _dbContext.Users
+                    .Where(u => memberUserIds.Contains(u.Id))
+                    .Select(u => new
+                    {
+                        UserId = u.Id,
+                        UserName = u.FullName 
+                    })
+                    .ToList();
+
+                return Ok(members);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
+
 }
