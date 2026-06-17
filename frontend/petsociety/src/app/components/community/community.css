@@ -1,6 +1,5 @@
 .community-page {
   display: flex;
-  /* تم تعديل الارتفاع لمنع التداخل والنزول تحت الهيدر الرئيسي للموقع */
   height: calc(100vh - 80px); 
   background: #fdfdfd;
   overflow: hidden; 
@@ -15,6 +14,27 @@
   height: 100%;      
   display: flex;
   flex-direction: column;
+}
+
+.add-channel-main-btn {
+  background: #d6b48c;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s ease;
+}
+
+.add-channel-main-btn:hover {
+  background: #c9a377;
 }
 
 .search-input {
@@ -48,6 +68,7 @@
   cursor: pointer;
   margin-bottom: 8px;
   transition: background 0.2s ease;
+  position: relative;
 }
 
 .channel:hover {
@@ -64,11 +85,16 @@
   align-items: center;
 }
 
+.channel-info {
+  flex: 1;
+}
+
 .channel-info h6 {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
   color: #2c2724;
+  padding-right: 55px; /* مساحة تضمن عدم تداخل النص مع الأزرار */
 }
 
 .channel-info p {
@@ -79,6 +105,7 @@
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  padding-right: 55px;
 }
 
 .channel-info span {
@@ -86,6 +113,49 @@
   color: #a39b92;
   margin-top: 4px;
   display: inline-block;
+}
+
+/* حاوية أزرار الأدمن على مستوى القنوات */
+.channel-admin-actions {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 5;
+}
+
+.channel:hover .channel-admin-actions {
+  opacity: 1;
+}
+
+.channel-action-btn {
+  background: #ffffff;
+  border: 1px solid #efeae0;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #a39b92;
+  transition: all 0.2s ease;
+}
+
+.channel-action-btn:hover {
+  color: #2c2724;
+  background: #faf8f5;
+  border-color: #d6cbb7;
+}
+
+.channel-action-btn.delete:hover {
+  color: #e06666;
+  background: #fff5f5;
+  border-color: #fcdede;
 }
 
 .community-chat {
@@ -169,10 +239,8 @@
   width: 100%;
 }
 
-/* محاذاة رسائلكِ لليمين مع الحفاظ على مسافة جانبية متناسقة */
 .message.you {
-  flex-direction: row-reverse;
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 
 .message-bubble-wrapper {
@@ -183,8 +251,16 @@
   gap: 12px;
 }
 
+.message.you .avatar {
+  order: 2;
+}
+
+.message.you .sender-name {
+  color: #c4955c;
+}
+
 .message.you .message-bubble-wrapper {
-  flex-direction: row-reverse;
+  order: 1;
 }
 
 .message-bubble {
@@ -199,6 +275,7 @@
 .message.you .message-bubble {
   background: #fdfaf4;
   border-color: #ebdcb9;
+  text-align: right;
 }
 
 .message-header {
@@ -229,7 +306,7 @@
   color: #332e2a;
   line-height: 1.5;
   word-break: break-word;
-  text-align: initial;
+  text-align: inherit;
 }
 
 .message-actions {
@@ -242,6 +319,10 @@
 
 .message-bubble-wrapper:hover .message-actions {
   opacity: 1;
+}
+
+.message.you .message-actions {
+  order: -1;
 }
 
 .action-btn {
@@ -265,6 +346,12 @@
 }
 
 .action-btn.delete:hover {
+  color: #e06666;
+  background: #fff5f5;
+  border-color: #fcdede;
+}
+
+.action-btn.kick:hover {
   color: #e06666;
   background: #fff5f5;
   border-color: #fcdede;
@@ -444,5 +531,94 @@
 }
 
 .join-btn:hover {
+  background: #c9a377;
+}
+
+.admin-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.admin-modal-card {
+  background: #ffffff;
+  width: 460px;
+  padding: 30px;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.admin-modal-card h3 {
+  margin: 0 0 20px 0;
+  color: #2c2724;
+  font-size: 20px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.modal-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #7c756e;
+}
+
+.modal-field input, .modal-field textarea {
+  padding: 10px 14px;
+  border: 1px solid #efeae0;
+  border-radius: 12px;
+  outline: none;
+  font-size: 14px;
+  background: #faf8f5;
+}
+
+.modal-field input:focus, .modal-field textarea:focus {
+  border-color: #d6cbb7;
+  background: #ffffff;
+}
+
+.modal-field textarea {
+  height: 80px;
+  resize: none;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.cancel-modal-btn {
+  background: transparent;
+  border: 1px solid #efeae0;
+  padding: 10px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  color: #7c756e;
+}
+
+.confirm-modal-btn {
+  background: #d6b48c;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-modal-btn:hover {
   background: #c9a377;
 }
