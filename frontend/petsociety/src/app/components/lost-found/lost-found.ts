@@ -18,6 +18,7 @@ export class LostFoundComponent implements OnInit {
   queryImagePreview: string | ArrayBuffer | null = null;
   queryImageFile: File | null = null;
   searchResultMessage: string | null = null;
+  aiMatches: any[] = [];
 
   // متغيرات العدادات
   lostCount: number = 0;
@@ -116,11 +117,12 @@ export class LostFoundComponent implements OnInit {
     if (!this.queryImageFile) return;
 
     this.searchResultMessage = 'Analyzing image and searching for matches...';
+    this.aiMatches = [];
 
     const formData = new FormData();
     formData.append('queryImage', this.queryImageFile, this.queryImageFile.name);
 
-    fetch('https://localhost:4200/api/Ai/compare', { 
+    fetch('https://localhost:44371/api/LostFoundReports/compare', { 
       method: 'POST',
       body: formData
     })
@@ -131,12 +133,36 @@ export class LostFoundComponent implements OnInit {
     .then(data => {
       console.log('AI Response:', data);
       this.searchResultMessage = 'AI comparison finished successfully! Match confidence: ' + 
-        (data.matches && data.matches.length > 0 ? (data.matches[0].confidence * 100) + '%' : 'unknown');
+        (data.matches && data.matches.length > 0 ? (data.matches[0].confidence * 100).toFixed(1) + '%' : 'no matches found');
+      
+      if (data.matches) {
+        const backendBase = 'https://localhost:44371';
+        this.aiMatches = data.matches.map((m: any) => {
+          const p = m.post;
+          const imageUrl = p.imageUrl || p.ImageUrl || '';
+          const image = imageUrl.startsWith('/') ? backendBase + imageUrl : imageUrl;
+          
+          return {
+            id: p.id,
+            type: p.type,
+            title: p.breed ? `${p.breed} (${p.petType})` : p.petType,
+            species: p.petType,
+            excerpt: p.excerpt || p.description || '',
+            location: p.location,
+            dateText: p.dateLastSeen ? new Date(p.dateLastSeen).toLocaleDateString() : new Date(p.createdAt).toLocaleDateString(),
+            image,
+            phone: p.reporterPhone,
+            status: p.status,
+            reporterName: p.reporterName,
+            confidence: (m.confidence * 100).toFixed(1) + '%'
+          };
+        });
+      }
       this.cdr.detectChanges();
     })
     .catch(error => {
       console.error('Error connecting to AI service:', error);
-      this.searchResultMessage = 'Image uploaded but the AI backend service is not reachable.';
+      this.searchResultMessage = 'Image uploaded but the AI backend service is not reachable or failed.';
       this.cdr.detectChanges();
     });
   }
