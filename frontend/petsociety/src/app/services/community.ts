@@ -12,12 +12,46 @@ export class CommunityService {
 
   getChannels(searchName: string = '') {
     let params = new HttpParams();
-    
     if (searchName && searchName.trim() !== '') {
       params = params.set('Name', searchName.trim());
     }
-
     return this.http.get(`${this.apiUrl}/CommunityChannels/GetAll`, { params });
+  }
+
+  createChannel(name: string, description: string, icon: string) {
+    const token = localStorage.getItem('token');
+    return this.http.post(
+      `${this.apiUrl}/CommunityChannels/Add`, 
+      { name, description, icon },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+  }
+
+  // تعديل بيانات القناة
+  editChannel(id: number, name: string, description: string, icon: string) {
+    const token = localStorage.getItem('token');
+    return this.http.put(
+      `${this.apiUrl}/CommunityChannels/Update`,
+      { id, name, description, icon },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+  }
+
+  // حذف القناة نهائياً
+  deleteChannel(id: number) {
+    const token = localStorage.getItem('token');
+    return this.http.delete(
+      `${this.apiUrl}/CommunityChannels/Delete?id=${id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+  }
+
+  kickUserFromChannel(channelId: number, userId: string) {
+    const token = localStorage.getItem('token');
+    return this.http.delete(
+      `${this.apiUrl}/CommunityChannels/KickUser?channelId=${channelId}&userId=${userId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
   }
 
   getMessages(channelId: number) {
@@ -26,76 +60,45 @@ export class CommunityService {
 
   sendMessage(channelId: number, messageText: string) {
     const token = localStorage.getItem('token');
-
     return this.http.post(
       `${this.apiUrl}/CommunityMessages/Add`,
-      {
-        channelId,
-        messageText
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      { channelId, messageText },
+      { headers: { Authorization: `Bearer ${token}` } }
     );
   }
 
   editMessage(messageId: number, newMessageText: string) {
     const token = localStorage.getItem('token');
-
     return this.http.put(
       `${this.apiUrl}/CommunityMessages/Update`,
-      {
-        id: messageId,
-        messageText: newMessageText
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      { id: messageId, messageText: newMessageText },
+      { headers: { Authorization: `Bearer ${token}` } }
     );
   }
 
   deleteMessage(messageId: number) {
     const token = localStorage.getItem('token');
-
     return this.http.delete(
       `${this.apiUrl}/CommunityMessages/Delete?id=${messageId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
   }
 
   joinChannel(channelId: number) {
     const token = localStorage.getItem('token');
-
     return this.http.post(
       `${this.apiUrl}/CommunityChannels/Join?channelId=${channelId}`,
       {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
   }
 
   leaveChannel(channelId: number) {
     const token = localStorage.getItem('token');
-
     return this.http.post(
       `${this.apiUrl}/CommunityChannels/Leave?channelId=${channelId}`,
       {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
   }
 }
