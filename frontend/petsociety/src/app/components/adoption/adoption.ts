@@ -38,6 +38,13 @@ export class Adoption implements OnInit {
   currentUserId: number | null = null;
   optionsMenuOpenId: number | null = null;
 
+  // Animated (count-up) display values for the hero stats.
+  // These start at 0 and tween up to the real values once data loads,
+  // giving the hero section a touch of life on first render.
+  displayedPetsCount = 0;
+  displayedAdoptedCount = 0;
+  private statsAnimated = false;
+
   constructor(
     private router: Router,
     private auth: Auth,
@@ -449,6 +456,7 @@ export class Adoption implements OnInit {
 
         this.isLoading = false; 
         this.cdr.detectChanges();
+        this.animateHeroStats();
       },
       error: (err) => {
         console.error('Error loading pets:', err);
@@ -473,14 +481,30 @@ export class Adoption implements OnInit {
 
     switch (req.status) {
       case 'Pending':
-        return '⏳ Pending';
+        return 'Request: Pending';
       case 'Approved':
-        return '✅ Approved';
+        return 'Request: Approved';
       case 'Rejected':
-        return '❌ Rejected';
+        return 'Request: Rejected';
       default:
         return '';
     }
+  }
+
+  /**
+   * Returns the status class to apply to the owner's listing card.
+   * When a request exists on the owner's pet, this mirrors the same
+   * pending/approved/rejected color treatment used on the adopter's
+   * "Your Request" card, so both views stay visually consistent.
+   * Falls back to the neutral "owner-listing" style when no request
+   * has come in yet.
+   */
+  getOwnerStatusClass(pet: any): string {
+    const req = this.adoptionRequests.find(r => r.petId === pet.id);
+    if (!req || !req.status) {
+      return 'owner-listing';
+    }
+    return req.status.toLowerCase();
   }
 
   getMyListingsCount(): number {
@@ -492,4 +516,55 @@ export class Adoption implements OnInit {
     const status = pet.currentUserRequest.status?.toLowerCase();
     return status === 'pending' || status === 'approved';
   }
+
+  scrollToPets() {
+    const el = document.querySelector('.pets-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  getAdoptedCount(): number {
+    return this.adoptionRequests.filter(
+      r => r.status?.toLowerCase() === 'approved'
+    ).length;
+  }
+
+  /**
+   * Animates the hero stat numbers (Pets Listed / Adopted) counting up from
+   * 0 to their real values once the data has finished loading. Purely a
+   * presentational touch — runs once per page load.
+   */
+  private animateHeroStats() {
+    if (this.statsAnimated) return;
+    this.statsAnimated = true;
+
+    const targetPets = this.pets.length;
+    const targetAdopted = this.getAdoptedCount();
+    const duration = 900; // ms
+    const start = performance.now();
+
+    const easeOutQuad = (t: number) => t * (2 - t);
+
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutQuad(progress);
+
+      this.displayedPetsCount = Math.round(targetPets * eased);
+      this.displayedAdoptedCount = Math.round(targetAdopted * eased);
+      this.cdr.detectChanges();
+
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        this.displayedPetsCount = targetPets;
+        this.displayedAdoptedCount = targetAdopted;
+        this.cdr.detectChanges();
+      }
+    };
+
+    requestAnimationFrame(tick);
+  }
+
 }
