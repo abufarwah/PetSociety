@@ -6,7 +6,7 @@
 //   HttpEvent
 // } from '@angular/common/http';
 // import { Observable } from 'rxjs';
-import { HttpInterceptorFn } from '@angular/common/http';
+// import { HttpInterceptorFn } from '@angular/common/http';
 
 // @Injectable()
 // export class AuthInterceptor implements HttpInterceptor {
