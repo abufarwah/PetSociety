@@ -25,20 +25,20 @@ namespace Petsociety.Services
     {
         // ── TIER 1: PROFANITY — always tombstone, never review ────────────────
         // These are unambiguous, context-free violations.
-        private static readonly string[] ProfanityKeywords =
-        [
+        private static readonly string[] ProfanityKeywords = new string[]
+        {
             // Severe insults & dehumanising language
             "idiot", "moron", "imbecile", "retard","متخلف","يلعن","بلعن","dick","pussy","asshole","horny","sex",
             "you suck", "hate you", "go die", "kill yourself",
 
             // Hate speech triggers
             "terrorist", "racist", "nazi","دواعش","اقتلو","اذبحو","اضربو",
-        ];
+        };
 
         // ── TIER 2: SUSPICIOUS — flag for admin review ────────────────────────
         // These are ambiguous in isolation but frequently associated with abuse.
-        private static readonly string[] SuspiciousKeywords =
-        [
+        private static readonly string[] SuspiciousKeywords = new string[]
+        {
             // SPAM / bait
             "click here", "win now", "free iphone", "free gift","عرض خاص","عروض","تنزيلات","فرصتك",
             "limited offer", "act now", "claim your prize",
@@ -53,7 +53,7 @@ namespace Petsociety.Services
             // PRIVACY — Jordanian mobile patterns 
             // Phone sharing may be legitimate (vet giving number) — flag, not delete.
             "079", "077", "078", "+962", "00962",
-        ];
+        };
 
         // ─────────────────────────────────────────────────────────────────────
         // Primary classification entry point
