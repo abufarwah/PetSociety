@@ -132,7 +132,11 @@ export class Adoption implements OnInit {
     this.editingPet = null;
   }
 
-  openPet(pet: any) {
+ openPet(pet: any) {
+    if (pet.isCurrentUserOwner) {
+      return; 
+    }
+    
     if (this.hasExistingRequest(pet)) {
       return; 
     }
@@ -271,10 +275,12 @@ export class Adoption implements OnInit {
     });
   }
 
-  savePet(pet: any) {
+savePet(pet: any) {
     const formData = new FormData();
-    if (pet.id) {
-      formData.append('id', pet.id.toString());
+    
+    const petId = pet.id ?? pet.Id ?? this.editingPet?.id ?? this.editingPet?.Id;
+    if (petId) {
+      formData.append('id', petId.toString());
     }
 
     formData.append('breed', pet.breed);
@@ -296,19 +302,21 @@ export class Adoption implements OnInit {
 
     formData.append('isAvailable', (pet.isAvailable !== false).toString());
 
-    const request = pet.id ? this.petService.updatePet(formData) : this.petService.addPet(formData);
+    const request = petId ? this.petService.updatePet(formData) : this.petService.addPet(formData);
+    
     request.subscribe({
       next: () => {
-        this.loadPets();
+        this.loadPets(); 
         this.showPostModal = false;
         this.showConfirm = true;
-        this.successType = pet.id ? 'edit' : 'add';
+        this.successType = petId ? 'edit' : 'add';
         this.editingPet = null;
         this.optionsMenuOpenId = null;
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Save pet failed:', err);
+        alert('Could not save changes. Please try again.');
       }
     });
   }

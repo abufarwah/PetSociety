@@ -1175,6 +1175,9 @@ select.modal-select:focus {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  text-align: center;
+  width: 100%;
+  flex-wrap: wrap;
 }
 .confirm-box h3 i {
   color: #b59473;
