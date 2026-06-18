@@ -5,6 +5,9 @@ namespace Petsociety.DTOs.Pets
     public class PetDto
     {
         public long Id { get; set; }
+        public string? OwnerPhoneNumber { get; set; }
+        public string? HandoverMethod { get; set; }
+        public string? Governorate { get; set; }
         public int UserId { get; set; }
         public string Breed { get; set; } = null!;
         public string Type { get; set; } = null!;

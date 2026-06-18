@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Petsociety.Model;
 
@@ -11,9 +12,11 @@ using Petsociety.Model;
 namespace Petsociety.Migrations
 {
     [DbContext(typeof(PetDbContext))]
-    partial class PetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260618180736_AddPhoneNumberToPet")]
+    partial class AddPhoneNumberToPet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace Petsociety.Migrations
 
                     b.Property<string>("DeliveryMethod")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Governorate")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("PetId")
@@ -272,9 +272,6 @@ namespace Petsociety.Migrations
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Governorate")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HandoverMethod")
