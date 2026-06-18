@@ -238,88 +238,205 @@ export class Adoption implements OnInit {
     this.adoptionError = '';
   }
 
-  addPet(pet: any) {
-    const formData = new FormData();
+//   addPet(pet: any) {
+//     const formData = new FormData();
 
-    formData.append('breed', pet.breed);
-    formData.append('type', pet.type);
-    formData.append('ageYears', pet.ageYears.toString()); 
-    formData.append('ageCategory', pet.ageCategory || pet.age || 'Adult');
-    formData.append('gender', pet.gender);
-    formData.append('description', pet.description || '');
+//     formData.append('breed', pet.breed);
+//     formData.append('type', pet.type);
+//     formData.append('ageYears', pet.ageYears.toString()); 
+//     formData.append('ageCategory', pet.ageCategory || pet.age || 'Adult');
+//     formData.append('gender', pet.gender);
+//     formData.append('description', pet.description || '');
 
-    if (pet.imageFile) {
-      formData.append('image', pet.imageFile);
-    }
+//     if (pet.imageFile) {
+//       formData.append('image', pet.imageFile);
+//     }
 
-    if (pet.tags && pet.tags.length) {
-      pet.tags.forEach((t: string, i: number) => {
-        formData.append(`Tags[${i}]`, t);
-      });
-    }
+//     if (pet.tags && pet.tags.length) {
+//       pet.tags.forEach((t: string, i: number) => {
+//         formData.append(`Tags[${i}]`, t);
+//       });
+//     }
 
-    formData.append('isAvailable', (pet.isAvailable !== false).toString());
+//     formData.append('isAvailable', (pet.isAvailable !== false).toString());
 
-    this.petService.addPet(formData).subscribe({
-      next: () => {
-        this.loadPets(); 
-        this.showPostModal = false; 
-        this.showConfirm = true;
-        this.successType = 'add';
-        this.editingPet = null;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Add pet failed:', err);
-      }
+//     this.petService.addPet(formData).subscribe({
+//       next: () => {
+//         this.loadPets(); 
+//         this.showPostModal = false; 
+//         this.showConfirm = true;
+//         this.successType = 'add';
+//         this.editingPet = null;
+//         this.cdr.detectChanges();
+//       },
+//       error: (err) => {
+//         console.error('Add pet failed:', err);
+//       }
+//     });
+//   }
+
+// savePet(pet: any) {
+//   const formData = new FormData();
+  
+//   const petId = pet.id ?? pet.Id ?? this.editingPet?.id ?? this.editingPet?.Id;
+//   if (petId) {
+//     formData.append('id', petId.toString());
+//   }
+
+//   formData.append('breed', pet.breed);
+//   formData.append('type', pet.type);
+//   formData.append('ageYears', pet.ageYears.toString());
+//   formData.append('ageCategory', pet.ageCategory || pet.age || 'Adult');
+//   formData.append('gender', pet.gender);
+//   formData.append('description', pet.description || '');
+
+//  if (pet.ownerPhoneNumber || pet.OwnerPhoneNumber) {
+//   const phone = pet.ownerPhoneNumber ?? pet.OwnerPhoneNumber;
+//   formData.append('OwnerPhoneNumber', phone);
+// }
+
+// if (pet.governorate || pet.Governorate) {
+//   const gov = pet.governorate ?? pet.Governorate;
+//   formData.append('Governorate', gov);
+// }
+  
+//   if (pet.handoverMethod) {
+//     formData.append('handoverMethod', pet.handoverMethod);
+//   }
+
+//   if (pet.imageFile) {
+//     formData.append('image', pet.imageFile);
+//   }
+
+//   if (pet.tags && pet.tags.length) {
+//     pet.tags.forEach((t: string, i: number) => {
+//       formData.append(`Tags[${i}]`, t);
+//     });
+//   }
+
+//   formData.append('isAvailable', (pet.isAvailable !== false).toString());
+
+//   const request = petId ? this.petService.updatePet(formData) : this.petService.addPet(formData);
+  
+//   request.subscribe({
+//     next: () => {
+//       this.loadPets(); 
+//       this.showPostModal = false;
+//       this.showConfirm = true;
+//       this.successType = petId ? 'edit' : 'add';
+//       this.editingPet = null;
+//       this.optionsMenuOpenId = null;
+//       this.cdr.detectChanges();
+//     },
+//     error: (err) => {
+//       console.error('Save pet failed:', err);
+//       alert('Could not save changes. Please try again.');
+//     }
+//   });
+// }
+
+addPet(pet: any) {
+  const formData = new FormData();
+
+  formData.append('breed', pet.breed);
+  formData.append('type', pet.type);
+  formData.append('ageYears', pet.ageYears.toString()); 
+  formData.append('ageCategory', pet.ageCategory || pet.age || 'Adult');
+  formData.append('gender', pet.gender);
+  formData.append('description', pet.description || '');
+
+  if (pet.ownerPhone) {
+    formData.append('OwnerPhoneNumber', pet.ownerPhone);
+  }
+  if (pet.ownerGovernorate) {
+    formData.append('Governorate', pet.ownerGovernorate);
+  }
+  if (pet.handoverMethod) {
+    formData.append('HandoverMethod', pet.handoverMethod);
+  }
+
+  if (pet.imageFile) {
+    formData.append('image', pet.imageFile);
+  }
+
+  if (pet.tags && pet.tags.length) {
+    pet.tags.forEach((t: string, i: number) => {
+      formData.append(`Tags[${i}]`, t);
     });
   }
+
+  formData.append('isAvailable', (pet.isAvailable !== false).toString());
+
+  this.petService.addPet(formData).subscribe({
+    next: () => {
+      this.loadPets(); 
+      this.showPostModal = false; 
+      this.showConfirm = true;
+      this.successType = 'add';
+      this.editingPet = null;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('Add pet failed:', err);
+    }
+  });
+}
 
 savePet(pet: any) {
-    const formData = new FormData();
-    
-    const petId = pet.id ?? pet.Id ?? this.editingPet?.id ?? this.editingPet?.Id;
-    if (petId) {
-      formData.append('id', petId.toString());
-    }
+  const formData = new FormData();
+  
+  const petId = pet.id ?? pet.Id ?? this.editingPet?.id ?? this.editingPet?.Id;
+  if (petId) {
+    formData.append('id', petId.toString());
+  }
 
-    formData.append('breed', pet.breed);
-    formData.append('type', pet.type);
-    formData.append('ageYears', pet.ageYears.toString());
-    formData.append('ageCategory', pet.ageCategory || pet.age || 'Adult');
-    formData.append('gender', pet.gender);
-    formData.append('description', pet.description || '');
+  formData.append('breed', pet.breed);
+  formData.append('type', pet.type);
+  formData.append('ageYears', pet.ageYears.toString());
+  formData.append('ageCategory', pet.ageCategory || pet.age || 'Adult');
+  formData.append('gender', pet.gender);
+  formData.append('description', pet.description || '');
 
-    if (pet.imageFile) {
-      formData.append('image', pet.imageFile);
-    }
+  if (pet.ownerPhone) {
+    formData.append('OwnerPhoneNumber', pet.ownerPhone);
+  }
+  if (pet.ownerGovernorate) {
+    formData.append('Governorate', pet.ownerGovernorate);
+  }
+  if (pet.handoverMethod) {
+    formData.append('HandoverMethod', pet.handoverMethod);
+  }
 
-    if (pet.tags && pet.tags.length) {
-      pet.tags.forEach((t: string, i: number) => {
-        formData.append(`Tags[${i}]`, t);
-      });
-    }
+  if (pet.imageFile) {
+    formData.append('image', pet.imageFile);
+  }
 
-    formData.append('isAvailable', (pet.isAvailable !== false).toString());
-
-    const request = petId ? this.petService.updatePet(formData) : this.petService.addPet(formData);
-    
-    request.subscribe({
-      next: () => {
-        this.loadPets(); 
-        this.showPostModal = false;
-        this.showConfirm = true;
-        this.successType = petId ? 'edit' : 'add';
-        this.editingPet = null;
-        this.optionsMenuOpenId = null;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Save pet failed:', err);
-        alert('Could not save changes. Please try again.');
-      }
+  if (pet.tags && pet.tags.length) {
+    pet.tags.forEach((t: string, i: number) => {
+      formData.append(`Tags[${i}]`, t);
     });
   }
+
+  formData.append('isAvailable', (pet.isAvailable !== false).toString());
+
+  const request = petId ? this.petService.updatePet(formData) : this.petService.addPet(formData);
+  
+  request.subscribe({
+    next: () => {
+      this.loadPets(); 
+      this.showPostModal = false;
+      this.showConfirm = true;
+      this.successType = petId ? 'edit' : 'add';
+      this.editingPet = null;
+      this.optionsMenuOpenId = null;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('Save pet failed:', err);
+      alert('Could not save changes. Please try again.');
+    }
+  });
+}
 
   getPetId(pet: any): number | null {
     const rawId = pet?.id ?? pet?.Id ?? null;
@@ -339,7 +456,10 @@ savePet(pet: any) {
 
   editPet(pet: any) {
     this.closeOptionsMenu();
-    this.editingPet = { ...pet };
+    this.editingPet = { ...pet,
+      ownerPhoneNumber: pet.ownerPhoneNumber ?? pet.OwnerPhoneNumber ?? '',
+      governorate: pet.governorate ?? pet.Governorate ?? ''
+     };
     this.showPostModal = true;
   }
 
