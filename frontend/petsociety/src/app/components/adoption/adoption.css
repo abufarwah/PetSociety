@@ -1146,7 +1146,7 @@ select.modal-select:focus {
   background-color: rgba(46, 37, 26, 0.06);
   margin: 4px 6px;
 }
-.confirm-modal {
+/* .confirm-modal {
   position: fixed;
   inset: 0;
   display: flex;
@@ -1167,7 +1167,44 @@ select.modal-select:focus {
   text-align: center;
   max-width: 380px;
   animation: modalPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+} */
+:host {
+  display: contents;
 }
+
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(46, 37, 26, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99999;
+  animation: backdropFadeIn 0.25s ease forwards;
+}
+
+.confirm-box {
+  background: white;
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: 0 30px 70px rgba(46, 37, 26, 0.12);
+  text-align: center;
+  max-width: 380px;
+  width: 90%;
+  margin: auto;          
+  /* position: relative;     */
+  position:  fixed;
+  animation: modalPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .confirm-box h3 {
   color: #2e251a;
   font-weight: 800;
