@@ -18,8 +18,11 @@ namespace Petsociety.Model
         [Required]
         public string DeliveryMethod { get; set; } = null!; // Delivery or Clinic Pickup
 
+        public string? Governorate { get; set; }
+
         public string Status { get; set; } = "Pending"; // Pending, Approved, Rejected
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
     }
 }

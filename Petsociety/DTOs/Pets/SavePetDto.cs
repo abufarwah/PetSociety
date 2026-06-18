@@ -6,6 +6,10 @@ namespace Petsociety.DTOs.Pets
     public class SavePetDto
     {
         public long Id { get; set; } // 0 for Add, existing Id for Update
+        public string? OwnerPhoneNumber { get; set; }
+        public string? HandoverMethod { get; set; }
+        public string? Governorate { get; set; }
+
         public string Breed { get; set; } = null!;
         public string Type { get; set; } = null!;
         public string AgeCategory { get; set; } = null!;

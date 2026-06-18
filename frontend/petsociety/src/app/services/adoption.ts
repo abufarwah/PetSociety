@@ -25,16 +25,17 @@ export class AdoptionService {
     });
   }
 
-  requestAdoption(data: any) {
-    return this.http.post(`${this.baseUrl}/Add`, {
-      petId: data.petId,
-      phoneNumber: data.phoneNumber,
-      deliveryMethod: data.deliveryMethod,
-      userEmail: data.userEmail
-    }, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+ requestAdoption(data: any) {
+  return this.http.post(`${this.baseUrl}/Add`, {
+    petId: data.petId,
+    phoneNumber: data.phoneNumber,
+    governorate: data.governorate,
+    deliveryMethod: data.deliveryMethod,
+    userEmail: data.userEmail
+  }, {
+    headers: this.getAuthHeaders(),
+  });
+}
 
   updateRequest(data: any) {
     return this.http.put(`${this.baseUrl}/Update`, data, {

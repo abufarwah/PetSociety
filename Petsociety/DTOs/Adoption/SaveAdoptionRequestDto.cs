@@ -6,7 +6,9 @@ namespace Petsociety.DTOs.AdoptionRequests
         public long PetId { get; set; }
         public string PhoneNumber { get; set; } = null!;
         public string DeliveryMethod { get; set; } = null!;
+        public string? Governorate { get; set; }
         public string? UserEmail { get; set; }
         public string? Status { get; set; } // optional for update
+
     }
 }

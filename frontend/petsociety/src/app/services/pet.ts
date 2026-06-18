@@ -37,17 +37,26 @@ export class PetService {
     });
   }
 
-  addPet(formData: FormData) {
-    return this.http.post(`${this.baseUrl}/Add`, formData, {
-      headers: this.getAuthHeaders(),
-    });
-  }
 
-  updatePet(formData: FormData) {
-    return this.http.put(`${this.baseUrl}/Update`, formData, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+updatePet(formData: FormData) {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  console.log('TOKEN = ', token);
+  const headers = new HttpHeaders({
+    'Authorization': token ? `Bearer ${token}` : ''
+  });
+
+  return this.http.put(`${this.baseUrl}/Update`, formData, { headers });
+}
+
+addPet(formData: FormData) {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  
+  const headers = new HttpHeaders({
+    'Authorization': token ? `Bearer ${token}` : ''
+  });
+
+  return this.http.post(`${this.baseUrl}/Add`, formData, { headers });
+}
 
   deletePet(id: number) {
     const params = new HttpParams().set('Id', id.toString());
