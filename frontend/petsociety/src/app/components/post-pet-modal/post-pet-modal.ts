@@ -22,7 +22,6 @@ export class PostPetModalComponent implements OnChanges {
   petDescription: string = '';
   isSubmitted = false;
 
-  // الحقول اللوجستية الجديدة المضافة للناشر والآدمين
   ownerPhone: string = '';
   handoverMethod: 'Delivery' | 'Clinic Pickup' = 'Clinic Pickup';
   ownerGovernorate: string = '';
@@ -70,23 +69,21 @@ export class PostPetModalComponent implements OnChanges {
     }
   }
 
-  loadPet(pet: any) {
-    this.petName = pet.breed || '';
-    this.petType = pet.type || '';
-    this.petAgeYears = pet.ageYears ?? null;
-    this.petGender = pet.gender || '';
-    this.petDescription = pet.description || '';
-    this.selectedTags = pet.tags ? [...pet.tags] : [];
-    this.selectedImageFile = null;
-    this.imagePreview = pet.image || pet.imageUrl || '';
-    
-    // تحميل الحقول المخزنة سابقاً عند التعديل
-    this.ownerPhone = pet.ownerPhone || '';
-    this.handoverMethod = pet.handoverMethod || 'Clinic Pickup';
-    this.ownerGovernorate = pet.ownerGovernorate || '';
-    
-    this.isSubmitted = false;
-  }
+loadPet(pet: any) {
+  this.petName = pet.breed || '';
+  this.petType = pet.type || '';
+  this.petAgeYears = pet.ageYears ?? null;
+  this.petGender = pet.gender || '';
+  this.petDescription = pet.description || '';
+  this.selectedTags = pet.tags ? [...pet.tags] : [];
+  this.selectedImageFile = null;
+  this.imagePreview = pet.image || pet.imageUrl || '';
+  this.ownerPhone = pet.ownerPhone ?? pet.ownerPhoneNumber ?? pet.OwnerPhoneNumber ?? pet.OwnerPhone ?? '';
+  this.handoverMethod = pet.handoverMethod ?? pet.HandoverMethod ?? 'Clinic Pickup';
+  this.ownerGovernorate = pet.ownerGovernorate ?? pet.governorate ?? pet.Governorate ?? pet.OwnerGovernorate ?? '';
+  
+  this.isSubmitted = false;
+}
 
   resetForm() {
     this.petName = '';
@@ -125,7 +122,6 @@ export class PostPetModalComponent implements OnChanges {
 
     const isEditing = !!this.pet?.id;
 
-    // شروط التحقق الشاملة بما فيها رقم الهاتف، ونوع التسليم والمحافظة الإلزامية في حال التوصيل
     if (
       !this.petName ||
       !this.petType ||
@@ -154,7 +150,6 @@ export class PostPetModalComponent implements OnChanges {
       tags: this.selectedTags,
       isAvailable: true,
       
-      // إرسال البيانات المضافة حديثاً للـ Backend والـ Admin
       ownerPhone: this.ownerPhone,
       handoverMethod: this.handoverMethod,
       ownerGovernorate: this.handoverMethod === 'Delivery' ? this.ownerGovernorate : 'Clinic'
