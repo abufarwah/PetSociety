@@ -25,19 +25,20 @@ namespace Petsociety.Controllers
         {
             try
             {
-                // Materialize the query first to avoid expression tree issues with .Split and .ToList
                 var data = _dbContext.Pets
                     .Where(pet =>
-                        (filterDto.Breed == null || pet.Breed.Contains(filterDto.Breed)) &&  //*******
+                        (filterDto.Breed == null || pet.Breed.Contains(filterDto.Breed)) &&  
                         (filterDto.Type == null || filterDto.Type == "All" || pet.Type.ToUpper() == filterDto.Type.ToUpper()) &&
                         (filterDto.AgeCategory == null || filterDto.AgeCategory == "All" || pet.AgeCategory.ToUpper() == filterDto.AgeCategory.ToUpper()) &&
                         (filterDto.Gender == null || filterDto.Gender == "All" || pet.Gender.ToUpper() == filterDto.Gender.ToUpper()) &&
                         (filterDto.Tag == null || filterDto.Tag == "All" || pet.Tags.ToUpper().Contains(filterDto.Tag.ToUpper()))
                     )
-                    .ToList() // Materialize here
+                    .ToList() 
                     .Select(pet => new PetDto
                     {
                         Id = pet.Id,
+                        OwnerPhoneNumber = pet.OwnerPhoneNumber,
+                        HandoverMethod = pet.HandoverMethod,
                         UserId = pet.UserId,
                         Breed = pet.Breed,
                         Type = pet.Type,
@@ -50,7 +51,9 @@ namespace Petsociety.Controllers
                             ? new System.Collections.Generic.List<string>()
                             : pet.Tags.Split(',').Select(t => t.Trim()).Where(t => t != string.Empty).ToList(),
                         Description = pet.Description,
-                        IsAvailable = pet.IsAvailable
+                        IsAvailable = pet.IsAvailable,
+                        Governorate = pet.Governorate
+
                     });
 
                 return Ok(data);
@@ -75,6 +78,8 @@ namespace Petsociety.Controllers
                 var pet = new PetDto
                 {
                     Id = petEntity.Id,
+                    OwnerPhoneNumber = petEntity.OwnerPhoneNumber,
+                    HandoverMethod = petEntity.HandoverMethod,
                     UserId = petEntity.UserId,
                     Breed = petEntity.Breed,
                     Type = petEntity.Type,
@@ -87,7 +92,8 @@ namespace Petsociety.Controllers
                         ? new System.Collections.Generic.List<string>()
                         : petEntity.Tags.Split(',').Select(t => t.Trim()).Where(t => t != string.Empty).ToList(),
                     Description = petEntity.Description,
-                    IsAvailable = petEntity.IsAvailable
+                    IsAvailable = petEntity.IsAvailable,
+                    Governorate = petEntity.Governorate
                 };
 
                 return Ok(pet);
@@ -111,11 +117,13 @@ namespace Petsociety.Controllers
                 if (petDto.Image == null)
                     return BadRequest("Image is required");
                 var userId = int.Parse(
-    User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
                 var pet = new Pet
                 {
                     UserId = userId,
+                    OwnerPhoneNumber = petDto.OwnerPhoneNumber,
+                    HandoverMethod = petDto.HandoverMethod,
                     Breed = petDto.Breed,
                     Type = petDto.Type,
                     AgeCategory = petDto.AgeCategory,
@@ -125,7 +133,8 @@ namespace Petsociety.Controllers
                         ? string.Join(',', petDto.Tags.Where(t => !string.IsNullOrWhiteSpace(t)))
                         : string.Empty,
                     Description = petDto.Description,
-                    IsAvailable = petDto.IsAvailable
+                    IsAvailable = petDto.IsAvailable,
+                    Governorate = petDto.Governorate,
                 };
 
                 var uploadsFolder = Path.Combine("wwwroot/images");
@@ -158,30 +167,33 @@ namespace Petsociety.Controllers
         [HttpPut("Update")]
         public IActionResult Update([FromForm] SavePetDto petDto)
         {
+            Console.WriteLine("UPDATE ENTERED");
+
             try
             {
                 var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == petDto.Id);
 
-                var currentUserId = int.Parse(
-    User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-                if (pet.UserId != currentUserId &&
-                    !User.IsInRole("Admin"))
-                {
-                    return Forbid();
-                }
-
                 if (pet == null)
                     return NotFound("Pet Does Not Exist");
+
+                var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+                if (pet.UserId != currentUserId && !User.IsInRole("Admin"))
+                {
+                    return Forbid(); 
+                }
 
                 if (string.IsNullOrWhiteSpace(petDto.Breed))
                     return BadRequest("Breed is required");
 
                 pet.Breed = petDto.Breed;
+                pet.OwnerPhoneNumber = petDto.OwnerPhoneNumber;
+                pet.HandoverMethod = petDto.HandoverMethod;
                 pet.Type = petDto.Type;
                 pet.AgeCategory = petDto.AgeCategory;
                 pet.AgeYears = petDto.AgeYears;
                 pet.Gender = petDto.Gender;
+                pet.Governorate = petDto.Governorate;
 
                 pet.Tags = petDto.Tags != null
                     ? string.Join(',', petDto.Tags.Where(t => !string.IsNullOrWhiteSpace(t)))
@@ -224,7 +236,7 @@ namespace Petsociety.Controllers
                 var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == Id);
 
                 var currentUserId = int.Parse(
-    User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
                 if (pet.UserId != currentUserId &&
                     !User.IsInRole("Admin"))

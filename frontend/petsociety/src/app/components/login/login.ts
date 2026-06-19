@@ -64,6 +64,7 @@ import { Auth } from '../../services/auth';
   styleUrls: ['./login.css']
 })
 export class Login {
+  showPassword = false;
 
   // loginForm = new FormGroup({
   //   email: new FormControl('', [Validators.required, Validators.email]),

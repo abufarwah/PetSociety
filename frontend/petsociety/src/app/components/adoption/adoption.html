@@ -1,22 +1,61 @@
 <section class="adoption-hero">
-  <div class="floating-hero-card">
-    
-    <div class="hero-center-content">
-      <div class="verification-note">
-        <span class="pulse-dot"></span>
-        ✓ All pets are verified before adoption to ensure safety and well-being
+  <div class="floating-hero-card floating-hero-card--split">
+
+    <div class="card-top-accent"></div>
+
+    <div class="hero-split-body">
+      <div class="hero-left">
+
+        <div class="badge-row">
+          <div class="verification-note">
+            <span class="pulse-dot"></span>
+            ✓ All pets are verified before adoption
+          </div>
+        </div>
+
+        <p class="hero-eyebrow">Pet Adoption</p>
+
+        <h1>Find Your <span class="hero-highlight">Perfect</span><br>Companion</h1>
+
+        <p class="hero-desc">
+          Browse verified pets looking for loving homes and connect
+          with responsible adopters in a safe and trusted environment.
+        </p>
+
+        <div class="hero-stats">
+  <div class="hero-stat">
+    <span class="stat-num">{{ displayedPetsCount }}</span>
+    <span class="stat-lbl">Pets Listed</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="hero-stat">
+    <span class="stat-num">{{ displayedAdoptedCount }}</span>
+    <span class="stat-lbl">Adopted</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="hero-stat">
+    <span class="stat-num">100%</span>
+    <span class="stat-lbl">Verified</span>
+  </div>
+</div>
+
+        <div class="embedded-actions-zone hero-actions-row">
+          <button class="post-btn post-btn--dark" (click)="handlePostPet()">
+            + Post Pet for Adoption
+          </button>
+          <button class="post-btn" (click)="scrollToPets()">
+            Browse Pets
+          </button>
+        </div>
+
       </div>
-      
-      <h1>Find Your Perfect Companion</h1>
-      <p>
-        Browse verified pets looking for loving homes and connect
-        with responsible adopters in a safe and trusted environment.
-      </p>
+
+      <div class="hero-right">
+        <div class="hero-paw-bg">🐾</div>
+        <div class="hero-paw-sm">🐾</div>
+      </div>
     </div>
 
-    <div class="embedded-actions-zone">
-      <button class="post-btn" (click)="handlePostPet()">+ Post Pet for Adoption</button>
-    </div>
   </div>
 </section>
 
@@ -95,12 +134,12 @@
 <section *ngIf="!isLoading" class="pets-section container">
     <div class="pets-grid">
 
-        <div class="pet-card" *ngFor="let pet of filteredPets">
+        <div class="pet-card" *ngFor="let pet of filteredPets; let i = index" [style.--card-index]="i">
             
             <div class="post-actions" *ngIf="isLoggedIn && canManagePet(pet)">
                 <div class="menu-wrapper">
                     <button class="menu-toggle" type="button" title="Manage pet" (click)="toggleOptionsMenu(pet.id, $event)">
-                        ⋯
+                        <i class="fa-solid fa-ellipsis"></i>
                     </button>
                     <div class="menu-dropdown" *ngIf="optionsMenuOpenId === pet.id" (click)="$event.stopPropagation()">
                         <button class="menu-item" type="button" (click)="editPet(pet)">
@@ -149,7 +188,9 @@
                 </div>
 
                 <div class="pet-card-actions">
-                    <div *ngIf="pet.isCurrentUserOwner" class="adopt-status owner-listing">
+                    <div *ngIf="pet.isCurrentUserOwner" 
+                         class="adopt-status" 
+                         [ngClass]="getOwnerStatusClass(pet)">
                         {{ pet.ownerMessage || 'Listed by You' }}
                     </div>
 

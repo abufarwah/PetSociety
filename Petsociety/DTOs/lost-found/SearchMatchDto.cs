@@ -4,12 +4,8 @@ namespace Petsociety.DTOs.LostFound
 {
     public class SearchMatchDto
     {
-        public int ReportId { get; set; }
-        public string Type { get; set; } = null!;
-        public string PetType { get; set; } = null!;
-        public string ImageUrl { get; set; } = null!;
-        public double SimilarityScore { get; set; }
-        public string Excerpt { get; set; } = string.Empty;
+        public LostFoundReportDto Post { get; set; } = null!;
+        public double Confidence { get; set; }
     }
 
     public class SearchSimilarResponseDto

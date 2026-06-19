@@ -7,6 +7,9 @@ namespace Petsociety.Model
     public class Pet
     {
         public long Id { get; set; }
+        public string? OwnerPhoneNumber { get; set; }
+        public string? HandoverMethod { get; set; }
+        public string? Governorate { get; set; }
         public int UserId { get; set; }
 
         [Required]

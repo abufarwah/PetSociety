@@ -40,7 +40,8 @@ namespace Petsociety.Controllers
                                RequesterEmail = user != null ? user.Email : string.Empty,
                                RequesterName = user != null ? user.FullName : string.Empty,
                                Status = req.Status,
-                               CreatedAt = req.CreatedAt
+                               CreatedAt = req.CreatedAt,
+                               Governorate = req.Governorate
                            };
 
                 return Ok(data.ToList());
@@ -72,7 +73,8 @@ namespace Petsociety.Controllers
                                 RequesterEmail = user != null ? user.Email : string.Empty,
                                 RequesterName = user != null ? user.FullName : string.Empty,
                                 Status = req.Status,
-                                CreatedAt = req.CreatedAt
+                                CreatedAt = req.CreatedAt,
+                                Governorate = req.Governorate
                             }).FirstOrDefault();
 
                 return Ok(item);
@@ -82,116 +84,6 @@ namespace Petsociety.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        //[HttpPost("Add")]
-        //public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
-        //{
-        //    try
-        //    {
-        //        var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
-        //        if (pet == null)
-        //        {
-        //            return BadRequest("Pet Does Not Exist");
-        //        }
-
-        //        if (!pet.IsAvailable)
-        //        {
-        //            return BadRequest("Pet Is Not Available For Adoption");
-        //        }
-
-        //        var request = new AdoptionRequest
-        //        {
-        //            Id = 0,
-        //            PetId = dto.PetId,
-        //            PhoneNumber = dto.PhoneNumber,
-        //            DeliveryMethod = dto.DeliveryMethod,
-        //            Status = dto.Status ?? "Pending",
-        //            CreatedAt = DateTime.UtcNow
-        //        };
-
-        //        _dbContext.AdoptionRequests.Add(request);
-        //        _dbContext.SaveChanges();
-
-        //        // Note: not changing pet.IsAvailable here to preserve admin approval workflow
-
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-        //[HttpPost("Add")]
-        //public IActionResult Add([FromBody] SaveAdoptionRequestDto dto)
-        //{
-        //    try
-        //    {
-        //        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        //        if (string.IsNullOrEmpty(userIdClaim))
-        //        {
-        //            return Unauthorized();
-        //        }
-
-        //        var userId = int.Parse(userIdClaim);
-
-        //        var pet = _dbContext.Pets.FirstOrDefault(x => x.Id == dto.PetId);
-        //        if (pet == null)
-        //        {
-        //            return BadRequest("Pet Does Not Exist");
-        //        }
-
-        //        if (!pet.IsAvailable)
-        //        {
-        //            return BadRequest("Pet Is Not Available For Adoption");
-        //        }
-
-        //        long userId = 0;
-        //        if (!string.IsNullOrWhiteSpace(dto.UserEmail))
-        //        {
-        //            var normalizedEmail = dto.UserEmail.Trim().ToLower();
-        //            var user = _dbContext.Users.FirstOrDefault(x => x.Email.ToLower() == normalizedEmail);
-        //            if (user == null)
-        //            {
-        //                user = new User
-        //                {
-        //                    FullName = normalizedEmail.Contains('@') ? normalizedEmail.Substring(0, normalizedEmail.IndexOf('@')) : normalizedEmail,
-        //                    Email = normalizedEmail,
-        //                    PasswordHash = "external-user",
-        //                    IsActive = true,
-        //                    IsDeleted = false,
-        //                    IsRestricted = false
-        //                };
-        //                _dbContext.Users.Add(user);
-        //                _dbContext.SaveChanges();
-        //            }
-        //            userId = user.Id;
-        //        }
-
-        //        var request = new AdoptionRequest
-        //        {
-        //            Id = 0,
-        //            PetId = dto.PetId,
-        //            UserId = 1, 
-        //            PhoneNumber = dto.PhoneNumber,
-        //            DeliveryMethod = dto.DeliveryMethod,
-        //            Status = dto.Status ?? "Pending",
-        //            CreatedAt = DateTime.UtcNow
-        //        };
-
-        //        _dbContext.AdoptionRequests.Add(request);
-        //        _dbContext.SaveChanges();
-
-        //        // Note: not changing pet.IsAvailable here to preserve admin approval workflow
-
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
 
         [Authorize]
         [HttpPost("Add")]
@@ -227,6 +119,7 @@ namespace Petsociety.Controllers
                     UserId = userId,
                     PhoneNumber = dto.PhoneNumber,
                     DeliveryMethod = dto.DeliveryMethod,
+                    Governorate = dto.Governorate,
                     Status = dto.Status ?? "Pending",
                     CreatedAt = DateTime.UtcNow
                 };
@@ -257,9 +150,9 @@ namespace Petsociety.Controllers
                     return BadRequest("Adoption Request Does Not Exist");
                 }
 
-                // Only allow status update and delivery/phone fields in this simple implementation
                 request.PhoneNumber = dto.PhoneNumber;
                 request.DeliveryMethod = dto.DeliveryMethod;
+                request.Governorate = dto.Governorate;
                 if (!string.IsNullOrEmpty(dto.Status))
                 {
                     request.Status = dto.Status;
@@ -308,13 +201,12 @@ namespace Petsociety.Controllers
             return Ok();
         }
 
-        [Authorize] // يجب أن يكون المستخدم مسجلاً لمعرفة حالته مع الحيوانات
+        [Authorize] 
         [HttpGet("GetPetsWithUserStatus")]
         public IActionResult GetPetsWithUserStatus()
         {
             try
             {
-                // 1. جلب الـ UserId الخاص بالمستخدم الحالي من الـ Token
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdClaim))
                 {
@@ -322,7 +214,6 @@ namespace Petsociety.Controllers
                 }
                 long currentUserId = long.Parse(userIdClaim);
 
-                // 2. ربط الحيوانات بجدول طلبات التبني الخاصة بهذا المستخدم فقط
                 var result = (from pet in _dbContext.Pets
                               join req in _dbContext.AdoptionRequests.Where(r => r.UserId == currentUserId)
                               on pet.Id equals req.PetId into reqGroup
@@ -335,11 +226,10 @@ namespace Petsociety.Controllers
                                   AgeYears = pet.AgeYears,
                                   Gender = pet.Gender,
                                   Image = pet.ImageUrl,
-                                  Tags = pet.Tags, // تأكد أن الـ Tags ممتدة كـ List أو Array بناءً على الـ Model عندك
+                                  Tags = pet.Tags, 
                                   IsAvailable = pet.IsAvailable,
-                                  UserId = pet.UserId, // افتراضاً أن جدول الـ Pet يحتوي على UserId لصاحب الحيوان
+                                  UserId = pet.UserId, 
 
-                                  // الشروط الجديدة التي طلبها الفرونت إند
                                   IsOwner = pet.UserId == currentUserId,
                                   HasApplied = userRequest != null,
                                   AdoptionStatus = userRequest != null ? userRequest.Status : "None"

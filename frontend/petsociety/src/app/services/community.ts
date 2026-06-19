@@ -101,4 +101,7 @@ export class CommunityService {
       { headers: { Authorization: `Bearer ${token}` } }
     );
   }
+  getChannelMembers(channelId: number) {
+  return this.http.get(`${this.apiUrl}/CommunityChannels/GetMembers?channelId=${channelId}`);
+}
 }

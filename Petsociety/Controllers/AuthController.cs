@@ -44,7 +44,9 @@ namespace Petsociety.Controllers
                     Email = dto.Email,
                     Phone = dto.Phone,
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                    Role = "User"
+                    Role = "User" ,
+                    IsActive = true,
+                    IsDeleted = false
                 };
 
                 _dbContext.Users.Add(user);
