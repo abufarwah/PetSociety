@@ -110,19 +110,31 @@ namespace Petsociety.Services
                     {
                         result.Add(new SearchMatchDto
                         {
-                            ReportId = report.Id,
-                            Type = report.Type.ToString().ToLower(),
-                            PetType = report.PetType,
-                            ImageUrl = report.ImageUrl,
-                            SimilarityScore = score,
-                            Excerpt = (report.Description ?? "").Length > 200
-                                ? report.Description.Substring(0, 200) + "..."
-                                : report.Description ?? ""
+                            Post = new LostFoundReportDto
+                            {
+                                Id = report.Id,
+                                Type = report.Type.ToString().ToLower(),
+                                PetType = report.PetType,
+                                Breed = report.Breed,
+                                ColorMarkings = report.ColorMarkings,
+                                DateLastSeen = report.DateLastSeen,
+                                Location = report.Location,
+                                Excerpt = (report.Description ?? "").Length > 200
+                                    ? report.Description.Substring(0, 200) + "..."
+                                    : report.Description ?? "",
+                                ImageUrl = report.ImageUrl,
+                                ReporterName = report.ReporterName,
+                                ReporterUserId = report.ReporterUserId,
+                                ReporterPhone = report.ReporterPhone,
+                                Status = report.Status.ToString(),
+                                CreatedAt = report.CreatedAt
+                            },
+                            Confidence = score
                         });
                     }
                 }
 
-                return result.OrderByDescending(r => r.SimilarityScore).ToList();
+                return result.OrderByDescending(r => r.Confidence).ToList();
             }
             catch (Exception ex)
             {

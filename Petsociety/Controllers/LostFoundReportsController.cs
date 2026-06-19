@@ -302,18 +302,7 @@ namespace Petsociety.Controllers
             try
             {
                 var matches = await _aiMatchingService.FindSimilarPetsAsync(queryImage);
-                var matchIds = matches.Select(m => m.ReportId).ToList();
-                var posts = _db.LostFoundReports.Where(r => matchIds.Contains(r.Id)).ToList();
-
-                var formattedMatches = matches.Select(m => {
-                    var post = posts.FirstOrDefault(p => p.Id == m.ReportId);
-                    return new {
-                        post = post,
-                        confidence = m.SimilarityScore
-                    };
-                }).Where(x => x.post != null).ToList();
-
-                return Ok(new { matches = formattedMatches });
+                return Ok(new { matches = matches });
             }
             catch (Exception ex)
             {
