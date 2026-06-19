@@ -156,6 +156,7 @@ sys.path.append('.')
 try:
     from fastreid.config import get_cfg
     from fastreid.engine import DefaultPredictor
+    from fastreid.data.transforms import build_transforms
     from pet_id.config import add_retri_config  # المسار الصحيح والمعدل
 except ImportError as e:
     print(f"WARNING: Could not import fastreid. Error details: {e}")
@@ -163,12 +164,17 @@ except ImportError as e:
     traceback.print_exc() 
     print("WARNING: Could not import fastreid. Make sure requirements are installed.")
 
+import torch
+from PIL import Image
+import io
+
 app = Flask(__name__)
 
 predictor = None
+transform = None
 
 def setup_predictor():
-    global predictor
+    global predictor, transform
     try:
         cfg = get_cfg()
         add_retri_config(cfg)
@@ -181,6 +187,10 @@ def setup_predictor():
         # تعديل أساسي: إجبار الموديل على العمل على الـ CPU لتجنب خطأ الـ CUDA
         cfg.MODEL.DEVICE = 'cpu'  
         cfg.MODEL.BACKBONE.PRETRAIN = False
+        
+        # Build image transforms before freezing cfg
+        transform = build_transforms(cfg, is_train=False)
+        
         cfg.freeze()
         predictor = DefaultPredictor(cfg)
         print("AI Model loaded successfully.")
@@ -196,16 +206,21 @@ def predict():
     file = request.files['image']
     image_bytes = file.read()
 
-    # Decode the image
-    img = cv2.imdecode(np.frombuffer(image_bytes, np.uint8), cv2.IMREAD_COLOR)
+    # Decode the image to PIL for transformations
+    try:
+        img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+    except Exception as e:
+        return jsonify({"error": "Invalid image format"}), 400
 
-    if img is None:
-        return jsonify({"error": "Invalid image"}), 400
-
-    if predictor:
+    if predictor and transform:
         try:
+            # Apply transforms
+            image_tensor = transform(img)
+            # Add batch dimension [1, C, H, W]
+            image_tensor = torch.unsqueeze(image_tensor, 0)
+            
             # Get feature representation
-            predictions = predictor(img)
+            predictions = predictor(image_tensor)
             # تحويل البصمة إلى مصفوفة أرقام عادية (List of floats) ليفهمها الـ .NET
             features = predictions.cpu().numpy().tolist()[0] 
             return jsonify({"features": features, "status": "success"})
