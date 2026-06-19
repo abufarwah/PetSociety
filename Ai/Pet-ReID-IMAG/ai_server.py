@@ -210,6 +210,8 @@ def predict():
             features = predictions.cpu().numpy().tolist()[0] 
             return jsonify({"features": features, "status": "success"})
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             return jsonify({"error": str(e)}), 500
     else:
         # Mock response if model couldn't load
