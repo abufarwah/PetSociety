@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Petsociety.DTOs.LostFound;
 using Petsociety.Model;
-using System.Net.Http;
 using System.Text.Json;
+using System.Net.Http.Headers;
 
 namespace Petsociety.Services
 {
@@ -11,7 +10,7 @@ namespace Petsociety.Services
     {
         private readonly PetDbContext _db;
         private readonly HttpClient _httpClient;
-        private readonly string _aiMicroserviceUrl = "http://localhost:5000/api/predict";
+        private readonly string _pythonApiUrl = "http://localhost:5000";
 
         public AiPetMatchingService(PetDbContext db)
         {
@@ -19,7 +18,7 @@ namespace Petsociety.Services
             _httpClient = new HttpClient();
         }
 
-        public async Task<string?> GetFeatureVectorAsync(IFormFile imageFile)
+        public async Task<string?> ExtractFeatureVectorAsync(IFormFile imageFile)
         {
             if (imageFile == null || imageFile.Length == 0) return null;
 
@@ -27,104 +26,109 @@ namespace Petsociety.Services
             {
                 using var content = new MultipartFormDataContent();
                 using var stream = imageFile.OpenReadStream();
-                content.Add(new StreamContent(stream), "image", imageFile.FileName);
+                var streamContent = new StreamContent(stream);
+                streamContent.Headers.ContentType = new MediaTypeHeaderValue(imageFile.ContentType);
+                content.Add(streamContent, "image", imageFile.FileName);
 
-                var response = await _httpClient.PostAsync(_aiMicroserviceUrl, content);
-                if (response.IsSuccessStatusCode)
+                var response = await _httpClient.PostAsync($"{_pythonApiUrl}/api/predict", content);
+                if (!response.IsSuccessStatusCode) return null;
+
+                var result = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(result);
+                if (doc.RootElement.TryGetProperty("features", out var featuresElement))
                 {
-                    var aiResult = await response.Content.ReadAsStringAsync();
-                    using var doc = JsonDocument.Parse(aiResult);
-                    if (doc.RootElement.TryGetProperty("features", out JsonElement featuresElement))
-                    {
-                        return featuresElement.GetRawText();
-                    }
+                    return featuresElement.GetRawText();
                 }
             }
             catch (Exception ex)
             {
-                // Handle or log exception
-                Console.WriteLine($"Error getting feature vector: {ex.Message}");
+                Console.WriteLine($"Error extracting features: {ex.Message}");
             }
             return null;
         }
 
         public async Task<List<SearchMatchDto>> FindSimilarPetsAsync(IFormFile imageFile)
         {
-            var queryVectorString = await GetFeatureVectorAsync(imageFile);
-            if (string.IsNullOrEmpty(queryVectorString))
-                return new List<SearchMatchDto>();
+            var result = new List<SearchMatchDto>();
+            if (imageFile == null || imageFile.Length == 0)
+                return result;
 
             try
             {
-                var queryVectorArray = JsonSerializer.Deserialize<float[][]>(queryVectorString);
-                var queryVector = queryVectorArray != null && queryVectorArray.Length > 0 ? queryVectorArray[0] : Array.Empty<float>();
+                // 1. Get query features
+                var queryFeatureStr = await ExtractFeatureVectorAsync(imageFile);
+                if (string.IsNullOrEmpty(queryFeatureStr)) return result;
 
-                if (queryVector.Length == 0) return new List<SearchMatchDto>();
+                var queryFeature = JsonSerializer.Deserialize<List<double>>(queryFeatureStr);
+                if (queryFeature == null || queryFeature.Count == 0) return result;
 
-                var posts = await _db.LostFoundReports
-                    .Where(p => !string.IsNullOrEmpty(p.FeatureVector) && p.IsPublished)
-                    .ToListAsync();
+                // 2. Get candidates from DB
+                var reports = _db.LostFoundReports
+                    .Where(r => r.IsPublished && !string.IsNullOrEmpty(r.FeatureVector))
+                    .ToList();
 
-                var matches = posts.Select(p => 
+                if (!reports.Any()) return result;
+
+                var candidatesList = new List<object>();
+                foreach (var r in reports)
                 {
-                    var postVectorArray = JsonSerializer.Deserialize<float[][]>(p.FeatureVector!);
-                    var postVector = postVectorArray != null && postVectorArray.Length > 0 ? postVectorArray[0] : Array.Empty<float>();
-                    return new 
+                    try
                     {
-                        Post = p,
-                        Confidence = CalculateCosineSimilarity(queryVector, postVector)
-                    };
-                })
-                .Where(m => m.Confidence > 0.6) // Only 60%+ match
-                .OrderByDescending(m => m.Confidence)
-                .Take(5) // Top 5
-                .Select(m => new SearchMatchDto
-                {
-                    Post = new LostFoundReportDto
-                    {
-                        Id = m.Post.Id,
-                        Type = m.Post.Type.ToString().ToLower(),
-                        PetType = m.Post.PetType,
-                        Breed = m.Post.Breed,
-                        ColorMarkings = m.Post.ColorMarkings,
-                        DateLastSeen = m.Post.DateLastSeen,
-                        Location = m.Post.Location,
-                        Excerpt = (m.Post.Description ?? "").Length > 200
-                            ? m.Post.Description.Substring(0, 200) + "..."
-                            : m.Post.Description,
-                        ImageUrl = m.Post.ImageUrl,
-                        ReporterName = m.Post.ReporterName,
-                        ReporterUserId = m.Post.ReporterUserId,
-                        ReporterPhone = m.Post.ReporterPhone,
-                        Status = m.Post.Status.ToString(),
-                        CreatedAt = m.Post.CreatedAt
-                    },
-                    Confidence = m.Confidence
-                })
-                .ToList();
+                        var fv = JsonSerializer.Deserialize<List<double>>(r.FeatureVector!);
+                        if (fv != null)
+                        {
+                            candidatesList.Add(new { id = r.Id, feature = fv });
+                        }
+                    }
+                    catch { }
+                }
 
-                return matches;
+                // 3. Compare via python API
+                var matchPayload = new
+                {
+                    query_feature = queryFeature,
+                    candidates = candidatesList,
+                    threshold = 0.0
+                };
+
+                var matchContent = new StringContent(JsonSerializer.Serialize(matchPayload), System.Text.Encoding.UTF8, "application/json");
+                var matchRes = await _httpClient.PostAsync($"{_pythonApiUrl}/api/match", matchContent);
+                if (!matchRes.IsSuccessStatusCode) return result;
+
+                var matchJson = await matchRes.Content.ReadAsStringAsync();
+                using var matchDoc = JsonDocument.Parse(matchJson);
+                if (!matchDoc.RootElement.TryGetProperty("matches", out var matchesElement)) return result;
+
+                // 4. Map to DTOs
+                foreach (var m in matchesElement.EnumerateArray())
+                {
+                    var id = m.GetProperty("id").GetInt32();
+                    var score = m.GetProperty("score").GetDouble();
+
+                    var report = reports.FirstOrDefault(x => x.Id == id);
+                    if (report != null)
+                    {
+                        result.Add(new SearchMatchDto
+                        {
+                            ReportId = report.Id,
+                            Type = report.Type.ToString().ToLower(),
+                            PetType = report.PetType,
+                            ImageUrl = report.ImageUrl,
+                            SimilarityScore = score,
+                            Excerpt = (report.Description ?? "").Length > 200
+                                ? report.Description.Substring(0, 200) + "..."
+                                : report.Description ?? ""
+                        });
+                    }
+                }
+
+                return result.OrderByDescending(r => r.SimilarityScore).ToList();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error comparing feature vectors: {ex.Message}");
-                return new List<SearchMatchDto>();
+                Console.WriteLine($"Error in FindSimilarPetsAsync: {ex.Message}");
+                return result;
             }
-        }
-
-        private double CalculateCosineSimilarity(float[] vectorA, float[] vectorB)
-        {
-            if (vectorA.Length != vectorB.Length || vectorA.Length == 0) return 0;
-
-            double dotProduct = 0, normA = 0, normB = 0;
-            for (int i = 0; i < vectorA.Length; i++)
-            {
-                dotProduct += vectorA[i] * vectorB[i];
-                normA += Math.Pow(vectorA[i], 2);
-                normB += Math.Pow(vectorB[i], 2);
-            }
-            if (normA == 0 || normB == 0) return 0;
-            return dotProduct / (Math.Sqrt(normA) * Math.Sqrt(normB));
         }
     }
 }
