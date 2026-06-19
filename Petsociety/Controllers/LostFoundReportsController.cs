@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Petsociety.DTOs.LostFound;
@@ -16,11 +16,13 @@ namespace Petsociety.Controllers
     {
         private readonly PetDbContext _db;
         private readonly IImageStorageService _imageStorage;
+        private readonly IAiPetMatchingService _aiMatchingService;
 
-        public LostFoundReportsController(PetDbContext db, IImageStorageService imageStorage)
+        public LostFoundReportsController(PetDbContext db, IImageStorageService imageStorage, IAiPetMatchingService aiMatchingService)
         {
             _db = db;
             _imageStorage = imageStorage;
+            _aiMatchingService = aiMatchingService;
         }
 
         // ───────────────────────────────
@@ -121,7 +123,7 @@ namespace Petsociety.Controllers
         // ───────────────────────────────
         [HttpPost("reports")]
         [Authorize] // 🔥 لازم يكون مسجل دخول
-        public IActionResult Create([FromForm] SaveLostFoundReportDto dto)
+        public async Task<IActionResult> Create([FromForm] SaveLostFoundReportDto dto)
         {
             try
             {
@@ -130,14 +132,15 @@ namespace Petsociety.Controllers
 
                 string? imageUrl = null;
                 string? imageFileName = null;
+                string? featureVector = null;
 
                 if (dto.ImageFile != null)
                 {
-                    var saved = _imageStorage.SaveLostFoundImageAsync(dto.ImageFile)
-                        .GetAwaiter().GetResult();
+                    var saved = await _imageStorage.SaveLostFoundImageAsync(dto.ImageFile);
 
                     imageUrl = saved.Url;
                     imageFileName = saved.FileName;
+                    featureVector = await _aiMatchingService.ExtractFeatureVectorAsync(dto.ImageFile);
                 }
 
                 var entity = new LostFoundReport
@@ -163,12 +166,13 @@ namespace Petsociety.Controllers
                     ReporterUserId = userId,
                     Status = LostFoundReportStatus.Open,
                     IsPublished = true,
+                    FeatureVector = featureVector,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
 
                 _db.LostFoundReports.Add(entity);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
                 return Ok(entity);
             }
@@ -186,7 +190,7 @@ namespace Petsociety.Controllers
         // ───────────────────────────────
         [Authorize]
         [HttpPut("reports/{id:int}")]
-        public IActionResult Update(int id, [FromForm] SaveLostFoundReportDto dto)
+        public async Task<IActionResult> Update(int id, [FromForm] SaveLostFoundReportDto dto)
         {
             var entity = _db.LostFoundReports.FirstOrDefault(x => x.Id == id);
             if (entity == null) return NotFound();
@@ -211,9 +215,10 @@ namespace Petsociety.Controllers
                 if (!string.IsNullOrEmpty(entity.ImageFileName))
                     _imageStorage.DeleteImage(entity.ImageFileName);
 
-                var saved = _imageStorage.SaveLostFoundImageAsync(dto.ImageFile).GetAwaiter().GetResult();
+                var saved = await _imageStorage.SaveLostFoundImageAsync(dto.ImageFile);
                 entity.ImageUrl = saved.Url;
                 entity.ImageFileName = saved.FileName;
+                entity.FeatureVector = await _aiMatchingService.ExtractFeatureVectorAsync(dto.ImageFile);
             }
 
             try
@@ -221,12 +226,12 @@ namespace Petsociety.Controllers
                 _db.LostFoundReports.Attach(entity);
                 _db.Entry(entity).State = EntityState.Modified;
 
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
                 // تأكيد الـ Transaction يدوياً احتياطاً للتعديل أيضاً
                 if (_db.Database.CurrentTransaction != null)
                 {
-                    _db.Database.CurrentTransaction.Commit();
+                    await _db.Database.CurrentTransaction.CommitAsync();
                 }
 
                 return Ok(entity);
@@ -283,6 +288,36 @@ namespace Petsociety.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { message = "Database rejected deletion.", error = ex.InnerException?.Message ?? ex.Message });
+            }
+        }
+        // ───────────────────────────────
+        // COMPARE (AI MATCHING)
+        // ───────────────────────────────
+        [HttpPost("compare")]
+        public async Task<IActionResult> Compare(IFormFile queryImage)
+        {
+            if (queryImage == null || queryImage.Length == 0)
+                return BadRequest("No image provided.");
+
+            try
+            {
+                var matches = await _aiMatchingService.FindSimilarPetsAsync(queryImage);
+                var matchIds = matches.Select(m => m.ReportId).ToList();
+                var posts = _db.LostFoundReports.Where(r => matchIds.Contains(r.Id)).ToList();
+
+                var formattedMatches = matches.Select(m => {
+                    var post = posts.FirstOrDefault(p => p.Id == m.ReportId);
+                    return new {
+                        post = post,
+                        confidence = m.SimilarityScore
+                    };
+                }).Where(x => x.post != null).ToList();
+
+                return Ok(new { matches = formattedMatches });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
