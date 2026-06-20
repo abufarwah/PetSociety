@@ -275,11 +275,11 @@
                 <div class="request-row">
                     <label>Delivery Option *</label>
                     <div class="delivery-options">
-                        <button type="button" [class.active]="adopterDeliveryMethod === 'Delivery'" (click)="adopterDeliveryMethod = 'Delivery'">
-                            Delivery
-                        </button>
                         <button type="button" [class.active]="adopterDeliveryMethod === 'Clinic Pickup'" (click)="adopterDeliveryMethod = 'Clinic Pickup'">
                             Clinic Pickup
+                        </button>
+                        <button type="button" [class.active]="adopterDeliveryMethod === 'Delivery'" (click)="adopterDeliveryMethod = 'Delivery'">
+                            Delivery
                         </button>
                     </div>
                 </div>
