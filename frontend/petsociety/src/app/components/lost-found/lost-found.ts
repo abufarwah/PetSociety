@@ -45,6 +45,37 @@ export class LostFoundComponent implements OnInit {
     private auth: Auth
   ) {}
 
+  // 1. يمنع إدخال أي شيء غير الأرقام (يسمح بالـ + في البداية فقط)
+validatePhoneInput(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
+  const charCode = event.which ? event.which : event.keyCode;
+
+  // يسمح بالرقم فقط (48-57)
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
+
+// 2. يضمن أن يبدأ الرقم بـ +962 ويقيد الطول بـ 13 خانة (3 للرمز + 9 للأرقام)
+enforceFormat(event: any) {
+  let value = event.target.value;
+
+  // إزالة أي شيء ليس رقماً
+  value = value.replace(/[^0-9]/g, '');
+
+  // التأكد من إضافة +962 في البداية إذا لم تكن موجودة
+  if (!value.startsWith('962')) {
+    value = '962' + value;
+  }
+
+  // تقييد الطول بـ 12 رقم (962 + 9 أرقام = 12 خانة)
+  if (value.length > 12) {
+    value = value.substring(0, 12);
+  }
+
+  // إعادة القيمة المنسقة مع الـ +
+  this.reportForm.phone = '+' + value;
+}
   ngOnInit() {
     // إعداد القيم الأولية فوراً عند تحميل الصفحة
     this.isLoggedIn = this.auth.isLoggedIn$.value;
