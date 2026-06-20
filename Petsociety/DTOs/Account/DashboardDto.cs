@@ -5,7 +5,9 @@
         public UserProfileDto User { get; set; } = null!;
 
         public AccountStatsDto Stats { get; set; } = null!;
-
         public List<AdoptedPetDto> AdoptedPets { get; set; } = new();
+
+        public List<SubscriptionDto> Subscriptions { get; set; }
     }
+
 }
