@@ -132,17 +132,95 @@
   line-height: 1.9;
 }
 
-/* GLASS STATS */
-
-.stats-container {
-  background: rgba(255,255,255,0.65);
-  backdrop-filter: blur(14px);
+/* ================= PREMIUM STATS ================= */
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 12px 25px 12px 12px;
   border-radius: 999px;
-  padding: 26px 40px;
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.05),
-    inset 0 1px 0 rgba(255,255,255,0.8);
-  border: 1px solid rgba(255,255,255,0.5);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: default;
+}
+
+.stat-pill:hover {
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Icons */
+.stat-icon-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Text */
+.stat-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.stat-number {
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+/* Thematic Colors & Glow */
+.stat-lost:hover {
+  box-shadow: 0 15px 30px rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+.stat-lost .stat-number { color: #ef4444; }
+.stat-lost .stat-icon-wrapper { color: #ef4444; background: linear-gradient(135deg, #fef2f2, #fee2e2); }
+
+.stat-found:hover {
+  box-shadow: 0 15px 30px rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+.stat-found .stat-number { color: #22c55e; }
+.stat-found .stat-icon-wrapper { color: #22c55e; background: linear-gradient(135deg, #f0fdf4, #dcfce7); }
+
+.stat-reunited:hover {
+  box-shadow: 0 15px 30px rgba(214, 180, 140, 0.3);
+  border-color: rgba(214, 180, 140, 0.5);
+}
+.stat-reunited .stat-number { color: #c9a774; }
+.stat-reunited .stat-icon-wrapper { color: #c9a774; background: linear-gradient(135deg, #fdfaf5, #f0e6d6); }
+
+/* Continuous Float Animation */
+.stat-pill:nth-child(1) { animation: floatStat 5s ease-in-out infinite; }
+.stat-pill:nth-child(2) { animation: floatStat 5s ease-in-out infinite 1.5s; }
+.stat-pill:nth-child(3) { animation: floatStat 5s ease-in-out infinite 0.7s; }
+
+@keyframes floatStat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.stat-pill:hover {
+  animation-play-state: paused;
 }
 
 /* ================= TWINKLE ================= */
@@ -164,32 +242,7 @@
   }
 }
 
-/* ================= STATS ================= */
 
-.stats-container {
-  background: white;
-  border-radius: 999px;
-  padding: 20px 30px;
-  border: none;
-  box-shadow: var(--card-shadow);
-  transition: all 0.3s ease;
-}
-
-.stats-container:hover {
-  transform: translateY(-3px);
-}
-
-.counter {
-  color: var(--dark);
-  font-weight: 700;
-}
-
-.vr {
-  width: 1px;
-  height: 40px;
-  background: #e5e7eb;
-  opacity: 1;
-}
 
 /* ================= UPLOAD CARD ================= */
 
@@ -1217,17 +1270,6 @@
     width: 100%;
     height: 50%;
   }
-}
-
-  width: 70px;
-  height: 70px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 20px;
-  font-size: 1.6rem;
-  transition: all 0.3s ease;
 }
 
 .step-item:hover .step-icon {
