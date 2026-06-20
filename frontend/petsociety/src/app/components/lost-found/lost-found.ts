@@ -20,6 +20,11 @@ export class LostFoundComponent implements OnInit {
   searchResultMessage: string | null = null;
   aiMatches: any[] = [];
 
+  // Interactive How-It-Works State
+  currentStep: number = 1;
+  isDemoMode: boolean = true;
+  demoInterval: any;
+
   // متغيرات العدادات
   lostCount: number = 0;
   foundCount: number = 0;
@@ -63,6 +68,9 @@ export class LostFoundComponent implements OnInit {
     this.startCounter('foundCount', 85);
     this.startCounter('reunitedCount', 50);
 
+    // Start Demo Animation for How It Works
+    this.startDemoAnimation();
+
     // جلب المنشورات من قاعدة البيانات
     this.loadPosts();
   }
@@ -88,6 +96,27 @@ export class LostFoundComponent implements OnInit {
     }, stepTime);
   }
 
+  startDemoAnimation() {
+    this.demoInterval = setInterval(() => {
+      if (this.isDemoMode) {
+        this.currentStep = this.currentStep >= 4 ? 1 : this.currentStep + 1;
+        this.cdr.detectChanges();
+      }
+    }, 2500);
+  }
+
+  stopDemoAnimation() {
+    this.isDemoMode = false;
+    if (this.demoInterval) {
+      clearInterval(this.demoInterval);
+    }
+  }
+
+  setStep(step: number) {
+    this.stopDemoAnimation();
+    this.currentStep = step;
+  }
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -97,6 +126,8 @@ export class LostFoundComponent implements OnInit {
         this.queryImagePreview = reader.result;
         this.queryImageFile = file;
         this.searchResultMessage = null;
+        this.stopDemoAnimation();
+        this.currentStep = 2; // Advance to step 2 after upload
         this.cdr.detectChanges();
       };
       reader.readAsDataURL(file);
@@ -111,6 +142,9 @@ export class LostFoundComponent implements OnInit {
 
     if (this.queryInputVariable)
       this.queryInputVariable.nativeElement.value = '';
+      
+    this.stopDemoAnimation();
+    this.currentStep = 1; // Reset to step 1
   }
 
   searchSimilarPets() {
@@ -118,6 +152,8 @@ export class LostFoundComponent implements OnInit {
 
     this.searchResultMessage = 'Analyzing image and searching for matches...';
     this.aiMatches = [];
+    this.currentStep = 3; // Advance to step 3 (Searching)
+    this.cdr.detectChanges();
 
     const formData = new FormData();
     formData.append('queryImage', this.queryImageFile, this.queryImageFile.name);
@@ -158,11 +194,13 @@ export class LostFoundComponent implements OnInit {
           };
         });
       }
+      this.currentStep = 4; // Advance to step 4 (Results)
       this.cdr.detectChanges();
     })
     .catch(error => {
       console.error('Error connecting to AI service:', error);
       this.searchResultMessage = 'Image uploaded but the AI backend service is not reachable or failed.';
+      this.currentStep = 1; // Reset on error
       this.cdr.detectChanges();
     });
   }
