@@ -59,7 +59,17 @@ namespace Petsociety.Services
                 var queryFeatureStr = await ExtractFeatureVectorAsync(imageFile);
                 if (string.IsNullOrEmpty(queryFeatureStr)) return result;
 
-                var queryFeature = JsonSerializer.Deserialize<List<double>>(queryFeatureStr);
+                List<double>? queryFeature = null;
+                if (queryFeatureStr.TrimStart().StartsWith("[["))
+                {
+                    var qfArray = JsonSerializer.Deserialize<List<List<double>>>(queryFeatureStr);
+                    if (qfArray != null && qfArray.Count > 0) queryFeature = qfArray[0];
+                }
+                else
+                {
+                    queryFeature = JsonSerializer.Deserialize<List<double>>(queryFeatureStr);
+                }
+
                 if (queryFeature == null || queryFeature.Count == 0) return result;
 
                 // 2. Get candidates from DB
@@ -74,7 +84,17 @@ namespace Petsociety.Services
                 {
                     try
                     {
-                        var fv = JsonSerializer.Deserialize<List<double>>(r.FeatureVector!);
+                        List<double>? fv = null;
+                        if (r.FeatureVector!.TrimStart().StartsWith("[["))
+                        {
+                            var fvArray = JsonSerializer.Deserialize<List<List<double>>>(r.FeatureVector);
+                            if (fvArray != null && fvArray.Count > 0) fv = fvArray[0];
+                        }
+                        else
+                        {
+                            fv = JsonSerializer.Deserialize<List<double>>(r.FeatureVector);
+                        }
+
                         if (fv != null)
                         {
                             candidatesList.Add(new { id = r.Id, feature = fv });

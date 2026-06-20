@@ -1,7 +1,9 @@
+/* الهيدر الخاص بحساب المستخدم */
 .account-header {
   border-radius: 20px;
 }
 
+/* دائرة الصورة الشخصية الرمزية */
 .avatar-circle {
   width: 64px;
   height: 64px;
@@ -15,6 +17,7 @@
   color: #fff;
 }
 
+/* الدوائر الصغيرة داخل الإحصائيات السريعة */
 .icon-circle {
   width: 36px;
   height: 36px;
@@ -25,6 +28,7 @@
   color: #fff;
 }
 
+/* الصندوق الفارغ الرمادي للقلب */
 .empty-state {
   width: 60px;
   height: 60px;
@@ -38,6 +42,7 @@
   color: #999;
 }
 
+/* الأزرار العامة للمنصة ذات اللون البيجي الدافئ */
 .ps-btn {
   background: #d6b896;      
   color: #fff;
@@ -46,30 +51,50 @@
   border-radius: 30px;
   font-weight: 500;
   transition: 0.3s;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .ps-btn:hover {
-  background: #c5a882;          
+  background: #c5a882;      
+  color: #fff;
 }
 
+/* زر تصفح الحيوانات الأليفة ممركز في المنتصف */
 .adopt-btn {
   min-width: 260px;
   padding: 12px 32px;
   border-radius: 28px;
   margin: 20px auto 0;
-  display: block;
+  display: inline-block; /* تم تعديلها ليتناسب التمركز المباشر داخل الـ text-center */
   text-align: center;
 }
 
+/* التنسيق الجديد لشبكة كروت الحيوانات المتبناة */
 .adopted-pet-image {
-  height: 160px;
+  height: 200px; /* زيادة الارتفاع قليلاً ليعطي دقة وجمالية مثل صورة الكلب اللطيف */
   object-fit: cover;
+  border-top-left-radius: 12px; /* إعطاء حواف ناعمة للصورة من الأعلى */
+  border-top-right-radius: 12px;
 }
+
+/* كارد الحيوان نفسه ليصبح بحواف ناعمة وظل خفيف ومتناسق */
+.col-xl-3 .card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+}
+
+.col-xl-3 .card:hover {
+  transform: translateY(-5px); /* تأثير حركة بسيط ولطيف عند تمرير الماوس فوق الكارت */
+}
+
+/* زر تسجيل الخروج */
 .signout-link {
   text-decoration: none;
-   background: #d6b896;
-   color: #fff;
-   padding: 12px 26px;
+  background: #d6b896;
+  color: #fff;
+  padding: 12px 26px;
   border-radius: 30px;
   font-weight: 500;
   transition: 0.3s;
@@ -77,6 +102,129 @@
 
 .signout-link:hover {
   text-decoration: none;
-   background: #c5a882; 
+  background: #c5a882; 
+  color: #fff;
+}
 
+/* الكارد الجديد للاشتراكات في اليسار */
+.subscription-status-card {
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%); /* تدرج خفيف جداً وناعم */
+}
+
+/* صندوق الأيقونة اللطيف الممركز في الوسط */
+.subscription-empty-icon {
+  width: 80px;
+  height: 80px;
+  background-color: #fbf5ee; /* لون بيج ناعم جداً للخلفية الدائرية المحيطة بالأيقونة */
+  border: 2px dashed #d6b896; /* إطار متقطع بلون السيمات الأساسي للموقع */
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #c5a882;
+}
+
+/* تعديل بسيط لعرض الأرقام في الإحصائيات */
+.card-body span.fw-bold {
+  font-size: 1.1rem;
+}
+
+/* حاوية الاشتراكات العمودية لتفعيل الـ Scrollbar مثل الصورة */
+.subscription-scroll-container {
+  max-height: 520px; /* تحديد ارتفاع أقصى ليظهر التمرير */
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* تخصيص مظهر السكرول بار ليصبح ناعماً */
+.subscription-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+.subscription-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 10px;
+}
+
+/* تنسيق كروت الاشتراكات */
+.subscription-card {
+  border-radius: 20px;
+  border: 1px solid #ebdccb;
+}
+.subscription-card.premium {
+  background: #fdfaf5; /* خلفية الباقة المميزة */
+}
+.subscription-card.basic {
+  background: #f4f8fc; /* خلفية الباقة العادية زرقاء خفيفة */
+}
+
+.plan-icon-box {
+  width: 50px;
+  height: 50px;
+  background: #ebdccb;
+  color: #a37f55;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+.subscription-card.basic .plan-icon-box {
+  background: #d6e4f0;
+  color: #4a7c59;
+}
+
+.plan-price {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.plan-features-list {
+  list-style: none;
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* زر إلغاء الاشتراك */
+.cancel-sub-btn {
+  background-color: #c5a882;
+  color: white;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.cancel-sub-btn:hover {
+  background-color: #b0936d;
+  color: white;
+}
+
+/* كرت الحيوان وشريط الحالة الأخضر */
+.pet-layout-card {
+  border-radius: 16px;
+  overflow: hidden;
+}
+.request-status-bar {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.subscriptions-container {
+    max-height: 400px; /* هذا هو الارتفاع الثابت الذي ترغبين به */
+    overflow-y: auto;  /* سيظهر شريط التمرير فقط إذا زاد عدد الاشتراكات عن المساحة */
+    padding-right: 5px; /* مساحة صغيرة لشريط التمرير */
+}
+
+/* تحسين شكل شريط التمرير (اختياري) */
+.subscriptions-container::-webkit-scrollbar {
+    width: 6px;
+}
+.subscriptions-container::-webkit-scrollbar-thumb {
+    background-color: #c4a484; /* لون متناسق مع تصميم الموقع */
+    border-radius: 10px;
 }
