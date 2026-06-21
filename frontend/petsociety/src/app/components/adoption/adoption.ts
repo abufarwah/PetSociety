@@ -30,7 +30,7 @@ export class Adoption implements OnInit {
   
   adopterPhone: string = '';
   adopterGovernorate: string = ''; 
-  adopterDeliveryMethod: 'Delivery' | 'Clinic Pickup' = 'Delivery';
+  adopterDeliveryMethod: 'Delivery' | 'Clinic Pickup' = 'Clinic Pickup';
   
   adoptionError: string = '';
   isLoggedIn = false;
@@ -142,7 +142,7 @@ export class Adoption implements OnInit {
     this.adoptionError = '';
     this.adopterPhone = '';
     this.adopterGovernorate = ''; 
-    this.adopterDeliveryMethod = 'Delivery';
+    this.adopterDeliveryMethod = 'Clinic Pickup';
   }
 
   closePet() {
@@ -155,8 +155,16 @@ export class Adoption implements OnInit {
     this.adoptionError = '';
     this.adopterPhone = '';
     this.adopterGovernorate = ''; 
-    this.adopterDeliveryMethod = 'Delivery';
+    this.adopterDeliveryMethod = 'Clinic Pickup';
     this.showAdoptionDetails = true;
+  }
+
+  selectDeliveryMethod(method: 'Delivery' | 'Clinic Pickup') {
+    this.adopterDeliveryMethod = method;
+    this.adoptionError = '';
+    if (method !== 'Delivery') {
+      this.adopterGovernorate = '';
+    }
   }
 
   validatePhoneNumber(phone: string) {
@@ -179,7 +187,7 @@ export class Adoption implements OnInit {
       return;
     }
 
-    if (!governorate) {
+    if (this.adopterDeliveryMethod === 'Delivery' && !governorate) {
       this.adoptionError = 'Please select your governorate.';
       return;
     }
@@ -232,7 +240,7 @@ export class Adoption implements OnInit {
     this.showAdoptionDetails = false;
     this.adopterPhone = '';
     this.adopterGovernorate = ''; 
-    this.adopterDeliveryMethod = 'Delivery';
+    this.adopterDeliveryMethod = 'Clinic Pickup';
     this.adoptionError = '';
   }
 

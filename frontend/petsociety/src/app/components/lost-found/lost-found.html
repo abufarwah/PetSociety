@@ -523,9 +523,24 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label small text-muted">PHONE NUMBER <span class="text-danger">*</span></label>
-            <input class="form-control" [(ngModel)]="reportForm.phone" name="phone" placeholder="+962 ...">
-          </div>
+  <label class="form-label small text-muted">PHONE NUMBER <span class="text-danger">*</span></label>
+  <input 
+    class="form-control" 
+    [(ngModel)]="reportForm.phone" 
+    name="phone" 
+    placeholder="+962XXXXXXXXX"
+    type="tel"
+    (keypress)="validatePhoneInput($event)"
+    (input)="enforceFormat($event)"
+    maxlength="13"
+    #phoneInput="ngModel"
+    required>
+  
+  <div *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)" class="text-danger small mt-1">
+    Please enter a valid format starting with +962 followed by 9 digits.
+  </div>
+</div>
+
         </div>
 
         <div class="d-flex justify-content-end gap-2">
