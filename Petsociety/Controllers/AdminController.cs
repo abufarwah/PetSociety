@@ -191,29 +191,18 @@ namespace Petsociety.Controllers
             if (user is null)
                 return NotFound(new { error = $"User with id {id} not found." });
 
-            // ── SOFT DELETE (uncomment once migration is applied) ──────────────
-            // user.IsDeleted  = true;
-            // user.IsActive   = false;
-            // user.DeletedAt  = DateTime.UtcNow;
-            // await _context.SaveChangesAsync();
-            // return Ok(new
-            // {
-            //     userId    = user.Id,
-            //     isDeleted = true,
-            //     deletedAt = user.DeletedAt,
-            //     message   = $"User '{user.FullName}' has been soft-deleted. All related data is preserved."
-            // });
-            // ────────────────────────────────────────────────────────────────────
-
-            // TEMPORARY FALLBACK — hard delete until migration is applied.
-            // Replace with soft-delete block above after migration.
-            _context.Users.Remove(user);
+            // ── SOFT DELETE ───────────────────────────────────────────────────
+            user.IsDeleted  = true;
+            user.IsActive   = false;
+            user.DeletedAt  = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
             return Ok(new
             {
-                userId  = user.Id,
-                message = $"User '{user.FullName}' was hard-deleted (temporary — pending migration)."
+                userId    = user.Id,
+                isDeleted = true,
+                deletedAt = user.DeletedAt,
+                message   = $"User '{user.FullName}' has been soft-deleted. All related data is preserved."
             });
         }
 

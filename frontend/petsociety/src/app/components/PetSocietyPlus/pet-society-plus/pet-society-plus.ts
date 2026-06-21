@@ -47,8 +47,8 @@ export class PetSocietyPlus implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Only fetch status when the user is already logged in
-    if (this.auth.isLoggedIn$.value) {
+    // Only fetch status for regular users (not admin)
+    if (this.auth.isLoggedIn$.value && !this.auth.isAdmin$.value) {
       this.loadSubscriptionStatus();
     }
   }
