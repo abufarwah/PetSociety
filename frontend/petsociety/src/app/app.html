@@ -1,44 +1,44 @@
 <link rel="stylesheet" href="app.css">
-<div class="navbar-bg"> 
-<nav class="custom-navbar">
-  <div class="nav-left">
-    <span class="brand"><i class="fa-solid fa-paw"></i> Pet Society</span>
-  </div>
+<div class="navbar-bg">
+  <nav class="custom-navbar">
+    <div class="nav-left">
+      <span class="brand"><i class="fa-solid fa-paw"></i> Pet Society</span>
+    </div>
 
-  <ul class="nav-links">
-    <li><a routerLink="/Home" routerLinkActive="active">Home</a></li>
-    <li><a routerLink="/Adoption" routerLinkActive="active">Adoption</a></li>
-  <li><a routerLink="/PetSocietyPlus" routerLinkActive="active">Pet society+</a></li>
-    <li><a routerLink="/community" routerLinkActive="active">Community</a></li>
-    <li><a routerLink="/lost-found" routerLinkActive="active">Lost&Found</a></li>
-  </ul>
+    <ul class="nav-links">
+      <li><a routerLink="/Home" routerLinkActive="active">Home</a></li>
+      <li><a routerLink="/Adoption" routerLinkActive="active">Adoption</a></li>
+      <li><a routerLink="/PetSocietyPlus" routerLinkActive="active">Pet society+</a></li>
+      <li><a routerLink="/community" routerLinkActive="active">Community</a></li>
+      <li><a routerLink="/lost-found" routerLinkActive="active">Lost&Found</a></li>
+    </ul>
 
-  <nav class="Right-nav">
-
-  
-  <!-- NOT LOGGED IN -->
-<a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/signup" routerLinkActive="active" class="sign-up">
-  Sign up
-</a>
-
-<a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/login" routerLinkActive="active" class="login-btn">
-  Login
-</a>
-
-<!-- LOGGED IN -->
-<a *ngIf="auth.isLoggedIn$ | async" routerLink="/Account" routerLinkActive="active" class="account-btn">
-  <i class="fa-solid fa-user"></i>Account
-</a>
+    <nav class="Right-nav">
 
 
- 
-</nav>
+      <!-- NOT LOGGED IN -->
+      <a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/signup" routerLinkActive="active" class="sign-up">
+        Sign up
+      </a>
+
+      <a *ngIf="!(auth.isLoggedIn$ | async)" routerLink="/login" routerLinkActive="active" class="login-btn">
+        Login
+      </a>
+
+      <!-- LOGGED IN -->
+      <a *ngIf="auth.isLoggedIn$ | async" routerLink="/Account" routerLinkActive="active" class="account-btn">
+        <i class="fa-solid fa-user"></i>Account
+      </a>
+
+
+
+    </nav>
 
   </nav>
 </div>
 
 <div class="main-content">
-<router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>
 <!-- ══════════════════════════════════════════════════════
      GLOBAL FOOTER — Pet Society (Light Theme)
@@ -50,7 +50,7 @@
   <!-- Top wave divider -->
   <div class="footer-wave" aria-hidden="true">
     <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,30 C360,60 1080,0 1440,30 L1440,0 L0,0 Z" fill="#fff"/>
+      <path d="M0,30 C360,60 1080,0 1440,30 L1440,0 L0,0 Z" fill="#fff" />
     </svg>
   </div>
 

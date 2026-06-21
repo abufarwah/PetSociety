@@ -33,7 +33,96 @@ namespace Petsociety.Controllers
             _context = context;
         }
 
+        // ── GET /api/admin/users ──────────────────────────────────────────────
+
+        /// <summary>Returns all users for the admin dashboard.</summary>
+        [HttpGet]
+        [SwaggerOperation(Summary = "List all users", Tags = new[] { "Admin - Users" })]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            // Step 1: Fetch raw user data — simple columns only to avoid EF translation issues.
+            var rawUsers = await _context.Users
+                .AsNoTracking()
+                .OrderBy(u => u.Id)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.FullName,
+                    u.Email,
+                    u.Phone,
+                    u.IsDeleted,
+                    u.IsRestricted,
+                    u.IsActive,
+                    u.Role
+                })
+                .ToListAsync();
+
+            // Step 2: Fetch pets count per user.
+            var petCounts = await _context.Pets
+                .GroupBy(p => p.UserId)
+                .Select(g => new { UserId = g.Key, Count = g.Count() })
+                .ToListAsync();
+            var petCountDict = petCounts.ToDictionary(x => x.UserId, x => x.Count);
+
+            // Step 3: Fetch active subscription per user.
+            var activeSubs = await _context.Subscriptions
+                .Where(s => s.IsActive)
+                .Select(s => new { s.UserId, s.PackageName })
+                .ToListAsync();
+            var subDict = activeSubs
+                .GroupBy(s => s.UserId)
+                .ToDictionary(g => g.Key, g => g.First().PackageName + " Plan");
+
+            // Step 4: Merge in-memory.
+            var result = rawUsers.Select(u => new
+            {
+                u.Id,
+                Name         = u.FullName,
+                u.Email,
+                Phone        = u.Phone ?? "—",
+                Status       = u.IsDeleted ? "Deactivated"
+                             : u.IsRestricted ? "Restricted"
+                             : u.IsActive ? "Active"
+                             : "Disabled",
+                Role         = u.Role ?? "User",
+                PetsPosted   = petCountDict.TryGetValue(u.Id, out var pc) ? pc : 0,
+                Subscription = subDict.TryGetValue(u.Id, out var sub) ? sub : "None",
+                Activity     = "Active"
+            });
+
+            return Ok(result);
+        }
+
+        // ── GET /api/admin/subscriptions ─────────────────────────────────────
+
+        /// <summary>Returns all subscriptions for the admin dashboard.</summary>
+        [HttpGet("/api/admin/subscriptions")]
+        [SwaggerOperation(Summary = "List all subscriptions", Tags = new[] { "Admin - Users" })]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllSubscriptions()
+        {
+            var subs = await _context.Subscriptions
+                .AsNoTracking()
+                .Include(s => s.User)
+                .OrderByDescending(s => s.StartDate)
+                .Select(s => new
+                {
+                    Id          = "SUB-" + s.Id.ToString("D3"),
+                    RawId       = s.Id,
+                    UserName    = s.User != null ? s.User.FullName : "Unknown",
+                    Plan        = s.PackageName,
+                    Price       = "$" + s.Price.ToString("F2") + "/mo",
+                    Status      = s.IsActive ? "Active" : "Cancelled",
+                    NextBilling = s.EndDate.ToString("yyyy-MM-dd")
+                })
+                .ToListAsync();
+
+            return Ok(subs);
+        }
+
         // ── POST /api/admin/users/add ─────────────────────────────────────────
+
 
         /// <summary>Creates a new user account.</summary>
         /// <response code="201">User created successfully.</response>
@@ -149,24 +238,16 @@ namespace Petsociety.Controllers
             if (user is null)
                 return NotFound(new { error = $"User with id {id} not found." });
 
-            // TODO: Uncomment once Add-Migration AddUserSoftDeleteAndRestriction is applied.
-            // ─────────────────────────────────────────────────────────────────
-            // user.IsRestricted = dto.IsRestricted;
-            // await _context.SaveChangesAsync();
-            // return Ok(new
-            // {
-            //     userId       = user.Id,
-            //     isRestricted = user.IsRestricted,
-            //     message      = dto.IsRestricted
-            //                    ? $"User '{user.FullName}' has been restricted."
-            //                    : $"User '{user.FullName}' restriction has been lifted."
-            // });
-            // ─────────────────────────────────────────────────────────────────
+            user.IsRestricted = dto.IsRestricted;
+            await _context.SaveChangesAsync();
 
-            return StatusCode(StatusCodes.Status501NotImplemented, new
+            return Ok(new
             {
-                error = "Ban functionality requires running: Add-Migration AddUserSoftDeleteAndRestriction && Update-Database, " +
-                        "then uncomment the logic in AdminController.BanUser."
+                userId       = user.Id,
+                isRestricted = user.IsRestricted,
+                message      = dto.IsRestricted
+                               ? $"User '{user.FullName}' has been restricted."
+                               : $"User '{user.FullName}' restriction has been lifted."
             });
         }
 

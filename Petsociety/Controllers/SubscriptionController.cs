@@ -252,5 +252,35 @@ namespace Petsociety.Controllers
                 message = $"Subscription {id} is now {(subscription.IsActive ? "Active" : "Cancelled")}."
             });
         }
+
+        /// <summary>
+        /// يعيد حالة اشتراك المستخدم الحالي المسجل دخوله
+        /// </summary>
+        [Authorize]
+        [HttpGet("my-status")]
+        public async Task<IActionResult> GetMyStatus()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+                return Unauthorized(new { message = "User identification failed." });
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            var subscription = await _context.Subscriptions
+                .AsNoTracking()
+                .Where(s => s.UserId == userId && s.IsActive)
+                .OrderByDescending(s => s.StartDate)
+                .FirstOrDefaultAsync();
+
+            if (subscription == null)
+                return Ok(new { isActive = false, packageName = (string?)null, endDate = (string?)null });
+
+            return Ok(new
+            {
+                isActive    = true,
+                packageName = subscription.PackageName,
+                endDate     = subscription.EndDate.ToString("yyyy-MM-dd")
+            });
+        }
     }
 }

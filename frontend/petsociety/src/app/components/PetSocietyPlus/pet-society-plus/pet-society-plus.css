@@ -5,6 +5,68 @@
   text-align: center;
 }
 
+/* ── Active Subscription Banner ── */
+.active-sub-banner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 1.5px solid rgba(34, 197, 94, 0.35);
+  border-radius: 20px;
+  padding: 18px 28px;
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.1);
+  text-align: left;
+  animation: bannerSlideIn 0.5s ease;
+}
+
+@keyframes bannerSlideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.active-sub-icon {
+  font-size: 2.2rem;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.active-sub-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 2px;
+}
+
+.active-sub-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #16a34a;
+}
+
+.active-sub-plan {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #15803d;
+}
+
+.active-sub-expiry {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.active-sub-badge {
+  background: #16a34a;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
 .subscription-title {
   font-size: 36px;
   font-weight: 800;
