@@ -325,18 +325,19 @@ enforceFormat(event: any) {
   reportForm: any = this.emptyReport();
 
   emptyReport() {
-    return {
-      petType: 'Dog',
-      breed: '',
-      color: '',
-      dateLastSeen: '',
-      location: '',
-      description: '',
-      photoName: null,
-      reporterName: '',
-      phone: ''
-    };
-  }
+  return {
+    petType: 'Dog',
+    breed: '',
+    color: '',
+    dateLastSeen: '',
+    location: '',
+    description: '',
+    photoName: null,
+    photoPreview: null,   // أضيفي هذا السطر
+    reporterName: '',
+    phone: ''
+  };
+}
 
   getCurrentUserId(): number | null {
     const raw = localStorage.getItem('userId') || sessionStorage.getItem('userId');
@@ -398,12 +399,22 @@ enforceFormat(event: any) {
   }
 
   onModalPhotoSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.reportForm.photoName = file.name;
-      this.reportImageFile = file;
-    }
+  const file = event.target.files[0];
+
+  if (file) {
+
+    this.reportForm.photoName = file.name;
+    this.reportImageFile = file;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.reportForm.photoPreview = reader.result;
+    };
+
+    reader.readAsDataURL(file);
   }
+}
 
   submitReport() {
     if (!this.auth.isLoggedIn$.value) {

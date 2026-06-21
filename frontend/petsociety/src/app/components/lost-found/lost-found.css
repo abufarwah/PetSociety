@@ -581,21 +581,33 @@
 /* ================= REPORT BUTTONS ================= */
 
 .report-btn {
-  background: var(--primary);
-  color: #000;
+  background: linear-gradient(
+    135deg,
+    #e2c08f 0%,
+    #cfa46d 100%
+  );
+
+  color: white;
   border: none;
   border-radius: 999px;
   padding: 12px 24px;
   font-weight: 700;
+
   transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(214,180,140,0.25);
+
+  box-shadow:
+    0 10px 22px rgba(207,164,109,0.28);
 }
 
 .report-btn:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-}
+  background: linear-gradient(
+    135deg,
+    #cfa46d 0%,
+    #b88a52 100%
+  );
 
+  transform: translateY(-3px);
+}
 /* ================= FILTERS WRAPPER ================= */
 
 .filters-wrapper {
@@ -1560,4 +1572,12 @@
 /* أيقونات الخيارات */
 .options-menu .dropdown-item i {
   font-size: 16px !important;
+}
+
+.pet-preview-img{
+  width:180px;
+  height:180px;
+  object-fit:cover;
+  border-radius:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
 }
