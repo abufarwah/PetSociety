@@ -27,7 +27,7 @@ export class Account implements OnInit, OnDestroy {
   private routerSubscription!: Subscription;
 
   constructor(
-    private auth: Auth,
+    public auth: Auth,
     private router: Router,
     private accountService: AccountService,
     private cdr: ChangeDetectorRef 

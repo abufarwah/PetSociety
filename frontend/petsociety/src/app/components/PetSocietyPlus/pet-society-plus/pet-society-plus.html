@@ -1,9 +1,28 @@
 <section class="subscription-section text-center py-5">
   <h2 class="subscription-title mb-3"><i class="fa-solid fa-paw"></i>Pet Society+ </h2>
-  <p class="subscription-subtitle mb-5">
+  <p class="subscription-subtitle mb-4">
    Choose the perfect subscription package for your beloved pet. All packages include high-quality products and professional care services delivered to your door.
    And remember, you can cancel or upgrade your plan anytime!
   </p>
+
+  <!-- ── Active Subscription Banner ── -->
+  <div class="container mb-4" *ngIf="subscriptionStatus?.isActive">
+    <div class="active-sub-banner">
+      <div class="active-sub-icon"><i class="fa-solid fa-circle-check"></i></div>
+      <div class="active-sub-text">
+        <span class="active-sub-label">Your Active Plan</span>
+        <span class="active-sub-plan">{{ subscriptionStatus?.packageName }} Plan</span>
+        <span class="active-sub-expiry">Renews on {{ subscriptionStatus?.endDate }}</span>
+      </div>
+      <div class="active-sub-badge">ACTIVE</div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="text-center mb-3" *ngIf="isStatusLoading">
+    <div class="spinner-border text-warning spinner-border-sm" role="status"></div>
+    <small class="ms-2 text-muted">Loading your subscription status...</small>
+  </div>
 
   <div class="container">
     <div class="row g-4 justify-content-center">

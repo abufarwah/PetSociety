@@ -80,25 +80,28 @@ loginForm = new FormGroup({
   ) {}
 
   login() {
-  if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) return;
 
-  const loginPayload = {
-    email: this.loginForm.get('email')?.value,
-    password: this.loginForm.get('password')?.value
-  };
+    const loginPayload = {
+      email:    this.loginForm.get('email')?.value,
+      password: this.loginForm.get('password')?.value
+    };
 
-  console.log(loginPayload); // 👈 مهم جدًا للتأكد
-
-  this.auth.login(loginPayload).subscribe({
-    next: (res) => {
-      console.log('Login success', res);
-      this.router.navigate(['/Home']);
-    },
-    error: (err) => {
-      console.log('FULL ERROR:', err.error); // 👈 أهم سطر
-      alert(err.error);
-    }
-  });
-}
+    this.auth.login(loginPayload).subscribe({
+      next: (res) => {
+        console.log('Login success', res);
+        // ✅ توجيه مباشر للداشبورد إذا كان الـ role هو Admin
+        if (res.role?.toLowerCase() === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/Home']);
+        }
+      },
+      error: (err) => {
+        console.log('FULL ERROR:', err.error);
+        alert(err.error || 'Invalid email or password');
+      }
+    });
+  }
 }
 

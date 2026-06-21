@@ -3,7 +3,8 @@
 <div class="modal-box" *ngIf="showAddUserModal" role="dialog" aria-modal="true" aria-labelledby="addUserTitle">
     <div class="modal-header">
         <h3 id="addUserTitle"><i class="fa-solid fa-user-plus"></i> Add New User</h3>
-        <button class="close-btn" (click)="closeAddUserModal()" aria-label="Close modal"><i class="fa-solid fa-xmark"></i></button>
+        <button class="close-btn" (click)="closeAddUserModal()" aria-label="Close modal"><i
+                class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
         <div class="modal-field">
@@ -20,7 +21,7 @@
                 <option *ngFor="let r of addUserRoles" [value]="r">{{ r }}</option>
             </select>
         </div>
-        
+
     </div>
     <div class="modal-footer">
         <button class="btn-modal-cancel" (click)="closeAddUserModal()">Cancel</button>
@@ -32,10 +33,12 @@
 
 <!-- ══ Manage Subscription Modal ══════════════════════════════════════════ -->
 <div class="modal-backdrop" *ngIf="showManageSubModal" (click)="closeManageSubModal()"></div>
-<div class="modal-box" *ngIf="showManageSubModal && selectedSub" role="dialog" aria-modal="true" aria-labelledby="manageSubTitle">
+<div class="modal-box" *ngIf="showManageSubModal && selectedSub" role="dialog" aria-modal="true"
+    aria-labelledby="manageSubTitle">
     <div class="modal-header">
         <h3 id="manageSubTitle"><i class="fa-solid fa-gear"></i> Manage Subscription</h3>
-        <button class="close-btn" (click)="closeManageSubModal()" aria-label="Close modal"><i class="fa-solid fa-xmark"></i></button>
+        <button class="close-btn" (click)="closeManageSubModal()" aria-label="Close modal"><i
+                class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="modal-body">
         <div class="manage-sub-info">
@@ -53,7 +56,8 @@
             </div>
             <div class="sub-info-row">
                 <span class="sub-info-label">Current Status</span>
-                <span class="status-badge" [ngClass]="selectedSub.status === 'Active' ? 'active-green' : 'cancelled-gray'">
+                <span class="status-badge"
+                    [ngClass]="selectedSub.status === 'Active' ? 'active-green' : 'cancelled-gray'">
                     {{ selectedSub.status }}
                 </span>
             </div>
@@ -65,7 +69,7 @@
                 <option value="Cancelled">Cancelled</option>
             </select>
         </div>
-        
+
     </div>
     <div class="modal-footer">
         <button class="btn-modal-cancel" (click)="closeManageSubModal()">Cancel</button>
@@ -85,7 +89,8 @@
                 <h1>Admin Dashboard</h1>
                 <p>Manage and monitor Pet Society platform</p>
             </div>
-            <button class="refresh-btn" (click)="loadSummary()" title="Refresh KPIs" aria-label="Refresh Dashboard KPIs">
+            <button class="refresh-btn" (click)="loadSummary()" title="Refresh KPIs"
+                aria-label="Refresh Dashboard KPIs">
                 <i class="fa-solid fa-rotate-right" [class.fa-spin]="isSummaryLoading"></i>
             </button>
         </div>
@@ -191,12 +196,13 @@
 </main>
 
 <div class="tabs-bar">
-    <button [class.active]="activeTab === 'users'"         (click)="setActiveTab('users')">User Management</button>
-    <button [class.active]="activeTab === 'chat'"          (click)="setActiveTab('chat')">Chat &amp; Community</button>
-    <button [class.active]="activeTab === 'analytics'"     (click)="setActiveTab('analytics')">Platform Analytics</button>
-    <button [class.active]="activeTab === 'subscriptions'" (click)="setActiveTab('subscriptions')">Subscriptions</button>
-    <button [class.active]="activeTab === 'requests'"      (click)="setActiveTab('requests')">Adoption Requests</button>
-    <button [class.active]="activeTab === 'reports'"       (click)="setActiveTab('reports')">Lost &amp; Found (AI)</button>
+    <button [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">User Management</button>
+    <button [class.active]="activeTab === 'chat'" (click)="setActiveTab('chat')">Chat &amp; Community</button>
+    <button [class.active]="activeTab === 'analytics'" (click)="setActiveTab('analytics')">Platform Analytics</button>
+    <button [class.active]="activeTab === 'subscriptions'"
+        (click)="setActiveTab('subscriptions')">Subscriptions</button>
+    <button [class.active]="activeTab === 'requests'" (click)="setActiveTab('requests')">Adoption Requests</button>
+    <button [class.active]="activeTab === 'reports'" (click)="setActiveTab('reports')">Lost &amp; Found (AI)</button>
 </div>
 
 <!-- ══════════════════════════ USER MANAGEMENT ══════════════════════════ -->
@@ -232,12 +238,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let user of filteredUsers"
-                    [class.row-soft-deleted]="user.status === 'Deactivated'">
+                <tr *ngFor="let user of filteredUsers" [class.row-soft-deleted]="user.status === 'Deactivated'">
                     <td>
                         <div class="user-cell">
-                            <div class="avatar-circle"
-                                 [class.avatar-deleted]="user.status === 'Deactivated'">
+                            <div class="avatar-circle" [class.avatar-deleted]="user.status === 'Deactivated'">
                                 {{ user.name.charAt(0) }}
                             </div>
                             <div class="user-info-text">
@@ -249,8 +253,7 @@
                     <td>{{ user.phone }}</td>
                     <td>{{ user.role }}</td>
                     <td>
-                        <span class="status-badge"
-                              [ngClass]="{
+                        <span class="status-badge" [ngClass]="{
                                 'active-green':   user.status === 'Active',
                                 'cancelled-gray': user.status === 'Disabled',
                                 'churn':          user.status === 'Restricted',
@@ -263,23 +266,25 @@
                     <td>
                         <div class="action-buttons">
                             <!-- View -->
-                            <button class="icon-btn view" (click)="viewUser(user)" title="View Profile" aria-label="View Profile">
+                            <button class="icon-btn view" (click)="viewUser(user)" title="View Profile"
+                                aria-label="View Profile">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                             <!-- Ban / Unban — disabled if soft-deleted -->
                             <button class="icon-btn edit" (click)="banUser(user)"
-                                    [disabled]="user.status === 'Deactivated'"
-                                    [title]="user.status === 'Restricted' ? 'Lift Restriction' : 'Restrict User'"
-                                    aria-label="Toggle Restriction">
-                                <i class="fa-solid" [ngClass]="user.status === 'Restricted' ? 'fa-check' : 'fa-ban'"></i>
+                                [disabled]="user.status === 'Deactivated'"
+                                [title]="user.status === 'Restricted' ? 'Lift Restriction' : 'Restrict User'"
+                                aria-label="Toggle Restriction">
+                                <i class="fa-solid"
+                                    [ngClass]="user.status === 'Restricted' ? 'fa-check' : 'fa-ban'"></i>
                             </button>
                             <!-- Soft-Delete / already deactivated indicator -->
-                            <button class="icon-btn delete"
-                                    (click)="deleteUser(user.id)"
-                                    [disabled]="user.status === 'Deactivated'"
-                                    [title]="user.status === 'Deactivated' ? 'Already Soft-Deleted' : 'Soft-Delete User'"
-                                    aria-label="Soft-Delete User">
-                                <i class="fa-solid" [ngClass]="user.status === 'Deactivated' ? 'fa-lock' : 'fa-user-xmark'"></i>
+                            <button class="icon-btn delete" (click)="deleteUser(user.id)"
+                                [disabled]="user.status === 'Deactivated'"
+                                [title]="user.status === 'Deactivated' ? 'Already Soft-Deleted' : 'Soft-Delete User'"
+                                aria-label="Soft-Delete User">
+                                <i class="fa-solid"
+                                    [ngClass]="user.status === 'Deactivated' ? 'fa-lock' : 'fa-user-xmark'"></i>
                             </button>
                         </div>
                     </td>
@@ -291,20 +296,24 @@
     <div id="userDetails" class="user-details-card" *ngIf="selectedUser">
         <div class="card-header-row">
             <h3>User Profile: {{ selectedUser.name }}</h3>
-            <button class="close-btn" (click)="selectedUser = null" aria-label="Close Details"><i class="fa-solid fa-xmark"></i></button>
+            <button class="close-btn" (click)="selectedUser = null" aria-label="Close Details"><i
+                    class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="details-grid">
             <div class="detail-item">
                 <i class="fa-solid fa-paw"></i>
-                <div><span class="label">Pets Posted</span><span class="value">{{ selectedUser.petsPosted }} Pets</span></div>
+                <div><span class="label">Pets Posted</span><span class="value">{{ selectedUser.petsPosted }} Pets</span>
+                </div>
             </div>
             <div class="detail-item">
                 <i class="fa-solid fa-crown"></i>
-                <div><span class="label">Subscription</span><span class="value">{{ selectedUser.subscription }}</span></div>
+                <div><span class="label">Subscription</span><span class="value">{{ selectedUser.subscription }}</span>
+                </div>
             </div>
             <div class="detail-item">
                 <i class="fa-solid fa-clock-rotate-left"></i>
-                <div><span class="label">Last Activity</span><span class="value">{{ selectedUser.activity }}</span></div>
+                <div><span class="label">Last Activity</span><span class="value">{{ selectedUser.activity }}</span>
+                </div>
             </div>
             <div class="detail-item">
                 <i class="fa-solid fa-envelope"></i>
@@ -325,7 +334,7 @@
 
     <div class="subs-stats-row">
         <div class="stat-card">
-            <span class="stat-label">Daily Messages</span>
+            <span class="stat-label">Today's Messages</span>
             <h3 class="stat-value revenue">{{ chatStats.dailyMessages }}</h3>
         </div>
         <div class="stat-card">
@@ -346,13 +355,18 @@
             </div>
             <table class="data-table">
                 <thead>
-                    <tr><th>User</th><th>Reason &amp; Duration</th><th>Action</th></tr>
+                    <tr>
+                        <th>User</th>
+                        <th>Reason &amp; Duration</th>
+                        <th>Action</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let user of bannedUsers">
                         <td>
                             <div class="user-cell">
-                                <div class="avatar-circle small avatar-xs banned-avatar"><i class="fa-solid fa-ban"></i></div>
+                                <div class="avatar-circle small avatar-xs banned-avatar"><i class="fa-solid fa-ban"></i>
+                                </div>
                                 <div class="user-info-text">
                                     <span class="user-name">{{ user.user }}</span>
                                     <span class="sub-text">{{ user.bannedAt }}</span>
@@ -365,7 +379,8 @@
                                 <span class="sub-text">{{ user.reason }}</span>
                             </div>
                         </td>
-                        <td><button class="text-btn unban-btn" title="Unban User" aria-label="Unban User">Unban</button></td>
+                        <td><button class="text-btn unban-btn" title="Unban User" aria-label="Unban User">Unban</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -395,8 +410,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let msg of reportedMessages"
-                        [class.row-auto-flagged]="msg.isAutoFlagged">
+                    <tr *ngFor="let msg of reportedMessages" [class.row-auto-flagged]="msg.isAutoFlagged">
                         <!-- Col 1: Sender -->
                         <td>
                             <div class="user-cell">
@@ -429,8 +443,7 @@
                                 </span>
 
                                 <!-- Report reason badge -->
-                                <span class="reason-badge"
-                                      [ngClass]="{
+                                <span class="reason-badge" [ngClass]="{
                                         'reason-spam':     msg.reportReason === 'Spam',
                                         'reason-harass':   msg.reportReason === 'Harassment',
                                         'reason-privacy':  msg.reportReason === 'Sharing Private Info',
@@ -454,26 +467,20 @@
                         <td>
                             <div class="action-buttons mod-actions">
                                 <!-- Delete — hard-removes the message -->
-                                <button class="icon-btn delete"
-                                        (click)="deleteMessage(msg.id)"
-                                        title="Delete Message Permanently"
-                                        aria-label="Delete Message">
+                                <button class="icon-btn delete" (click)="deleteMessage(msg.id)"
+                                    title="Delete Message Permanently" aria-label="Delete Message">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
 
                                 <!-- Dismiss — clears all flags, keeps message visible -->
-                                <button class="icon-btn dismiss"
-                                        (click)="dismissMessage(msg.id)"
-                                        title="Dismiss as False Alarm"
-                                        aria-label="Dismiss False Alarm">
+                                <button class="icon-btn dismiss" (click)="dismissMessage(msg.id)"
+                                    title="Dismiss as False Alarm" aria-label="Dismiss False Alarm">
                                     <i class="fa-solid fa-circle-check"></i>
                                 </button>
 
                                 <!-- Ban user from chat entirely -->
-                                <button class="icon-btn ban-chat"
-                                        (click)="banChatUser(msg.sender)"
-                                        title="Ban User From Community Chat"
-                                        aria-label="Ban User">
+                                <button class="icon-btn ban-chat" (click)="banChatUser(msg.sender)"
+                                    title="Ban User From Community Chat" aria-label="Ban User">
                                     <i class="fa-solid fa-user-slash"></i>
                                 </button>
                             </div>
@@ -541,7 +548,8 @@
         </div>
         <div class="stat-card">
             <span class="stat-label">Last Request</span>
-            <h3 class="stat-value">{{ adoptionRequests.length ? (adoptionRequests[0]?.createdAt | date:'short') : 'N/A' }}</h3>
+            <h3 class="stat-value">{{ adoptionRequests.length ? (adoptionRequests[0]?.createdAt | date:'short') : 'N/A'
+                }}</h3>
         </div>
     </div>
 
@@ -580,8 +588,10 @@
                     </td>
                     <td>{{ req.createdAt | date:'short' }}</td>
                     <td>
-                        <button class="text-btn" (click)="updateAdoptionRequestStatus(req, 'Approved')" [disabled]="req.status === 'Approved'">Approve</button>
-                        <button class="text-btn" (click)="updateAdoptionRequestStatus(req, 'Rejected')" [disabled]="req.status === 'Rejected'">Reject</button>
+                        <button class="text-btn" (click)="updateAdoptionRequestStatus(req, 'Approved')"
+                            [disabled]="req.status === 'Approved'">Approve</button>
+                        <button class="text-btn" (click)="updateAdoptionRequestStatus(req, 'Rejected')"
+                            [disabled]="req.status === 'Rejected'">Reject</button>
                     </td>
                 </tr>
                 <tr *ngIf="adoptionRequests.length === 0">
@@ -631,14 +641,17 @@
                 <div class="progress-row">
                     <span class="progress-label"><i class="fa-solid fa-circle" style="color:#e8a838"></i> Pending</span>
                     <div class="progress-track">
-                        <div class="progress-fill orange-fill" [style.width.%]="summary.pendingAdoptions > 0 ? 60 : 0"></div>
+                        <div class="progress-fill orange-fill" [style.width.%]="summary.pendingAdoptions > 0 ? 60 : 0">
+                        </div>
                     </div>
                     <span class="progress-pct">{{ summary.pendingAdoptions }}</span>
                 </div>
                 <div class="progress-row">
-                    <span class="progress-label"><i class="fa-solid fa-circle" style="color:#6c8ebf"></i> Available</span>
+                    <span class="progress-label"><i class="fa-solid fa-circle" style="color:#6c8ebf"></i>
+                        Available</span>
                     <div class="progress-track">
-                        <div class="progress-fill" style="background:linear-gradient(90deg,#4facfe,#00f2fe)" [style.width.%]="summary.availablePets > 0 ? 80 : 0"></div>
+                        <div class="progress-fill" style="background:linear-gradient(90deg,#4facfe,#00f2fe)"
+                            [style.width.%]="summary.availablePets > 0 ? 80 : 0"></div>
                     </div>
                     <span class="progress-pct">{{ summary.availablePets }}</span>
                 </div>
@@ -705,15 +718,21 @@
     <div class="subs-stats-row plans-row">
         <div class="stat-card plan-card basic-plan">
             <div class="plan-icon"><i class="fa-solid fa-bone"></i></div>
-            <div><span class="stat-label">Basic Plan</span><h3 class="stat-value">{{ planStats.basic }}</h3></div>
+            <div><span class="stat-label">Basic Plan</span>
+                <h3 class="stat-value">{{ planStats.basic }}</h3>
+            </div>
         </div>
         <div class="stat-card plan-card premium-plan">
             <div class="plan-icon"><i class="fa-solid fa-paw"></i></div>
-            <div><span class="stat-label">Premium Plan</span><h3 class="stat-value">{{ planStats.premium }}</h3></div>
+            <div><span class="stat-label">Premium Plan</span>
+                <h3 class="stat-value">{{ planStats.premium }}</h3>
+            </div>
         </div>
         <div class="stat-card plan-card deluxe-plan">
             <div class="plan-icon"><i class="fa-solid fa-crown"></i></div>
-            <div><span class="stat-label">Deluxe Plan</span><h3 class="stat-value">{{ planStats.deluxe }}</h3></div>
+            <div><span class="stat-label">Deluxe Plan</span>
+                <h3 class="stat-value">{{ planStats.deluxe }}</h3>
+            </div>
         </div>
     </div>
 
@@ -731,8 +750,13 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>ID</th><th>User</th><th>Plan</th><th>Price</th>
-                    <th>Status</th><th>Next Billing</th><th>Action</th>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Plan</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Next Billing</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -742,15 +766,16 @@
                     <td>{{ sub.plan }}</td>
                     <td>{{ sub.price }}</td>
                     <td>
-                        <span class="status-badge" [ngClass]="sub.status === 'Active' ? 'active-green' : 'cancelled-gray'">
+                        <span class="status-badge"
+                            [ngClass]="sub.status === 'Active' ? 'active-green' : 'cancelled-gray'">
                             {{ sub.status }}
                         </span>
                     </td>
                     <td>{{ sub.nextBilling }}</td>
                     <!-- Wired: opens Manage Subscription modal -->
                     <td>
-                        <button class="text-btn" (click)="openManageSubModal(sub)"
-                                title="Manage Subscription" aria-label="Manage Subscription">
+                        <button class="text-btn" (click)="openManageSubModal(sub)" title="Manage Subscription"
+                            aria-label="Manage Subscription">
                             <i class="fa-solid fa-gear"></i> Manage
                         </button>
                     </td>
