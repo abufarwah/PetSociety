@@ -33,7 +33,7 @@ try
 
     // ── 2. DATABASE CONTEXT ──────────────────────────────────────────────────
     builder.Services.AddDbContext<PetDbContext>(options =>
-        options.UseSqlServer(
+        options.UseSqlite(
             builder.Configuration.GetConnectionString("HrContext")
             ?? throw new InvalidOperationException(
                 "STARTUP ERROR: Connection string 'HrContext' is missing from appsettings.json.")));
