@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs'; // ضفنا tap و Obse
 })
 export class Auth {
   // الرابط الأساسي للباك إيند تبعك (تأكد من رقم البورت عندك)
-  private apiUrl = 'https://localhost:44371/api/Auth'; 
+  private apiUrl = 'http://localhost:5290/api/Auth'; 
 
   isLoggedIn$ = new BehaviorSubject<boolean>(false);
   isAdmin$ = new BehaviorSubject<boolean>(false);

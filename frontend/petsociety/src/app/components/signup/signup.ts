@@ -53,7 +53,8 @@ import { Auth } from '../../services/auth'; // 👈 تأكد من صحة مسا�
   styleUrl: './signup.css',
 })
 export class Signup {
-  
+  showPassword = false;
+  showConfirmPassword = false;
   // الـ Validator الخاص بك بعد تعديل مسميات الحقول لتطابق الباك إيند
   passwordsMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
     const pass = group.get('password')?.value;

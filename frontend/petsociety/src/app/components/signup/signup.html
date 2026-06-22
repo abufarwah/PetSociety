@@ -1,77 +1,112 @@
-<div class="container-fluid">
-  <div class="row vh-100">
+<div class="container-fluid p-0 signup-container">
+  <div class="row g-0 full-height-row">
 
-    <div class="col-md-6 p-0 d-flex align-items-center justify-content-center bg-image-container">
-      <img src="/PetPic.png" class="signup-image">
+    <div class="col-md-5 col-lg-6 d-none d-md-block bg-image-container">
+      <img src="/PetPic.png" class="signup-image w-100 h-100" alt="Pet Image">
     </div>
 
-    <div class="col-md-6 d-flex justify-content-center align-items-center">
-      <div class="signup-box p-5 shadow-sm rounded-4">
+    <div class="col-md-7 col-lg-6 d-flex justify-content-center align-items-center position-relative overflow-auto">
+      <i class="fa-solid fa-paw floating-paw paw-1"></i>
+      <i class="fa-solid fa-paw floating-paw paw-2"></i>
+      <i class="fa-solid fa-paw floating-paw paw-3"></i>
+      <i class="fa-solid fa-paw floating-paw paw-4"></i>
+      <div class="signup-box shadow-sm">
         
         <div class="text-center mb-4">
-          <h3>Join Our Pet Community!<i class="fa-solid fa-paw"></i></h3>
+          <h3 class="fw-bold">Join Our Pet Community! <i class="fa-solid fa-paw ms-2" style="color: #b88a60;"></i></h3>
           <p class="text-muted">Tell us about you and your beloved pet</p>
         </div>
 
         <form [formGroup]="signupnForm" (ngSubmit)="signup()">
           
-          <label class="mb-1">Your Name</label>
-          <input type="text" class="form-control" formControlName="fullName" placeholder="Enter your name">
-          <div class="text-danger small mb-2" *ngIf="signupnForm.get('fullName')?.invalid && signupnForm.get('fullName')?.touched">
-            <span>Name is required</span>
+          <div class="mb-3">
+            <label class="mb-1">Your Name</label>
+            <div class="input-group">
+              <span class="input-group-text border-end-0"><i class="fa-solid fa-user"></i></span>
+              <input type="text" class="form-control ps-0" formControlName="fullName" placeholder="Enter your name" [class.is-invalid]="signupnForm.get('fullName')?.invalid && signupnForm.get('fullName')?.touched">
+            </div>
+            <div class="text-danger small mt-1" *ngIf="signupnForm.get('fullName')?.invalid && signupnForm.get('fullName')?.touched">
+              <span><i class="fa-solid fa-circle-exclamation me-1"></i>Name is required</span>
+            </div>
           </div>
 
-          <label class="mb-1">Phone Number</label>
-          <input 
-            type="text" class="form-control" placeholder="+962XXXXXXXXX" formControlName="phone"
-            [class.is-invalid]="signupnForm.get('phone')?.invalid && signupnForm.get('phone')?.touched"
-          />
-          <div class="text-danger small mb-2" *ngIf="signupnForm.get('phone')?.invalid && signupnForm.get('phone')?.touched">
-            <span *ngIf="signupnForm.get('phone')?.errors?.['required']">Phone number is required</span>
-            <span *ngIf="signupnForm.get('phone')?.errors?.['pattern']">Please enter a valid Jordanian phone number (+962XXXXXXXXX)</span>
+          <div class="mb-3">
+            <label class="mb-1">Phone Number</label>
+            <div class="input-group">
+              <span class="input-group-text border-end-0"><i class="fa-solid fa-phone"></i></span>
+              <input 
+                type="text" class="form-control ps-0" placeholder="+962XXXXXXXXX" formControlName="phone"
+                [class.is-invalid]="signupnForm.get('phone')?.invalid && signupnForm.get('phone')?.touched"
+              />
+            </div>
+            <div class="text-danger small mt-1" *ngIf="signupnForm.get('phone')?.invalid && signupnForm.get('phone')?.touched">
+              <span *ngIf="signupnForm.get('phone')?.errors?.['required']"><i class="fa-solid fa-circle-exclamation me-1"></i>Phone number is required</span>
+              <span *ngIf="signupnForm.get('phone')?.errors?.['pattern']"><i class="fa-solid fa-circle-exclamation me-1"></i>Please enter a valid Jordanian phone number</span>
+            </div>
           </div>
 
-          <label class="mb-1">Email Address</label>
-          <input
-            type="email"
-            class="form-control"
-            placeholder="paw@gmail.com"
-            formControlName="email"
-            [class.is-invalid]="signupnForm.get('email')?.invalid && signupnForm.get('email')?.touched"
-          />
-          <div class="text-danger small mb-2" *ngIf="signupnForm.get('email')?.invalid && signupnForm.get('email')?.touched">
-            <span *ngIf="signupnForm.get('email')?.errors?.['required']">Email is required</span>
-            <span *ngIf="signupnForm.get('email')?.errors?.['email']">Please enter a valid email address (example@domain.com)</span>
+          <div class="mb-3">
+            <label class="mb-1">Email Address</label>
+            <div class="input-group">
+              <span class="input-group-text border-end-0"><i class="fa-solid fa-envelope"></i></span>
+              <input
+                type="email"
+                class="form-control ps-0"
+                placeholder="paw@gmail.com"
+                formControlName="email"
+                [class.is-invalid]="signupnForm.get('email')?.invalid && signupnForm.get('email')?.touched"
+              />
+            </div>
+            <div class="text-danger small mt-1" *ngIf="signupnForm.get('email')?.invalid && signupnForm.get('email')?.touched">
+              <span *ngIf="signupnForm.get('email')?.errors?.['required']"><i class="fa-solid fa-circle-exclamation me-1"></i>Email is required</span>
+              <span *ngIf="signupnForm.get('email')?.errors?.['email']"><i class="fa-solid fa-circle-exclamation me-1"></i>Please enter a valid email address</span>
+            </div>
           </div>
 
-          <label class="mb-1">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            placeholder="********"
-            formControlName="password"
-            [class.is-invalid]="signupnForm.get('password')?.invalid && signupnForm.get('password')?.touched"
-          />
-          <div class="text-danger small mb-2" *ngIf="signupnForm.get('password')?.invalid && signupnForm.get('password')?.touched">
-            <span *ngIf="signupnForm.get('password')?.errors?.['required']">Password is required</span>
-            <span *ngIf="signupnForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters</span>
-          </div>
+          <div class="row">
+            <div class="col-sm-6 mb-3">
+              <label class="mb-1">Password</label>
+              <div class="input-group">
+                <span class="input-group-text border-end-0"><i class="fa-solid fa-lock"></i></span>
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  class="form-control border-end-0 ps-0"
+                  placeholder="••••••••"
+                  formControlName="password"
+                  [class.is-invalid]="signupnForm.get('password')?.invalid && signupnForm.get('password')?.touched"
+                  style="border-radius: 0;"
+                />
+                <button type="button" class="input-group-text bg-transparent border-start-0 text-muted" (click)="showPassword = !showPassword" style="border-radius: 0 12px 12px 0; cursor: pointer; border: 1.5px solid #e8ded3;">
+                  <i class="fa-solid" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                </button>
+              </div>
+              <div class="text-danger small mt-1" *ngIf="signupnForm.get('password')?.invalid && signupnForm.get('password')?.touched">
+                <span *ngIf="signupnForm.get('password')?.errors?.['required']"><i class="fa-solid fa-circle-exclamation me-1"></i>Required</span>
+                <span *ngIf="signupnForm.get('password')?.errors?.['minlength']"><i class="fa-solid fa-circle-exclamation me-1"></i>Min 8 chars</span>
+              </div>
+            </div>
 
-          <label class="mb-1">Confirm Password</label>
-          <input
-            type="password"
-            class="form-control"
-            placeholder="********"
-            formControlName="confirmPassword"
-            [class.is-invalid]="signupnForm.get('confirmPassword')?.touched && (signupnForm.get('confirmPassword')?.invalid || signupnForm.hasError('passwordMismatch'))"
-          />
-          <div class="text-danger small mb-2" *ngIf="signupnForm.get('confirmPassword')?.touched && (signupnForm.get('confirmPassword')?.invalid || signupnForm.hasError('passwordMismatch'))">
-            <span *ngIf="signupnForm.get('confirmPassword')?.errors?.['required']">Confirm password is required</span>
-            <span *ngIf="signupnForm.get('confirmPassword')?.errors?.['minlength']">Password must be at least 8 characters</span>
-            <span *ngIf="signupnForm.hasError('passwordMismatch')">Passwords do not match</span>
-          </div>
-          
-          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="col-sm-6 mb-3">
+              <label class="mb-1">Confirm Password</label>
+              <div class="input-group">
+                <span class="input-group-text border-end-0"><i class="fa-solid fa-lock"></i></span>
+                <input
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  class="form-control border-end-0 ps-0"
+                  placeholder="••••••••"
+                  formControlName="confirmPassword"
+                  [class.is-invalid]="signupnForm.get('confirmPassword')?.touched && (signupnForm.get('confirmPassword')?.invalid || signupnForm.hasError('passwordMismatch'))"
+                  style="border-radius: 0;"
+                />
+                <button type="button" class="input-group-text bg-transparent border-start-0 text-muted" (click)="showConfirmPassword = !showConfirmPassword" style="border-radius: 0 12px 12px 0; cursor: pointer; border: 1.5px solid #e8ded3;">
+                  <i class="fa-solid" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
+                </button>
+              </div>
+              <div class="text-danger small mt-1" *ngIf="signupnForm.get('confirmPassword')?.touched && (signupnForm.get('confirmPassword')?.invalid || signupnForm.hasError('passwordMismatch'))">
+                <span *ngIf="signupnForm.get('confirmPassword')?.errors?.['required']"><i class="fa-solid fa-circle-exclamation me-1"></i>Required</span>
+                <span *ngIf="signupnForm.hasError('passwordMismatch')"><i class="fa-solid fa-circle-exclamation me-1"></i>Mismatch</span>
+              </div>
+            </div>
           </div>
 
           <button
@@ -81,7 +116,10 @@
             Sign Up
           </button>
 
-          <a href="./login" class="d-block text-center mt-3">Already have an account? Log In</a>
+          <p class="text-center mt-4 mb-0 text-muted">
+            Already have an account? 
+            <a href="./login" class="d-inline-block text-decoration-none fw-bold ms-1">Log In</a>
+          </p>
         </form>
       </div>
     </div>

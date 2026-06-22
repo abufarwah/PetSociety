@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { AdoptionService } from '../../services/adoption';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18,21 +19,12 @@ interface DashboardSummary {
   overallAiSuccessRate:     number;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MOCK DATA
-// TODO [TEAM INTEGRATION]: Remove this constant and replace loadSummary() with:
-//   this.http.get<DashboardSummary>(`${this.apiBase}/dashboard/summary`).subscribe(...)
-// ─────────────────────────────────────────────────────────────────────────────
-const MOCK_DASHBOARD_DATA: DashboardSummary = {
-  totalUsers:               248,
-  availablePets:             63,
-  pendingAdoptions:          17,
-  totalActiveSubscriptions:  84,
-  monthlyRecurringRevenue: 1547.16,
-  totalChatChannels:          9,
-  totalAiReportsProcessed:   46,
-  successfulAiMatches:       39,
-  overallAiSuccessRate:      84.8,
+// Fallback zeros — used only when the API is unreachable.
+const EMPTY_SUMMARY: DashboardSummary = {
+  totalUsers: 0, availablePets: 0, pendingAdoptions: 0,
+  totalActiveSubscriptions: 0, monthlyRecurringRevenue: 0,
+  totalChatChannels: 0, totalAiReportsProcessed: 0,
+  successfulAiMatches: 0, overallAiSuccessRate: 0,
 };
 
 @Component({
@@ -44,34 +36,158 @@ const MOCK_DASHBOARD_DATA: DashboardSummary = {
 })
 export class Admin implements OnInit {
 
-  // private readonly apiBase = 'http://localhost:5290/api'; // TODO [TEAM INTEGRATION]
+  private readonly apiBase = 'http://localhost:5290/api';
 
-  summary: DashboardSummary = { ...MOCK_DASHBOARD_DATA };
+  // ── Dashboard KPIs ────────────────────────────────────────────────────────
+  summary: DashboardSummary = { ...EMPTY_SUMMARY };
   isSummaryLoading = false;
   summaryError: string | null = null;
 
-  constructor(private adoptionService: AdoptionService) {}
+  constructor(private adoptionService: AdoptionService, private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadSummary();
+    this.loadUsers();
     this.loadAdoptionRequests();
+    this.loadSubscriptions();
+    this.loadFlaggedMessages();
+    this.loadChatStats();
   }
 
   loadSummary(): void {
-    // TODO [TEAM INTEGRATION]: Replace the two lines below with the HttpClient call.
-    this.isSummaryLoading = false;
-    this.summary = { ...MOCK_DASHBOARD_DATA };
+    this.isSummaryLoading = true;
+    this.summaryError = null;
+    this.http.get<DashboardSummary>(`${this.apiBase}/Dashboard/summary`).subscribe({
+      next:  (data) => { this.summary = data; this.isSummaryLoading = false; },
+      error: (err)  => {
+        console.error('Dashboard summary failed:', err);
+        this.summaryError = 'Unable to load dashboard data.';
+        this.isSummaryLoading = false;
+      }
+    });
   }
 
-  // ── Tab navigation ──────────────────────────────────────────────────────
+  // ── Tab navigation ────────────────────────────────────────────────────────
   activeTab = 'users';
   setActiveTab(tab: string) { this.activeTab = tab; }
 
-  // ════════════════════════════════════════════════════════════════════════
-  //  USER MANAGEMENT
-  // ════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
+  //  USER MANAGEMENT — wired to GET /api/admin/users
+  // ════════════════════════════════════════════════════════════════════════════
 
+  users: any[] = [];
+  isUsersLoading = false;
+  usersError: string | null = null;
   userSearchText = '';
+  selectedUser: any = null;
+  private nextUserId = 1;
+
+  loadUsers(): void {
+    this.isUsersLoading = true;
+    this.http.get<any[]>(`${this.apiBase}/admin/users`).subscribe({
+      next:  (data) => { this.users = data; this.isUsersLoading = false; },
+      error: (err)  => {
+        console.error('Failed to load users:', err);
+        this.usersError = 'Unable to load users.';
+        this.isUsersLoading = false;
+      }
+    });
+  }
+
+  get filteredUsers() {
+    if (!this.userSearchText) return this.users;
+    const t = this.userSearchText.toLowerCase();
+    return this.users.filter(u =>
+      u.name?.toLowerCase().includes(t) ||
+      u.email?.toLowerCase().includes(t) ||
+      u.phone?.includes(t)
+    );
+  }
+
+  viewUser(user: any) {
+    this.selectedUser = user;
+    setTimeout(() => document.getElementById('userDetails')?.scrollIntoView({ behavior: 'smooth' }), 100);
+  }
+
+  // ── Soft-delete user — DELETE /api/admin/users/{id} ─────────────────────
+  deleteUser(id: number): void {
+    const user = this.users.find(u => u.id === id);
+    if (!user) return;
+    if (!confirm(
+      `Soft-delete user "${user.name}"?\n\n` +
+      `Their account will be deactivated. All data is preserved.`
+    )) return;
+
+    this.http.delete(`${this.apiBase}/admin/users/${id}`).subscribe({
+      next: () => {
+        user.status   = 'Deactivated';
+        user.activity = `Deactivated on ${new Date().toLocaleDateString()}`;
+        if (this.selectedUser?.id === id) this.selectedUser = { ...user };
+      },
+      error: err => console.error('Delete failed:', err)
+    });
+  }
+
+  // ── Ban / Unban user — PUT /api/admin/users/{id}/ban ─────────────────────
+  banUser(user: any): void {
+    const action    = user.status === 'Restricted' ? 'unban' : 'ban';
+    const newStatus = action === 'ban' ? 'Restricted' : 'Active';
+    if (!confirm(`${action === 'ban' ? 'Restrict' : 'Lift restriction on'} user "${user.name}"?`)) return;
+
+    const payload = { isRestricted: action === 'ban', reason: action === 'ban' ? 'Admin action' : '' };
+    this.http.put(`${this.apiBase}/admin/users/${user.id}/ban`, payload).subscribe({
+      next: () => { user.status = newStatus; },
+      error: err => console.error('Ban failed:', err)
+    });
+  }
+
+  // ── Add User Modal — POST /api/admin/users/add ───────────────────────────
+  showAddUserModal = false;
+  addUserForm = { name: '', email: '', role: 'User' };
+  addUserRoles = ['User', 'Pet Owner', 'Vet'];
+
+  openAddUserModal(): void {
+    this.addUserForm = { name: '', email: '', role: 'User' };
+    this.showAddUserModal = true;
+  }
+  closeAddUserModal(): void { this.showAddUserModal = false; }
+
+  submitAddUser(): void {
+    if (!this.addUserForm.name.trim() || !this.addUserForm.email.trim()) {
+      alert('Name and email are required.');
+      return;
+    }
+    const payload = {
+      fullName: this.addUserForm.name,
+      email:    this.addUserForm.email,
+      password: 'TempPass#123',
+      role:     this.addUserForm.role
+    };
+    this.http.post<any>(`${this.apiBase}/admin/users/add`, payload).subscribe({
+      next: (created) => {
+        this.users.push({
+          id:           created.id,
+          name:         created.fullName,
+          email:        created.email,
+          phone:        '—',
+          status:       'Active',
+          role:         this.addUserForm.role,
+          petsPosted:   0,
+          subscription: 'None',
+          activity:     'Just added'
+        });
+        this.showAddUserModal = false;
+      },
+      error: err => {
+        console.error('Add user failed:', err);
+        alert(err.error?.error || 'Failed to create user.');
+      }
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════════════════
+  //  ADOPTION REQUESTS — wired to AdoptionService (already connected)
+  // ════════════════════════════════════════════════════════════════════════════
 
   adoptionRequests: any[] = [];
   isAdoptionRequestsLoading = false;
@@ -79,8 +195,6 @@ export class Admin implements OnInit {
 
   loadAdoptionRequests(): void {
     this.isAdoptionRequestsLoading = true;
-    this.adoptionRequestsError = null;
-
     this.adoptionService.getAll().subscribe({
       next: (data: any) => {
         this.adoptionRequests = Array.isArray(data) ? data : [];
@@ -96,139 +210,73 @@ export class Admin implements OnInit {
 
   updateAdoptionRequestStatus(request: any, status: string): void {
     const payload = {
-      id: request.id,
-      petId: request.petId,
+      id: request.id, petId: request.petId,
       phoneNumber: request.phoneNumber,
-      deliveryMethod: request.deliveryMethod,
-      status,
+      deliveryMethod: request.deliveryMethod, status,
     };
-
     this.adoptionService.updateRequest(payload).subscribe({
-      next: () => {
-        request.status = status;
-      },
-      error: (err) => {
-        console.error('Failed to update adoption request status:', err);
-      }
+      next:  () => { request.status = status; },
+      error: (err) => console.error('Failed to update adoption request:', err)
     });
   }
 
   get pendingAdoptionRequestCount(): number {
     return this.adoptionRequests.filter((r: any) => r.status === 'Pending').length;
   }
-  selectedUser: any = null;
 
-  get filteredUsers() {
-    if (!this.userSearchText) return this.users;
-    const t = this.userSearchText.toLowerCase();
-    return this.users.filter(u =>
-      u.name.toLowerCase().includes(t) ||
-      u.email.toLowerCase().includes(t) ||
-      u.phone.includes(t)
-    );
-  }
+  // ════════════════════════════════════════════════════════════════════════════
+  //  SUBSCRIPTIONS — wired to GET /api/admin/subscriptions
+  // ════════════════════════════════════════════════════════════════════════════
 
-  users: any[] = [
-    { id: 1, name: 'Besan Awwad',       email: 'besoawad1@gmail.com', phone: '+962 79 123 4567', status: 'Active',   role: 'Pet Owner', petsPosted: 3, subscription: 'Premium Plan', activity: 'Last login: 2 hours ago'  },
-    { id: 2, name: 'Hashem Aldawaimeh', email: 'dawaimehh@gmail.com', phone: '+962 77 987 6543', status: 'Disabled', role: 'User',      petsPosted: 0, subscription: 'None',         activity: 'Last login: 1 month ago' },
-    { id: 3, name: 'Rama Asha',         email: 'rama123@gmail.com',   phone: '+962 78 555 1122', status: 'Active',   role: 'Vet',       petsPosted: 1, subscription: 'Basic Plan',   activity: 'Online Now'              },
-    { id: 4, name: 'Ali Hudaib',        email: 'ali.h@gmail.com',     phone: '+962 79 000 1111', status: 'Active',   role: 'Pet Owner', petsPosted: 5, subscription: 'Deluxe Plan',  activity: 'Active yesterday'        }
+  subscriptionsList: any[] = [];
+  isSubsLoading = false;
+  showManageSubModal = false;
+  selectedSub: any = null;
+  manageSubNewStatus = 'Active';
+  searchText = '';
+
+  planDistribution = [
+    { label: 'Basic',   count: 0, pct: 0, color: '#6c8ebf' },
+    { label: 'Premium', count: 0, pct: 0, color: '#8a5cf3' },
+    { label: 'Deluxe',  count: 0, pct: 0, color: '#f8b84c' }
   ];
-  private nextUserId = 5;
+  planStats = { basic: 0, premium: 0, deluxe: 0 };
 
-  viewUser(user: any) {
-    this.selectedUser = user;
-    setTimeout(() => document.getElementById('userDetails')?.scrollIntoView({ behavior: 'smooth' }), 100);
-  }
-
-  // ── Soft Delete user ───────────────────────────────────────────────────
-  // ARCHITECTURE: Instead of removing the row, we mark it as "Deactivated"
-  // in the local array. This mirrors the backend soft-delete pattern:
-  //   PUT IsDeleted = true, IsActive = false, DeletedAt = now
-  // The row is kept visible so the admin has full audit context.
-  deleteUser(id: number): void {
-    const user = this.users.find(u => u.id === id);
-    if (!user) return;
-    if (!confirm(
-      `Soft-delete user "${user.name}"?\n\n` +
-      `Their account will be deactivated. All pets, adoption requests, ` +
-      `and subscriptions are preserved in the database.`
-    )) return;
-
-    console.log('[MOCK] DELETE /api/admin/users/' + id, { userId: id });
-
-    // TODO [TEAM INTEGRATION]: Un-comment for integration.
-    // this.http.delete(`${this.apiBase}/admin/users/${id}`).subscribe({
-    //   next: () => { /* soft-delete applied below */ },
-    //   error: err => console.error('Soft-delete failed', err)
-    // });
-
-    // Soft delete: mark row visually as deactivated instead of removing it.
-    user.status   = 'Deactivated';
-    user.activity = 'Account soft-deleted on 2026-06-06';
-    if (this.selectedUser?.id === id) {
-      this.selectedUser = { ...user }; // refresh detail panel
-    }
-  }
-
-  // ── Ban / Unban user ──────────────────────────────────────────────────
-  banUser(user: any): void {
-    const action    = user.status === 'Restricted' ? 'unban' : 'ban';
-    const newStatus = action === 'ban' ? 'Restricted' : 'Active';
-    if (!confirm(`${action === 'ban' ? 'Restrict' : 'Lift restriction on'} user "${user.name}"?`)) return;
-
-    const payload = { isRestricted: action === 'ban', reason: action === 'ban' ? 'Admin action' : '' };
-    console.log(`[MOCK] PUT /api/admin/users/${user.id}/ban`, payload);
-
-    // TODO [TEAM INTEGRATION]: Un-comment for integration.
-    // this.http.put(`${this.apiBase}/admin/users/${user.id}/ban`, payload).subscribe({
-    //   next: () => { /* status updated below */ },
-    //   error: err => console.error('Ban failed', err)
-    // });
-
-    user.status = newStatus;
-  }
-
-  // ── Add User Modal ────────────────────────────────────────────────────
-  showAddUserModal  = false;
-  addUserForm = { name: '', email: '', role: 'User' };
-  addUserRoles = ['User', 'Pet Owner', 'Vet'];
-
-  openAddUserModal(): void {
-    this.addUserForm = { name: '', email: '', role: 'User' };
-    this.showAddUserModal = true;
-  }
-
-  closeAddUserModal(): void { this.showAddUserModal = false; }
-
-  submitAddUser(): void {
-    if (!this.addUserForm.name.trim() || !this.addUserForm.email.trim()) {
-      alert('Name and email are required.');
-      return;
-    }
-
-    const payload = { ...this.addUserForm };
-    console.log('[MOCK] POST /api/admin/users/add', payload);
-
-    // TODO [TEAM INTEGRATION]: Un-comment for integration.
-    // this.http.post<any>(`${this.apiBase}/admin/users/add`, { ...payload, password: 'TempPass#123' }).subscribe({
-    //   next: created => { /* use created.id below */ },
-    //   error: err     => console.error('Add user failed', err)
-    // });
-
-    this.users.push({
-      id:           this.nextUserId++,
-      name:         this.addUserForm.name,
-      email:        this.addUserForm.email,
-      phone:        '—',
-      status:       'Active',
-      role:         this.addUserForm.role,
-      petsPosted:   0,
-      subscription: 'None',
-      activity:     'Just added — 2026-06-06'
+  loadSubscriptions(): void {
+    this.isSubsLoading = true;
+    this.http.get<any[]>(`${this.apiBase}/admin/subscriptions`).subscribe({
+      next: (data) => {
+        this.subscriptionsList = data;
+        this.isSubsLoading = false;
+        this.computePlanStats();
+      },
+      error: (err) => {
+        console.error('Failed to load subscriptions:', err);
+        this.isSubsLoading = false;
+      }
     });
+  }
 
-    this.showAddUserModal = false;
+  private computePlanStats(): void {
+    const active = this.subscriptionsList.filter(s => s.status === 'Active');
+    const total  = active.length || 1;
+    const basic   = active.filter(s => s.plan?.toLowerCase() === 'basic').length;
+    const premium = active.filter(s => s.plan?.toLowerCase() === 'premium').length;
+    const deluxe  = active.filter(s => s.plan?.toLowerCase() === 'deluxe').length;
+    this.planStats = { basic, premium, deluxe };
+    this.planDistribution = [
+      { label: 'Basic',   count: basic,   pct: Math.round(basic   / total * 100), color: '#6c8ebf' },
+      { label: 'Premium', count: premium, pct: Math.round(premium / total * 100), color: '#8a5cf3' },
+      { label: 'Deluxe',  count: deluxe,  pct: Math.round(deluxe  / total * 100), color: '#f8b84c' },
+    ];
+  }
+
+  get filteredSubscriptions() {
+    if (!this.searchText) return this.subscriptionsList;
+    const t = this.searchText.toLowerCase();
+    return this.subscriptionsList.filter(s =>
+      s.userName?.toLowerCase().includes(t) || s.id?.toLowerCase().includes(t)
+    );
   }
 
   openManageSubModal(sub: any): void {
@@ -236,209 +284,124 @@ export class Admin implements OnInit {
     this.manageSubNewStatus = sub?.status ?? 'Active';
     this.showManageSubModal = true;
   }
+  closeManageSubModal(): void { this.showManageSubModal = false; this.selectedSub = null; }
 
-  closeManageSubModal(): void {
-    this.showManageSubModal = false;
-    this.selectedSub = null;
-  }
-
+  // Calls PUT /api/Subscription/subscriptions/{rawId}/manage
   submitManageSub(): void {
     if (!this.selectedSub) return;
-
-    const previousStatus = this.selectedSub.status;
-    this.selectedSub.status = this.manageSubNewStatus;
-    console.log('[MOCK] PUT /api/admin/subscriptions/' + this.selectedSub.id, {
-      status: this.manageSubNewStatus
+    const rawId = this.selectedSub.rawId;
+    this.http.put(`${this.apiBase}/Subscription/subscriptions/${rawId}/manage`, {}).subscribe({
+      next: (res: any) => {
+        this.selectedSub.status = res.isActive ? 'Active' : 'Cancelled';
+        this.computePlanStats();
+        this.closeManageSubModal();
+      },
+      error: err => {
+        console.error('Manage subscription failed:', err);
+        this.closeManageSubModal();
+      }
     });
-
-    if (previousStatus !== this.manageSubNewStatus) {
-      this.selectedSub.nextBilling = this.manageSubNewStatus === 'Cancelled'
-        ? 'N/A'
-        : this.selectedSub.nextBilling || '2026-07-01';
-    }
-
-    this.closeManageSubModal();
   }
 
-  riskClass(risk: string): string {
-    switch (risk) {
-      case 'High': return 'risk-high';
-      case 'Medium': return 'risk-medium';
-      case 'Low': return 'risk-low';
-      default: return 'risk-neutral';
-    }
+  // ════════════════════════════════════════════════════════════════════════════
+  //  MODERATION (Chat & Community) — wired to /api/moderation
+  // ════════════════════════════════════════════════════════════════════════════
+
+  reportedMessages: any[] = [];
+  isModerationLoading = false;
+
+  chatStats = { dailyMessages: 0, totalMessages: 0, flaggedCount: 0 };
+  bannedUsers: any[] = [];
+
+  loadChatStats(): void {
+    this.http.get<any>(`${this.apiBase}/Dashboard/chat-stats`).subscribe({
+      next: (data) => {
+        this.chatStats.dailyMessages  = data.dailyMessages  ?? 0;
+        this.chatStats.totalMessages  = data.totalMessages  ?? 0;
+        this.chatStats.flaggedCount   = data.flaggedCount   ?? 0;
+        this.bannedUsers              = data.restrictedUsers ?? [];
+      },
+      error: err => console.error('Failed to load chat stats:', err)
+    });
   }
 
+  loadFlaggedMessages(): void {
+    this.isModerationLoading = true;
+    this.http.get<any[]>(`${this.apiBase}/moderation/flagged-messages`).subscribe({
+      next: (data) => {
+        // Map API shape → template-friendly shape
+        this.reportedMessages = data.map(m => ({
+          id:            m.id,
+          sender:        m.senderName,
+          content:       m.messageText,
+          reportReason:  m.reportReason  ?? 'Reported',
+          reportCount:   m.reportCount   ?? 0,
+          channelId:     m.channelId,
+          sentAt:        new Date(m.sentAt).toLocaleString(),
+          risk:          m.reportCount >= 5 ? 'High' : m.reportCount >= 3 ? 'Medium' : 'Low',
+          isAutoFlagged: m.isAutoFlagged
+        }));
+        this.chatStats.flaggedCount = data.length;
+        this.isModerationLoading = false;
+      },
+      error: err => {
+        console.error('Failed to load flagged messages:', err);
+        this.isModerationLoading = false;
+      }
+    });
+  }
+
+  // DELETE /api/moderation/messages/{id}
   deleteMessage(id: string | number): void {
     if (!confirm('Delete this reported message permanently?')) return;
-    this.reportedMessages = this.reportedMessages.filter(msg => msg.id !== id);
+    this.http.delete(`${this.apiBase}/moderation/messages/${id}`).subscribe({
+      next: () => { this.reportedMessages = this.reportedMessages.filter(m => m.id !== id); },
+      error: err => console.error('Delete message failed:', err)
+    });
   }
 
+  // PUT /api/moderation/messages/{id}/dismiss
   dismissMessage(id: string | number): void {
-    const message = this.reportedMessages.find(msg => msg.id === id);
-    if (!message) return;
-    message.reportCount = 0;
-    message.reportReason = 'Dismissed';
-    message.risk = 'Low';
-    message.isAutoFlagged = false;
+    this.http.put(`${this.apiBase}/moderation/messages/${id}/dismiss`, {}).subscribe({
+      next: () => {
+        const msg = this.reportedMessages.find(m => m.id === id);
+        if (msg) { msg.reportCount = 0; msg.reportReason = 'Dismissed'; msg.risk = 'Low'; msg.isAutoFlagged = false; }
+      },
+      error: err => console.error('Dismiss failed:', err)
+    });
   }
 
   banChatUser(sender: string): void {
     if (!confirm(`Ban ${sender} from the community chat?`)) return;
     this.reportedMessages = this.reportedMessages.map(msg =>
-      msg.sender === sender
-        ? { ...msg, reason: 'User banned', risk: 'High' }
-        : msg
+      msg.sender === sender ? { ...msg, reportReason: 'User banned', risk: 'High' } : msg
     );
   }
 
-  // ════════════════════════════════════════════════════════════════════════
-  //  SUBSCRIPTIONS
-  // ════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
+  //  AI REPORTS (static — backend integration pending AI team)
+  // ════════════════════════════════════════════════════════════════════════════
 
-  showManageSubModal = false;
-  selectedSub: any = null;
-  manageSubNewStatus = 'Active';
+  aiStats = { totalReports: 0, successfulMatches: 0, accuracy: '—' };
+  aiReports: any[] = [];
 
-  planDistribution = [
-    { label: 'Basic',   count: 7, pct: 35, color: '#6c8ebf' },
-    { label: 'Premium', count: 3, pct: 15, color: '#8a5cf3' },
-    { label: 'Deluxe',  count: 4, pct: 20, color: '#f8b84c' }
-  ];
+  // ── Helpers ───────────────────────────────────────────────────────────────
 
-  searchText = '';
-
-  get filteredSubscriptions() {
-    if (!this.searchText) return this.subscriptionsList;
-    const t = this.searchText.toLowerCase();
-    return this.subscriptionsList.filter(s =>
-      s.userName.toLowerCase().includes(t) || s.id.toLowerCase().includes(t)
-    );
+  riskClass(risk: string): string {
+    switch (risk) {
+      case 'High':   return 'risk-high';
+      case 'Medium': return 'risk-medium';
+      case 'Low':    return 'risk-low';
+      default:       return 'risk-neutral';
+    }
   }
 
-  subscriptionsList: any[] = [
-    { id: 'SUB-001', userName: 'Tamara Abzakh', plan: 'Deluxe',  price: '$28.99/mo', status: 'Active',    nextBilling: '2026-03-01' },
-    { id: 'SUB-002', userName: 'Rana Mofeed',   plan: 'Basic',   price: '$8.99/mo',  status: 'Active',    nextBilling: '2026-02-15' },
-    { id: 'SUB-003', userName: 'Basel Adarbeh', plan: 'Premium', price: '$18.99/mo', status: 'Cancelled', nextBilling: '2026-01-10' },
-  ];
-
-  planStats = { basic: 7, premium: 3, deluxe: 4 };
-
-  // ... 
-
-
-  // ==================  (AI Lost & Found)-----.....
-  aiStats = {
-    totalReports: 46,
-    successfulMatches: 39,
-    accuracy: '92%'
-  };
-
-  aiReports = [
-    { 
-      id: 'MATCH-101', 
-      reporter: 'Sami Farawneh', 
-      matchPercent: 98, 
-      status: 'User Confirmed', // المستخدم أكد أنه حيوانه
-      lastUpdate: '2 hours ago'
-    },
-    { 
-      id: 'MATCH-102', 
-      reporter: 'Layan S.', 
-      matchPercent: 92, 
-      status: 'Waiting User',   // النظام لقى تطابق وبستنى رد المستخدم
-      lastUpdate: '1 day ago'
-    },
-    { 
-      id: 'MATCH-103', 
-      reporter: 'Omar K.', 
-      matchPercent: 45, 
-      status: 'User Rejected',  // المستخدم قال "لا، مش حيواني"
-      lastUpdate: '3 days ago'
-    }
-  ];
-
-
-  //  إدارة الشات  (Chat & Community) ====================
-  
-  chatStats = {
-    dailyMessages: 140,
-    activeUsers: 45,
-    flaggedCount: 12
-  };
-
-  bannedUsers = [
-    { 
-      id: 201, 
-      user: 'SpammerX', 
-      reason: 'Sharing malicious links', 
-      bannedAt: '2024-12-20', 
-      duration: 'Permanent',
-      status: 'Banned'
-    },
-    { 
-      id: 205, 
-      user: 'AngryUser', 
-      reason: 'Offensive language', 
-      bannedAt: '2024-12-22', 
-      duration: '7 Days',
-      status: 'Muted'
-    },
-    { 
-      id: 310, 
-      user: 'FakeSeller', 
-      reason: 'Scam attempt reported', 
-      bannedAt: '2024-12-18', 
-      duration: '30 Days',
-      status: 'Suspended'
-    }
-  ]; 
-
-  reportedMessages = [
-    { 
-      id: 'MSG-991', 
-      sender: 'SpammerX', 
-      content: 'Win a free iPhone now! Click here...', 
-      reportReason: 'Spam', 
-      reportCount: 5,
-      channelId: '12',
-      sentAt: 'Today 11:30 AM',
-      risk: 'High',
-      isAutoFlagged: true
-    },
-    { 
-      id: 'MSG-992', 
-      sender: 'AngryUser', 
-      content: 'You are stupid and I hate this app', 
-      reportReason: 'Harassment', 
-      reportCount: 4,
-      channelId: '6',
-      sentAt: 'Today 10:15 AM',
-      risk: 'Medium',
-      isAutoFlagged: false
-    },
-    { 
-      id: 'MSG-993', 
-      sender: 'Seller123', 
-      content: 'Call me on 0799999 for discount', 
-      reportReason: 'Sharing Private Info', 
-      reportCount: 2,
-      channelId: '3',
-      sentAt: 'Yesterday 9:05 PM',
-      risk: 'Low',
-      isAutoFlagged: false
-    }
-  ];
-
-
-
-  //  إحصائيات الداشبورد العلوية ( بتنحسب لحالها)
   get stats() {
     return {
-      totalUsers: this.users.length,
-      activeUsers: this.users.filter(u => u.status === 'Active').length,
-      petsCount: this.adoptionRequests.length, 
-      subscribers: this.subscriptionsList.filter(s => s.status === 'Active').length,
+      totalUsers:   this.summary.totalUsers,
+      activeUsers:  this.users.filter(u => u.status === 'Active').length,
+      petsCount:    this.summary.availablePets,
+      subscribers:  this.summary.totalActiveSubscriptions,
       flaggedCount: this.reportedMessages.length
     };
   }

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../../../services/auth';
+import { SubscriptionService, SubscriptionStatusResponse } from '../../../services/subscription.service';
 
 @Component({
   selector: 'app-pet-society-plus',
@@ -9,8 +10,12 @@ import { Auth } from '../../../services/auth';
   templateUrl: './pet-society-plus.html',
   styleUrl: './pet-society-plus.css',
 })
-export class PetSocietyPlus {
+export class PetSocietyPlus implements OnInit {
   showLoginModal = false;
+
+  // ── Subscription Status ────────────────────────────────────────────────
+  subscriptionStatus: SubscriptionStatusResponse | null = null;
+  isStatusLoading = false;
 
   faqs = [
     {
@@ -35,14 +40,38 @@ export class PetSocietyPlus {
     }
   ];
 
-  constructor(private router: Router, private auth: Auth) {}
+  constructor(
+    private router: Router,
+    private auth: Auth,
+    private subscriptionService: SubscriptionService
+  ) {}
+
+  ngOnInit(): void {
+    // Only fetch status for regular users (not admin)
+    if (this.auth.isLoggedIn$.value && !this.auth.isAdmin$.value) {
+      this.loadSubscriptionStatus();
+    }
+  }
+
+  loadSubscriptionStatus(): void {
+    this.isStatusLoading = true;
+    this.subscriptionService.getMyStatus().subscribe({
+      next: (status) => {
+        this.subscriptionStatus = status;
+        this.isStatusLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load subscription status:', err);
+        this.isStatusLoading = false;
+      }
+    });
+  }
 
   toggleFaq(index: number) {
     this.faqs[index].isOpen = !this.faqs[index].isOpen;
   }
 
   goToPayment(plan: string) {
-    // Check if user is logged in
     const isLoggedIn = this.auth.isLoggedIn$.value;
 
     if (!isLoggedIn) {

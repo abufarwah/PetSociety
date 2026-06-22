@@ -20,6 +20,11 @@ export class LostFoundComponent implements OnInit {
   searchResultMessage: string | null = null;
   aiMatches: any[] = [];
 
+  // Interactive How-It-Works State
+  currentStep: number = 1;
+  isDemoMode: boolean = true;
+  demoInterval: any;
+
   // متغيرات العدادات
   lostCount: number = 0;
   foundCount: number = 0;
@@ -40,6 +45,37 @@ export class LostFoundComponent implements OnInit {
     private auth: Auth
   ) {}
 
+  // 1. يمنع إدخال أي شيء غير الأرقام (يسمح بالـ + في البداية فقط)
+validatePhoneInput(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
+  const charCode = event.which ? event.which : event.keyCode;
+
+  // يسمح بالرقم فقط (48-57)
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
+
+// 2. يضمن أن يبدأ الرقم بـ +962 ويقيد الطول بـ 13 خانة (3 للرمز + 9 للأرقام)
+enforceFormat(event: any) {
+  let value = event.target.value;
+
+  // إزالة أي شيء ليس رقماً
+  value = value.replace(/[^0-9]/g, '');
+
+  // التأكد من إضافة +962 في البداية إذا لم تكن موجودة
+  if (!value.startsWith('962')) {
+    value = '962' + value;
+  }
+
+  // تقييد الطول بـ 12 رقم (962 + 9 أرقام = 12 خانة)
+  if (value.length > 12) {
+    value = value.substring(0, 12);
+  }
+
+  // إعادة القيمة المنسقة مع الـ +
+  this.reportForm.phone = '+' + value;
+}
   ngOnInit() {
     // إعداد القيم الأولية فوراً عند تحميل الصفحة
     this.isLoggedIn = this.auth.isLoggedIn$.value;
@@ -62,6 +98,9 @@ export class LostFoundComponent implements OnInit {
     this.startCounter('lostCount', 120);
     this.startCounter('foundCount', 85);
     this.startCounter('reunitedCount', 50);
+
+    // Start Demo Animation for How It Works
+    this.startDemoAnimation();
 
     // جلب المنشورات من قاعدة البيانات
     this.loadPosts();
@@ -88,6 +127,27 @@ export class LostFoundComponent implements OnInit {
     }, stepTime);
   }
 
+  startDemoAnimation() {
+    this.demoInterval = setInterval(() => {
+      if (this.isDemoMode) {
+        this.currentStep = this.currentStep >= 4 ? 1 : this.currentStep + 1;
+        this.cdr.detectChanges();
+      }
+    }, 2500);
+  }
+
+  stopDemoAnimation() {
+    this.isDemoMode = false;
+    if (this.demoInterval) {
+      clearInterval(this.demoInterval);
+    }
+  }
+
+  setStep(step: number) {
+    this.stopDemoAnimation();
+    this.currentStep = step;
+  }
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -97,6 +157,8 @@ export class LostFoundComponent implements OnInit {
         this.queryImagePreview = reader.result;
         this.queryImageFile = file;
         this.searchResultMessage = null;
+        this.stopDemoAnimation();
+        this.currentStep = 2; // Advance to step 2 after upload
         this.cdr.detectChanges();
       };
       reader.readAsDataURL(file);
@@ -111,6 +173,9 @@ export class LostFoundComponent implements OnInit {
 
     if (this.queryInputVariable)
       this.queryInputVariable.nativeElement.value = '';
+      
+    this.stopDemoAnimation();
+    this.currentStep = 1; // Reset to step 1
   }
 
   searchSimilarPets() {
@@ -118,6 +183,8 @@ export class LostFoundComponent implements OnInit {
 
     this.searchResultMessage = 'Analyzing image and searching for matches...';
     this.aiMatches = [];
+    this.currentStep = 3; // Advance to step 3 (Searching)
+    this.cdr.detectChanges();
 
     const formData = new FormData();
     formData.append('queryImage', this.queryImageFile, this.queryImageFile.name);
@@ -158,11 +225,13 @@ export class LostFoundComponent implements OnInit {
           };
         });
       }
+      this.currentStep = 4; // Advance to step 4 (Results)
       this.cdr.detectChanges();
     })
     .catch(error => {
       console.error('Error connecting to AI service:', error);
       this.searchResultMessage = 'Image uploaded but the AI backend service is not reachable or failed.';
+      this.currentStep = 1; // Reset on error
       this.cdr.detectChanges();
     });
   }
@@ -256,18 +325,19 @@ export class LostFoundComponent implements OnInit {
   reportForm: any = this.emptyReport();
 
   emptyReport() {
-    return {
-      petType: 'Dog',
-      breed: '',
-      color: '',
-      dateLastSeen: '',
-      location: '',
-      description: '',
-      photoName: null,
-      reporterName: '',
-      phone: ''
-    };
-  }
+  return {
+    petType: 'Dog',
+    breed: '',
+    color: '',
+    dateLastSeen: '',
+    location: '',
+    description: '',
+    photoName: null,
+    photoPreview: null,   // أضيفي هذا السطر
+    reporterName: '',
+    phone: ''
+  };
+}
 
   getCurrentUserId(): number | null {
     const raw = localStorage.getItem('userId') || sessionStorage.getItem('userId');
@@ -329,12 +399,22 @@ export class LostFoundComponent implements OnInit {
   }
 
   onModalPhotoSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.reportForm.photoName = file.name;
-      this.reportImageFile = file;
-    }
+  const file = event.target.files[0];
+
+  if (file) {
+
+    this.reportForm.photoName = file.name;
+    this.reportImageFile = file;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.reportForm.photoPreview = reader.result;
+    };
+
+    reader.readAsDataURL(file);
   }
+}
 
   submitReport() {
     if (!this.auth.isLoggedIn$.value) {

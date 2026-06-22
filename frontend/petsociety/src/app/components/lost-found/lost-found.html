@@ -11,44 +11,168 @@
     </h1>
 
     <p class="text-muted description-text mb-5">
-      Upload two photos to compare and find out if they're the same pet.
-      Our AI analyzes color, shape, patterns, and more to give you a similarity score!
+      Lost a pet or found one? Just upload a single photo below. 
+      Our advanced AI will instantly scan the entire community database, analyzing breed, colors, and unique patterns to find the perfect match!
     </p>
 
     <div class="row justify-content-center mb-5">
-      <div class="col-lg-8">
-        <div class="stats-container d-flex justify-content-around align-items-center">
-          <div class="stat-item text-center">
-            <h3 class="fw-bold counter mb-0">{{ lostCount }}</h3>
-            <small class="text-muted fw-bold">🐶 Lost Pets</small>
+      <div class="col-lg-10">
+        <div class="d-flex flex-wrap justify-content-center gap-4 mt-2">
+          
+          <div class="stat-pill stat-lost">
+            <div class="stat-icon-wrapper"><i class="fa-solid fa-dog"></i></div>
+            <div class="stat-text text-start">
+              <span class="stat-label">Lost Pets</span>
+              <span class="stat-number">{{ lostCount }}</span>
+            </div>
           </div>
-          <div class="vr"></div>
-          <div class="stat-item text-center">
-            <h3 class="fw-bold counter mb-0">{{ foundCount }}</h3>
-            <small class="text-muted fw-bold">🐱 Found Pets</small>
+
+          <div class="stat-pill stat-found">
+            <div class="stat-icon-wrapper"><i class="fa-solid fa-cat"></i></div>
+            <div class="stat-text text-start">
+              <span class="stat-label">Found Pets</span>
+              <span class="stat-number">{{ foundCount }}</span>
+            </div>
           </div>
-          <div class="vr"></div>
-          <div class="stat-item text-center">
-            <h3 class="fw-bold counter mb-0">{{ reunitedCount }}</h3>
-            <small class="text-muted fw-bold">✅ Reunited!</small>
+
+          <div class="stat-pill stat-reunited">
+            <div class="stat-icon-wrapper"><i class="fa-solid fa-heart-circle-check"></i></div>
+            <div class="stat-text text-start">
+              <span class="stat-label">Reunited!</span>
+              <span class="stat-number">{{ reunitedCount }}</span>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ════════════════════════════════════════
+       HOW IT WORKS — Animated Steps Section
+       ════════════════════════════════════════ -->
+  <div class="how-it-works-section mb-5 position-relative">
+    
+    <!-- Background Paws for How It Works -->
+    <i class="fa-solid fa-paw bg-paw how-paw-left"></i>
+    <i class="fa-solid fa-paw bg-paw how-paw-right"></i>
+
+    <!-- Magical Sparkles -->
+    <i class="bi bi-stars magic-sparkle sparkle-1"></i>
+    <i class="bi bi-stars magic-sparkle sparkle-2"></i>
+    <i class="bi bi-stars magic-sparkle sparkle-3"></i>
+    <i class="bi bi-stars magic-sparkle sparkle-4"></i>
+    <i class="bi bi-stars magic-sparkle sparkle-5"></i>
+
+    <div class="how-header text-center mb-5 position-relative z-2">
+      <i class="fa-solid fa-paw bg-paw title-paw"></i>
+      <div class="how-badge">
+        <i class="bi bi-stars"></i> THE PROCESS
+      </div>
+      <h2 class="how-main-title fw-bold">
+        How It <span class="gold-gradient-text">Works</span>
+      </h2>
+      <p class="how-subtitle text-muted">
+        Four simple steps to find your pet using AI matching.
+      </p>
+    </div>
+    <div class="steps-track">
+
+      <!-- Step 1 -->
+      <div class="step-card" 
+           [class.active-step]="currentStep === 1" 
+           [class.completed-step]="currentStep > 1"
+           (click)="setStep(1)">
+        <div class="step-icon-wrap">
+          <i class="bi" [ngClass]="currentStep > 1 ? 'bi-check-lg' : 'bi-image'"></i>
+        </div>
+        <div class="step-number">01</div>
+        <h6 class="step-title">Upload a Photo</h6>
+        <p class="step-desc">Choose a clear photo of the lost or found pet from your device.</p>
+        <div class="step-pulse" *ngIf="currentStep === 1"></div>
+      </div>
+
+      <!-- Connector 1→2 -->
+      <div class="step-connector" [class.connector-filled]="currentStep > 1" [class.connector-flowing]="currentStep === 1">
+        <div class="connector-fill"></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card" 
+           [class.active-step]="currentStep === 2" 
+           [class.completed-step]="currentStep > 2"
+           (click)="setStep(2)">
+        <div class="step-icon-wrap">
+          <i class="bi" [ngClass]="currentStep > 2 ? 'bi-check-lg' : 'bi-magic'"></i>
+        </div>
+        <div class="step-number">02</div>
+        <h6 class="step-title">AI Analyzes</h6>
+        <p class="step-desc">Our AI scans color, patterns, shape, and unique markings of your pet.</p>
+        <div class="step-pulse" *ngIf="currentStep === 2"></div>
+      </div>
+
+      <!-- Connector 2→3 -->
+      <div class="step-connector" [class.connector-filled]="currentStep > 2" [class.connector-flowing]="currentStep === 2">
+        <div class="connector-fill"></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card" 
+           [class.active-step]="currentStep === 3" 
+           [class.completed-step]="currentStep > 3"
+           (click)="setStep(3)">
+        <div class="step-icon-wrap">
+          <i class="bi" [ngClass]="currentStep > 3 ? 'bi-check-lg' : 'bi-search'" 
+             [class.search-lens]="currentStep === 3"></i>
+        </div>
+        <div class="step-number">03</div>
+        <h6 class="step-title">Matches Scanned</h6>
+        <p class="step-desc">The AI searches the entire community database for similar pets in seconds.</p>
+        <div class="step-pulse" *ngIf="currentStep === 3"></div>
+      </div>
+
+      <!-- Connector 3→4 -->
+      <div class="step-connector" [class.connector-filled]="currentStep > 3" [class.connector-flowing]="currentStep === 3">
+        <div class="connector-fill"></div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card" 
+           [class.active-step]="currentStep === 4" 
+           [class.completed-step]="currentStep > 4"
+           (click)="setStep(4)">
+        <div class="step-icon-wrap">
+          <i class="bi bi-stars" [class.animate__animated]="currentStep === 4" [class.animate__tada]="currentStep === 4"></i>
+        </div>
+        <div class="step-number">04</div>
+        <h6 class="step-title">Results Revealed</h6>
+        <p class="step-desc">Get ranked matches with a similarity score and contact the owner directly!</p>
+        <div class="step-pulse" *ngIf="currentStep === 4"></div>
+      </div>
+
+    </div>
+  </div>
+  <!-- END HOW IT WORKS -->
+
   <div class="row g-4 justify-content-center">
     <div class="col-xl-8">
-      <div class="upload-card query-card p-4">
-        <div class="d-flex align-items-center gap-3 mb-3">
-          <div class="icon-box">
-            <i class="bi bi-upload fs-4"></i>
+      <div class="upload-card query-card p-4 position-relative overflow-hidden">
+        
+        <!-- Background Paw Prints -->
+        <i class="fa-solid fa-paw bg-paw paw-top-right"></i>
+        <i class="fa-solid fa-paw bg-paw paw-bottom-left"></i>
+
+        <div class="d-flex align-items-center gap-4 mb-4 position-relative z-2">
+          <div class="icon-box" style="background: linear-gradient(135deg, #f8f5f0, #f0e6d6); color: #c9a774; padding: 14px 18px; border-radius: 18px; box-shadow: 0 8px 15px rgba(214,180,140,0.15);">
+            <i class="bi bi-cloud-upload-fill fs-2"></i>
           </div>
           <div>
-            <h5 class="fw-bold mb-0">Upload Pet Photo</h5>
-            <small class="text-muted">
-              Upload one image now. Later, AI will compare it with images in the database.
-            </small>
+            <h4 class="fw-bolder mb-1" style="color: #1f2937; letter-spacing: -0.5px;">
+              Upload <span class="gold-gradient-text">Pet Photo</span>
+            </h4>
+            <p class="text-muted mb-0" style="font-size: 0.95rem;">
+              Upload a clear image. Our AI will instantly compare it with the community database.
+            </p>
           </div>
         </div>
 
@@ -60,10 +184,13 @@
           accept="image/*">
 
         <div
-          class="upload-area-container dashed-pink"
+          class="upload-area-container position-relative z-2"
           (click)="queryInput.click()">
 
-          <div *ngIf="!queryImageName" class="text-center">
+          <!-- AI Scanning Laser Line -->
+          <div class="ai-scanner-line" *ngIf="!queryImageName"></div>
+
+          <div *ngIf="!queryImageName" class="text-center position-relative z-3">
             <div class="upload-icon-circle">
               <i class="bi bi-upload fs-1"></i>
             </div>
@@ -385,9 +512,19 @@
                 <small class="text-muted">JPG, PNG up to 10MB</small>
               </div>
             </div>
-            <div *ngIf="reportForm.photoName" class="mt-2 text-success small">
-              <i class="bi bi-file-earmark-image me-1"></i> Selected: {{ reportForm.photoName }}
-            </div>
+            <div *ngIf="reportForm.photoPreview" class="mt-3 text-center">
+
+  <img 
+    [src]="reportForm.photoPreview"
+    class="pet-preview-img"
+    alt="Pet Preview">
+
+  <p class="text-success small mt-2">
+    <i class="bi bi-check-circle me-1"></i>
+    {{ reportForm.photoName }}
+  </p>
+
+</div>
           </div>
 
           <div class="col-md-6">
@@ -396,9 +533,24 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label small text-muted">PHONE NUMBER <span class="text-danger">*</span></label>
-            <input class="form-control" [(ngModel)]="reportForm.phone" name="phone" placeholder="+962 ...">
-          </div>
+  <label class="form-label small text-muted">PHONE NUMBER <span class="text-danger">*</span></label>
+  <input 
+    class="form-control" 
+    [(ngModel)]="reportForm.phone" 
+    name="phone" 
+    placeholder="+962XXXXXXXXX"
+    type="tel"
+    (keypress)="validatePhoneInput($event)"
+    (input)="enforceFormat($event)"
+    maxlength="13"
+    #phoneInput="ngModel"
+    required>
+  
+  <div *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)" class="text-danger small mt-1">
+    Please enter a valid format starting with +962 followed by 9 digits.
+  </div>
+</div>
+
         </div>
 
         <div class="d-flex justify-content-end gap-2">

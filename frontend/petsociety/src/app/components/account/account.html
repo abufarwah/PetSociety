@@ -1,26 +1,22 @@
 <div class="container py-5">
-  <div class="card shadow-sm mb-4 account-header">
+  
+  <div class="card shadow-sm mb-4 account-header" style="border-radius: 12px;">
     <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
       <div class="d-flex align-items-center gap-3">
-        <div class="avatar-circle">{{ dashboard.user.avatarInitial || 'U' }}</div>
-
+        <div class="avatar-circle">{{ dashboard?.user?.avatarInitial || 'U' }}</div>
         <div>
-          <h5 class="mb-1">{{ loading ? 'Loading your account…' : 'Welcome back, ' + (dashboard.user.name || 'Pet Parent') }}</h5>
-
+          <h5 class="mb-1 fw-bold">Welcome back, {{ dashboard?.user?.name || 'Pet Parent' }}</h5>
           <div class="text-muted small d-flex flex-wrap gap-3">
-            <span *ngIf="dashboard.user.email; else noEmail">
-              <i class="bi bi-envelope"></i>
-              {{ dashboard.user.email }}
-            </span>
-            <ng-template #noEmail>
-              <span><i class="bi bi-envelope"></i> Your email will appear here after sign in.</span>
-            </ng-template>
-
+            <span><i class="bi bi-envelope me-1"></i>{{ dashboard?.user?.email }}</span>
           </div>
         </div>
       </div>
-
-      <a class="signout-link" routerLink="/login" (click)="logout($event)">Sign Out</a>
+      <div class="d-flex gap-2">
+        <a *ngIf="auth.isAdmin$ | async" routerLink="/admin" class="btn btn-dark px-3" style="border-radius: 20px; display: flex; align-items: center;">
+          <i class="bi bi-speedometer2 me-2"></i> Dashboard
+        </a>
+        <a class="signout-link btn border px-3" style="cursor: pointer; border-radius: 20px; background-color: #c4a484; color: white;" (click)="logout($event)">Sign Out</a>
+      </div>
     </div>
   </div>
 
@@ -32,67 +28,106 @@
   <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</div>
 
   <div *ngIf="!loading && !error" class="row g-4">
-    <div class="col-lg-8">
-      <div class="card shadow-sm h-100">
-        <div class="card-body">
-          <h6 class="fw-bold">{{ dashboard.stats.subscriptionsCount ? 'Active Subscription' : 'No Active Subscription' }}</h6>
-          <p class="text-muted">
-            {{ dashboard.stats.subscriptionsCount ? 'Your subscription is active and ready to use.' : 'You don\'t have an active subscription yet. Subscribe to Pet Society + to get monthly care packages for your pets!' }}
-          </p>
-
-          <button class="ps-btn" routerLink="/PetSocietyPlus">
-            <i class="bi bi-box"></i>
-            View Plans
-          </button>
-        </div>
-      </div>
-    </div>
-
+    
     <div class="col-lg-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h6 class="fw-bold mb-3">Quick Stats</h6>
+      <div class="card shadow-sm p-3" style="border-radius: 16px; background-color: #fff; height: 500px; display: flex; flex-direction: column;">
+        <h6 class="fw-bold mb-3 text-secondary"><i class="bi bi-box-seam me-2"></i>Active Subscriptions</h6>
+        
+        <div *ngIf="!dashboard.subscriptions || dashboard.subscriptions.length === 0" class="text-center py-5 d-flex flex-column align-items-center justify-content-center h-100">
+          <div class="mb-3"><i class="bi bi-gift text-muted" style="font-size: 2.5rem;"></i></div>
+          <h6 class="fw-bold text-muted">No Active Subscriptions Yet</h6>
+        </div>
 
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="d-flex align-items-center gap-2">
-              <span class="icon-circle bg-success"><i class="bi bi-box"></i></span>
-              Subscriptions
+        <div *ngIf="dashboard.subscriptions && dashboard.subscriptions.length > 0" 
+             style="overflow-y: auto; padding-right: 5px; flex-grow: 1;" class="d-flex flex-column gap-3">
+          
+          <div class="card p-3 border text-center" 
+               *ngFor="let sub of dashboard.subscriptions"
+               [ngStyle]="{'background-color': sub.planName.toLowerCase() === 'premium' ? '#fdfaf6' : '#f8fafd', 'border-radius': '12px', 'border-color': sub.planName.toLowerCase() === 'premium' ? '#f5e6d3' : '#e3effb'}">
+            
+            <div class="mx-auto mb-2 d-flex align-items-center justify-content-center rounded-circle" 
+                 [ngStyle]="{'width': '50px', 'height': '50px', 'background-color': sub.planName.toLowerCase() === 'premium' ? '#fdecd8' : '#e1f0fe'}">
+              <i class="bi" [ngClass]="sub.planName.toLowerCase() === 'premium' ? 'bi-box-seam-fill' : 'bi-box'" [ngStyle]="{'color': sub.planName.toLowerCase() === 'premium' ? '#c68a4c' : '#4fa1f3'}"></i>
             </div>
-            <span>{{ dashboard.stats.subscriptionsCount }}</span>
-          </div>
 
-          <hr />
+            <h5 class="fw-bold mb-1 text-capitalize">{{ sub.planName }}</h5>
+            <span class="fw-bold text-dark d-block mb-3" style="font-size: 1.2rem;">${{ sub.price }}/month</span>
 
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-2">
-              <span class="icon-circle bg-warning"><i class="bi bi-heart"></i></span>
-              Adopted Pets
-            </div>
-            <span>{{ dashboard.stats.adoptedCount }}</span>
+            <ul class="text-start ps-0 mb-3" style="list-style: none; font-size: 0.85rem; color: #495057;">
+              <li *ngFor="let feature of sub.featuresList" class="mb-2 d-flex align-items-start gap-2">
+                <i class="bi bi-check-lg text-success mt-1"></i>
+                <span>{{ feature }}</span>
+              </li>
+            </ul>
+
+            <button class="btn btn-sm w-100 py-2 text-white fw-bold" (click)="cancelSubscription(sub.id)" style="background-color: #c4a484; border-radius: 8px; border: none;">
+              Cancel Subscription <i class="bi bi-paw-fill small ms-1"></i>
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-12">
-      <div class="card shadow-sm py-4">
-        <div class="card-body text-center">
-          <h5 class="fw-bold mb-3">Adopted Pets</h5>
-
-          <div *ngIf="(dashboard.adoptedPets.length || 0) === 0" class="text-center">
-            <div class="empty-state mb-3"><i class="bi bi-heart"></i></div>
-            <p class="text-muted">You haven't adopted any pets yet.</p>
-            <button class="ps-btn adopt-btn" routerLink="/Adoption">Browse Pets for Adoption</button>
+    <div class="col-lg-8">
+      <div class="row g-4">
+        <div class="col-md-7">
+          <div class="card shadow-sm h-100" style="border-radius: 12px;">
+            <div class="card-body">
+              <h6 class="fw-bold">Plan Details</h6>
+              <p class="text-muted small">If you wish to subscribe to Pet Society+ for monthly care packages for your pets, tap below to explore our flexible plans!</p>
+              <button class="btn btn-sm text-white px-3 py-2 fw-semibold" routerLink="/PetSocietyPlus" style="background-color: #c4a484; border-radius: 8px;">
+                <i class="bi bi-box me-1"></i> View Plans
+              </button>
+            </div>
           </div>
+        </div>
 
-          <div *ngIf="(dashboard.adoptedPets.length || 0) > 0" class="row g-3 text-start">
-            <div class="col-md-6 col-xl-4" *ngFor="let pet of dashboard.adoptedPets">
-              <div class="card h-100 border-0 shadow-sm">
-                <img *ngIf="pet.thumbnail" [src]="pet.thumbnail" class="card-img-top adopted-pet-image" [alt]="pet.name" />
-                <div class="card-body">
-                  <h6 class="fw-bold mb-1">{{ pet.name }}</h6>
-                  <p class="text-muted mb-2">Status: {{ pet.status }}</p>
-                  <span class="badge bg-light text-dark">Pet #{{ pet.id }}</span>
+        <div class="col-md-5">
+          <div class="card shadow-sm h-100" style="border-radius: 12px;">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h6 class="fw-bold mb-3">Quick Stats</h6>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center gap-2 small">
+                  <span class="badge bg-success rounded-circle p-1"><i class="bi bi-box"></i></span>
+                  Subscriptions
+                </div>
+                <span class="fw-bold">{{ dashboard?.stats?.subscriptionsCount }}</span>
+              </div>
+              <hr class="my-2" />
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2 small">
+                  <span class="badge bg-warning rounded-circle p-1"><i class="bi bi-heart"></i></span>
+                  Adopted Pets
+                </div>
+                <span class="fw-bold">{{ dashboard?.stats?.adoptedCount }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card shadow-sm py-4" style="border-radius: 12px;">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h5 class="fw-bold mb-0">Adopted Pets</h5>
+                <button class="btn btn-sm text-white px-3" routerLink="/Adoption" style="background-color: #c4a484; border-radius: 8px;">Browse Pets for Adoption</button>
+              </div>
+              <p class="text-muted small">Your full layout of family members.</p>
+              <hr class="my-3" style="opacity: 0.1;" />
+              <div *ngIf="!dashboard.adoptedPets || dashboard.adoptedPets.length === 0" class="text-center py-4"><p class="text-muted">You haven't adopted any pets yet.</p></div>
+              <div *ngIf="dashboard.adoptedPets && dashboard.adoptedPets.length > 0" class="row g-3">
+                <div class="col-md-6 col-xl-4" *ngFor="let pet of dashboard.adoptedPets">
+                  <div class="card h-100 border border-light shadow-sm" style="border-radius: 12px; overflow: hidden;">
+                    <div class="position-relative">
+                      <img [src]="pet.thumbnail ? 'https://localhost:44371' + pet.thumbnail : 'assets/images/default-pet.jpg'" class="w-100" style="height: 180px; object-fit: cover;" [alt]="pet.name" />
+                      <span class="badge bg-light text-success border position-absolute top-0 end-0 m-2 py-1 px-2" style="font-size: 0.7rem; border-radius: 12px;"><i class="bi bi-patch-check-fill me-1"></i>{{ pet.status || 'Adopted' }}</span>
+                    </div>
+                    <div class="card-body p-3">
+                      <div class="d-flex justify-content-between align-items-center mb-1"><h6 class="fw-bold mb-0">{{ pet.name }}</h6><span class="badge bg-light text-muted border" style="font-size: 0.7rem;">{{ pet.type }}</span></div>
+                      <p class="text-muted small mb-2"><i class="bi bi-paw-fill me-1"></i> {{ pet.breed }}</p>
+                      <div class="d-flex gap-3 text-muted small mb-2" style="font-size: 0.75rem;"><span><i class="bi bi-gender-ambiguous me-1"></i>{{ pet.gender }}</span><span><i class="bi bi-calendar3 me-1"></i>{{ pet.age }}</span></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -46,46 +46,32 @@ namespace Petsociety.Controllers
         {
             try
             {
-                var totalUsersTask = _context.Users
+                var totalUsers = await _context.Users
                     .AsNoTracking().CountAsync();
 
-                var availablePetsTask = _context.Pets
+                var availablePets = await _context.Pets
                     .AsNoTracking().CountAsync(p => p.IsAvailable);
 
-                var pendingAdoptionsTask = _context.AdoptionRequests
+                var pendingAdoptions = await _context.AdoptionRequests
                     .AsNoTracking().CountAsync(r => r.Status == "Pending");
 
-                var activeSubscriptionsTask = _context.Subscriptions
+                var activeSubscriptions = await _context.Subscriptions
                     .AsNoTracking().CountAsync(s => s.IsActive);
 
-                var mrrTask = _context.Subscriptions
+                var mrr = await _context.Subscriptions
                     .AsNoTracking()
                     .Where(s => s.IsActive)
-                    .SumAsync(s => (decimal?)s.Price);
+                    .SumAsync(s => (decimal?)s.Price) ?? 0m;
 
-                var totalChatChannelsTask = _context.CommunityChannels
+                var totalChatChannels = await _context.CommunityChannels
                     .AsNoTracking().CountAsync();
 
-                var totalAiReportsTask = _context.LostFoundReports
+                var totalReports = await _context.LostFoundReports
                     .AsNoTracking().CountAsync();
 
-                var successfulAiMatchesTask = _context.LostFoundReports
+                var successfulMatches = await _context.LostFoundReports
                     .AsNoTracking()
                     .CountAsync(r => r.FeatureVector != null && r.FeatureVector != string.Empty);
-
-                await Task.WhenAll(
-                    totalUsersTask,
-                    availablePetsTask,
-                    pendingAdoptionsTask,
-                    activeSubscriptionsTask,
-                    mrrTask,
-                    totalChatChannelsTask,
-                    totalAiReportsTask,
-                    successfulAiMatchesTask
-                );
-
-                int totalReports     = totalAiReportsTask.Result;
-                int successfulMatches = successfulAiMatchesTask.Result;
 
                 // OverallAiSuccessRate: percentage of reports that were processed by
                 // the AI model (i.e., received a FeatureVector). Returns 0.0 when no
@@ -96,12 +82,12 @@ namespace Petsociety.Controllers
 
                 var summary = new DashboardSummaryDto
                 {
-                    TotalUsers               = totalUsersTask.Result,
-                    AvailablePets            = availablePetsTask.Result,
-                    PendingAdoptions         = pendingAdoptionsTask.Result,
-                    TotalActiveSubscriptions = activeSubscriptionsTask.Result,
-                    MonthlyRecurringRevenue  = mrrTask.Result ?? 0m,
-                    TotalChatChannels        = totalChatChannelsTask.Result,
+                    TotalUsers               = totalUsers,
+                    AvailablePets            = availablePets,
+                    PendingAdoptions         = pendingAdoptions,
+                    TotalActiveSubscriptions = activeSubscriptions,
+                    MonthlyRecurringRevenue  = mrr,
+                    TotalChatChannels        = totalChatChannels,
                     TotalAiReportsProcessed  = totalReports,
                     SuccessfulAiMatches      = successfulMatches,
                     OverallAiSuccessRate     = overallAiSuccessRate
@@ -117,6 +103,54 @@ namespace Petsociety.Controllers
                     detail = ex.Message
                 });
             }
+        }
+
+        // ── GET /api/Dashboard/chat-stats ────────────────────────────────────
+        /// <summary>Returns chat & community moderation statistics for the admin dashboard.</summary>
+        [HttpGet("chat-stats")]
+        [SwaggerOperation(
+            Summary     = "Get Chat & Community Statistics",
+            OperationId = "Dashboard_GetChatStats",
+            Tags        = new[] { "Dashboard" }
+        )]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetChatStats()
+        {
+            var today = DateTime.UtcNow.Date;
+
+            var dailyMessages = await _context.CommunityMessages
+                .AsNoTracking()
+                .CountAsync(m => m.SentAt >= today && !m.IsSystemDeleted);
+
+            var totalMessages = await _context.CommunityMessages
+                .AsNoTracking()
+                .CountAsync(m => !m.IsSystemDeleted);
+
+            var flaggedCount = await _context.CommunityMessages
+                .AsNoTracking()
+                .CountAsync(m => !m.IsSystemDeleted && (m.IsAutoFlagged || m.ReportCount >= 3));
+
+            var restrictedUsers = await _context.Users
+                .AsNoTracking()
+                .Where(u => u.IsRestricted && !u.IsDeleted)
+                .Select(u => new
+                {
+                    id       = u.Id,
+                    user     = u.FullName,
+                    reason   = "Restricted by Admin",
+                    bannedAt = u.DeletedAt.HasValue ? u.DeletedAt.Value.ToString("yyyy-MM-dd") : "—",
+                    duration = "Indefinite",
+                    status   = "Restricted"
+                })
+                .ToListAsync();
+
+            return Ok(new
+            {
+                dailyMessages,
+                totalMessages,
+                flaggedCount,
+                restrictedUsers
+            });
         }
     }
 }
