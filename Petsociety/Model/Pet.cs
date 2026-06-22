@@ -29,7 +29,6 @@ namespace Petsociety.Model
         [Required]
         public string ImageUrl { get; set; } = null!;
 
-        // Stored as comma separated values to keep model simple and match controller-style LINQ
         public string Tags { get; set; } = string.Empty;
 
         public string? Description { get; set; }
