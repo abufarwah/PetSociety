@@ -17,9 +17,7 @@ export interface SubscriptionStatusResponse {
   providedIn: 'root'
 })
 export class SubscriptionService {
-
-  private readonly apiUrl = 'http://localhost:5290/api/Subscription';
-
+  private readonly apiUrl = 'https://localhost:44371/api/Subscription';
   constructor(private http: HttpClient) {}
 
   /**
