@@ -36,7 +36,7 @@ const EMPTY_SUMMARY: DashboardSummary = {
 })
 export class Admin implements OnInit {
 
-  private readonly apiBase = 'http://localhost:5290/api';
+  private readonly apiBase = 'http://localhost:44371/api';
 
   // ── Dashboard KPIs ────────────────────────────────────────────────────────
   summary: DashboardSummary = { ...EMPTY_SUMMARY };

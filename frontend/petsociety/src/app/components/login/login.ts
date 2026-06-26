@@ -104,7 +104,7 @@ loginForm = new FormGroup({
 
         if (err.status === 0 || err.error instanceof ProgressEvent) {
           // Network error: backend not running, CORS blocked, or wrong port
-          message = 'لا يمكن الاتصال بالسيرفر. تأكد أن الباك إيند شغال على المنفذ 5290.';
+          message = 'لا يمكن الاتصال بالسيرفر. تأكد أن الباك إيند شغال على المنفذ 44371.';
         } else if (typeof err.error === 'string' && err.error.length > 0) {
           // Server returned a plain-text error message (e.g. "Account is inactive")
           message = err.error;
