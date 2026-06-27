@@ -79,4 +79,3 @@ npm install
 
 # Run the local development server
 ng serve
-
