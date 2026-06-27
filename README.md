@@ -54,7 +54,7 @@ The ecosystem leverages a decoupled, Service-Oriented Architecture:
 
 ***This project was developed as a Graduation Project to fulfill the requirements for a Bachelor's Degree in Computer Information Systems (CIS) at Hashemite University.
 
-### 1. Set Up the AI Microservice (Flask)
+### Set Up the AI Microservice (Flask) / runnig the Angular 
 ```bash
 # Navigate to the AI microservice directory
 cd ai-microservice
