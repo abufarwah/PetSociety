@@ -12,9 +12,9 @@ The core mission of **PetSociety** is to unify all pet-related needs within a ce
 
 ## ✨ Key Features
 
-* **Pet Adoption Center:** A dedicated hub for browsing and adopting pets posted by individuals or shelters, facilitating animal rescue and streamlining the adoption workflow.
+* **Pet Adoption Center:** A dedicated hub for browsing and adopting pets posted by individuals, facilitating animal rescue and streamlining the adoption workflow.
 * **Pet Service Hub+:** A dynamic monthly subscription plan that curates and delivers selected pet supplies and essentials tailored strictly to user preferences and pet profiles.
-* **Live Chat Community:** A real-time (Socket-based) communication system enabling pet owners to connect, share advice, seek immediate assistance, and interact with local communities.
+* **Live Chat Community:** A communication system enabling pet owners to connect, share advice, seek immediate assistance, and interact with local communities.
 * **AI Lost & Found:** A sophisticated recovery subsystem powered by Computer Vision. It automatically extracts distinctive physical visual traits from lost and found pet photos to identify high-probability matches and speed up reunification.
 
 ---
